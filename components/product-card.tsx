@@ -1,0 +1,79 @@
+import Image from "next/image"
+import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  category: string
+  images: string[]
+  is_featured: boolean
+  is_available: boolean
+}
+
+interface ProductCardProps {
+  product: Product
+}
+
+export function ProductCard({ product }: ProductCardProps) {
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price)
+  }
+
+  return (
+    <Link href={`/products/${product.id}`} className="block h-full">
+      <Card className="group h-full overflow-hidden border border-border tech-shadow hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card relative">
+        <div className="aspect-[4/5] overflow-hidden bg-muted">
+          <Image
+            src={product.images[0] || "/placeholder.svg?height=400&width=320"}
+            alt={product.name}
+            width={320}
+            height={400}
+            className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+            <span className="bg-background text-foreground px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+              Xem chi tiết
+            </span>
+          </div>
+        </div>
+        <CardContent className="p-5 space-y-4 bg-background/50 backdrop-blur-sm">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tight text-sm">
+              {product.name}
+            </h3>
+            {product.is_featured && (
+              <Badge
+                variant="secondary"
+                className="bg-primary/10 text-primary border-none text-[10px] uppercase tracking-wider font-bold"
+              >
+                Bản giới hạn
+              </Badge>
+            )}
+          </div>
+
+          <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">{product.description}</p>
+
+          <div className="flex items-center justify-between pt-2 border-t border-border/50">
+            <span className="font-bold text-lg text-primary">{formatPrice(product.price)}</span>
+            <span className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
+              {product.category}
+            </span>
+          </div>
+
+          {!product.is_available && (
+            <Badge variant="destructive" className="w-full justify-center">
+              Hết hàng
+            </Badge>
+          )}
+        </CardContent>
+      </Card>
+    </Link>
+  )
+}
