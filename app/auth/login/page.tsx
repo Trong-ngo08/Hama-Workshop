@@ -89,7 +89,7 @@ export default function LoginPage() {
                   <Input
                     id='email'
                     type='email'
-                    placeholder='admin@ghecrochet.com'
+                    placeholder='admin@hamaworkshop.com'
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
