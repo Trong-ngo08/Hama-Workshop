@@ -414,6 +414,7 @@ export function ProductForm({ categories, product }: ProductFormProps) {
             value={formData.images}
             onChange={(urls) => handleChange('images', urls)}
             disabled={isSubmitting}
+            maxFiles={20}
           />
         </div>
 
