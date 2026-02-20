@@ -2,6 +2,7 @@ import { DeleteCategoryButton } from '@/components/admin/delete-category-button'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { getIconComponent } from '@/lib/category-icons'
 import { createClient } from '@/lib/supabase/server'
 import { Pencil, Plus, Users } from 'lucide-react'
 import Link from 'next/link'
@@ -10,6 +11,7 @@ interface Category {
   id: string
   name: string
   description: string | null
+  icon: string | null
   created_at: string
 }
 
@@ -48,7 +50,15 @@ export default async function CategoriesPage() {
         {categories?.map((category: Category) => (
           <Card key={category.id} className='shadow-sm border border-gray-200'>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-xl text-gray-900'>
+              <CardTitle className='text-xl text-gray-900 flex items-center gap-3'>
+                {(() => {
+                  const Icon = getIconComponent(category.icon)
+                  return (
+                    <div className='w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0'>
+                      <Icon className='w-5 h-5 text-primary' />
+                    </div>
+                  )
+                })()}
                 {category.name}
               </CardTitle>
               <div className='flex items-center gap-2'>

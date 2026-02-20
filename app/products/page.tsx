@@ -5,12 +5,39 @@ import { ProductFilters } from '@/components/product-filters'
 import { ProductSkeleton } from '@/components/product-skeleton'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
-import { PackageOpen } from 'lucide-react'
+import type { Metadata } from 'next'
+import { ChevronLeft, ChevronRight, PackageOpen } from 'lucide-react'
+import Link from 'next/link'
 import { Suspense } from 'react'
+
+const PAGE_SIZE = 12
 
 interface SearchParams {
   category?: string
   search?: string
+  page?: string
+}
+
+export async function generateMetadata({
+  searchParams
+}: {
+  searchParams: Promise<SearchParams>
+}): Promise<Metadata> {
+  const params = await searchParams
+  const hasFilter = params.search || params.category
+
+  const title = params.search
+    ? `Tìm kiếm "${params.search}"`
+    : params.category
+      ? `Danh mục: ${params.category}`
+      : 'Bộ sưu tập sản phẩm'
+
+  return {
+    title,
+    description:
+      'Khám phá bộ sưu tập sản phẩm gỗ thủ công và in 3D cá nhân hóa của Hama Workshop.',
+    robots: hasFilter ? { index: false, follow: true } : { index: true, follow: true }
+  }
 }
 
 export default async function ProductsPage({
@@ -20,24 +47,25 @@ export default async function ProductsPage({
 }) {
   const params = await searchParams
   const supabase = await createClient()
+  const page = Math.max(1, Number(params.page) || 1)
 
-  let products = []
-  let categories = []
+  let products: any[] = []
+  let categories: any[] = []
+  let totalCount = 0
 
   try {
-    // Get products based on filters - Updated multi-select logic
     let productsQuery = supabase
       .from('products')
-      .select('*')
+      .select('id, name, description, price, category, images, is_featured, is_available', {
+        count: 'exact'
+      })
       .eq('is_available', true)
       .order('created_at', { ascending: false })
+      .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
 
     if (params.category) {
       const categoryList = params.category.split(',')
-      // Using or filter for multiple categories
-      const filterStr = categoryList
-        .map((cat) => `category.ilike.%${cat}%`)
-        .join(',')
+      const filterStr = categoryList.map((cat) => `category.ilike.%${cat}%`).join(',')
       productsQuery = productsQuery.or(filterStr)
     }
 
@@ -47,27 +75,37 @@ export default async function ProductsPage({
       )
     }
 
-    const { data: productsData, error: productsError } = await productsQuery
+    const { data, error, count } = await productsQuery
 
-    if (productsError) {
-      console.error('[v0] Products query error:', productsError)
+    if (error) {
+      console.error('[products] query error:', error)
     } else {
-      products = productsData || []
+      products = data || []
+      totalCount = count || 0
     }
 
-    // Get categories
     const { data: categoriesData, error: categoriesError } = await supabase
       .from('categories')
       .select('*')
       .order('name')
 
     if (categoriesError) {
-      console.error('[v0] Categories query error:', categoriesError)
+      console.error('[products] categories error:', categoriesError)
     } else {
       categories = categoriesData || []
     }
   } catch (error) {
-    console.error('[v0] Database connection error:', error)
+    console.error('[products] connection error:', error)
+  }
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE)
+
+  const buildPageUrl = (pageNum: number) => {
+    const urlParams = new URLSearchParams()
+    if (params.category) urlParams.set('category', params.category)
+    if (params.search) urlParams.set('search', params.search)
+    urlParams.set('page', String(pageNum))
+    return `/products?${urlParams.toString()}`
   }
 
   return (
@@ -95,7 +133,9 @@ export default async function ProductsPage({
             <div className='flex-1'>
               <div className='flex items-center justify-between mb-8 border-b border-border/50 pb-4'>
                 <span className='text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-bold'>
-                  Hiện có {products?.length || 0} sản phẩm
+                  {totalCount > 0
+                    ? `${totalCount} sản phẩm${totalPages > 1 ? ` — Trang ${page}/${totalPages}` : ''}`
+                    : 'Không có sản phẩm'}
                 </span>
               </div>
 
@@ -103,18 +143,61 @@ export default async function ProductsPage({
               <Suspense
                 fallback={
                   <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8'>
-                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                    {Array.from({ length: PAGE_SIZE }).map((_, i) => (
                       <ProductSkeleton key={i} />
                     ))}
                   </div>
                 }
               >
-                {products && products.length > 0 ? (
-                  <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8'>
-                    {products.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
+                {products.length > 0 ? (
+                  <>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8'>
+                      {products.map((product, index) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          priority={index < 3}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                      <div className='flex items-center justify-center gap-3 mt-16'>
+                        {page > 1 ? (
+                          <Button variant='outline' asChild className='gap-1'>
+                            <Link href={buildPageUrl(page - 1)}>
+                              <ChevronLeft className='w-4 h-4' />
+                              Trước
+                            </Link>
+                          </Button>
+                        ) : (
+                          <Button variant='outline' disabled className='gap-1'>
+                            <ChevronLeft className='w-4 h-4' />
+                            Trước
+                          </Button>
+                        )}
+
+                        <span className='text-xs uppercase tracking-widest text-muted-foreground font-bold px-4'>
+                          {page} / {totalPages}
+                        </span>
+
+                        {page < totalPages ? (
+                          <Button variant='outline' asChild className='gap-1'>
+                            <Link href={buildPageUrl(page + 1)}>
+                              Tiếp
+                              <ChevronRight className='w-4 h-4' />
+                            </Link>
+                          </Button>
+                        ) : (
+                          <Button variant='outline' disabled className='gap-1'>
+                            Tiếp
+                            <ChevronRight className='w-4 h-4' />
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className='text-center py-24 bg-muted/30 rounded-3xl border-2 border-dashed border-border/50'>
                     <div className='space-y-6 max-w-sm mx-auto'>

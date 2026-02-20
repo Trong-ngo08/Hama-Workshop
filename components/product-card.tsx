@@ -16,9 +16,10 @@ interface Product {
 
 interface ProductCardProps {
   product: Product
+  priority?: boolean
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, priority = false }: ProductCardProps) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -35,6 +36,8 @@ export function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             width={320}
             height={400}
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            priority={priority}
             className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
           />
           <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">

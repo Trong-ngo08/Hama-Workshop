@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { createClient } from "@/lib/supabase/client"
-import { Upload, X, ImageIcon } from "lucide-react"
+import { Upload, X, ImageIcon, Star } from "lucide-react"
 import Image from "next/image"
 
 interface ImageUploadProps {
@@ -74,6 +74,11 @@ export function ImageUpload({ value = [], onChange, maxFiles = 5, disabled }: Im
     maxFiles: maxFiles - value.length,
     disabled: disabled || uploading,
   })
+
+  const setAsMain = (urlToPromote: string) => {
+    const newUrls = [urlToPromote, ...value.filter((url) => url !== urlToPromote)]
+    onChange(newUrls)
+  }
 
   const removeImage = async (urlToRemove: string) => {
     if (disabled) return
@@ -152,22 +157,39 @@ export function ImageUpload({ value = [], onChange, maxFiles = 5, disabled }: Im
                     className="object-cover"
                   />
                   {!disabled && (
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="sm"
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => removeImage(url)}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
+                    <>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 p-0"
+                        onClick={() => removeImage(url)}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                      {index !== 0 && (
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          title="Đặt làm ảnh chính"
+                          className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 p-0"
+                          onClick={() => setAsMain(url)}
+                        >
+                          <Star className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </>
+                  )}
+                  {index === 0 && (
+                    <div className="absolute bottom-2 left-2">
+                      <div className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-current" />
+                        Ảnh chính
+                      </div>
+                    </div>
                   )}
                 </div>
-                {index === 0 && (
-                  <div className="absolute bottom-2 left-2">
-                    <div className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded">Ảnh chính</div>
-                  </div>
-                )}
               </CardContent>
             </Card>
           ))}

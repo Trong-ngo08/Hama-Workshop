@@ -7,7 +7,6 @@ import { ProductCard } from '@/components/product-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import {
   ArrowLeft,
   Box,
@@ -23,72 +22,38 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import Loading from './loading'
+import { useState } from 'react'
 
-interface ProductPageProps {
-  params: { id: string }
+const BASE_URL = 'https://hmworkshop.vn'
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  category: string
+  images: string[]
+  is_featured: boolean
+  is_available: boolean
+  materials?: string | null
+  size_info?: string | null
+  care_instructions?: string | null
 }
 
-export default function ProductPageClient({ params }: ProductPageProps) {
-  const [product, setProduct] = useState<any>(null)
-  const [relatedProducts, setRelatedProducts] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const supabase = createClientComponentClient()
-  const { id } = params
+interface ProductPageClientProps {
+  product: Product
+  relatedProducts: Product[]
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data: productData, error: productError } = await supabase
-          .from('products')
-          .select('*')
-          .eq('id', id)
-          .single()
-
-        if (productError || !productData) {
-          notFound()
-          return
-        }
-
-        setProduct(productData)
-
-        const { data: relatedProductsData } = await supabase
-          .from('products')
-          .select('*')
-          .eq('category', productData.category)
-          .eq('is_available', true)
-          .neq('id', id)
-          .order('created_at', { ascending: false })
-          .limit(4)
-
-        setRelatedProducts(relatedProductsData || [])
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        notFound()
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [id, supabase])
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
+export default function ProductPageClient({
+  product,
+  relatedProducts
+}: ProductPageClientProps) {
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
     }).format(price)
-  }
-
-  if (loading) {
-    return <Loading />
-  }
-
-  if (!product) {
-    return <div>Product not found</div>
-  }
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -113,12 +78,32 @@ export default function ProductPageClient({ params }: ProductPageProps) {
       name: 'Hama Workshop'
     },
     category: product.category,
-    material: product.materials,
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '5',
-      reviewCount: '1'
-    }
+    ...(product.materials ? { material: product.materials } : {})
+  }
+
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Trang chủ',
+        item: BASE_URL
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Sản phẩm',
+        item: `${BASE_URL}/products`
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: product.name,
+        item: `${BASE_URL}/products/${product.id}`
+      }
+    ]
   }
 
   return (
@@ -127,26 +112,35 @@ export default function ProductPageClient({ params }: ProductPageProps) {
         type='application/ld+json'
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+      />
 
       <Header />
 
       <main className='py-8'>
         <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
           {/* Breadcrumb */}
-          <div className='flex items-center gap-2 text-sm text-muted-foreground mb-8'>
+          <nav
+            aria-label='Breadcrumb'
+            className='flex items-center gap-2 text-sm text-muted-foreground mb-8'
+          >
             <Link href='/' className='hover:text-primary transition-colors'>
               Trang chủ
             </Link>
-            <span>/</span>
+            <span aria-hidden='true'>/</span>
             <Link
               href='/products'
               className='hover:text-primary transition-colors'
             >
               Sản phẩm
             </Link>
-            <span>/</span>
-            <span className='text-foreground'>{product.name}</span>
-          </div>
+            <span aria-hidden='true'>/</span>
+            <span className='text-foreground' aria-current='page'>
+              {product.name}
+            </span>
+          </nav>
 
           {/* Back Button */}
           <Button variant='ghost' size='sm' className='mb-6' asChild>
@@ -218,11 +212,11 @@ export default function ProductPageClient({ params }: ProductPageProps) {
 
               <Separator className='bg-border/50' />
 
-              {/* Product Details - Updated Icons and labels */}
+              {/* Product Details */}
               <div className='space-y-6'>
-                <h3 className='font-bold text-xl text-foreground'>
+                <h2 className='font-bold text-xl text-foreground'>
                   Cá nhân hóa cho bạn
-                </h3>
+                </h2>
                 <div className='grid gap-4'>
                   <div className='flex items-center justify-between py-2 border-b border-border/30'>
                     <div className='flex items-center gap-3 text-muted-foreground'>
@@ -239,7 +233,7 @@ export default function ProductPageClient({ params }: ProductPageProps) {
                       <span>Kích thước:</span>
                     </div>
                     <span className='font-semibold text-foreground'>
-                      Chỉnh sửa mm theo ý muốn
+                      {product.size_info || 'Chỉnh sửa mm theo ý muốn'}
                     </span>
                   </div>
                   <div className='flex items-center justify-between py-2 border-b border-border/30'>
@@ -256,7 +250,7 @@ export default function ProductPageClient({ params }: ProductPageProps) {
 
               <Separator className='bg-border/50' />
 
-              {/* Action Buttons - Updated colors and style */}
+              {/* Action Buttons */}
               <div className='space-y-6'>
                 <Button
                   size='lg'
@@ -299,8 +293,8 @@ export default function ProductPageClient({ params }: ProductPageProps) {
             </div>
           </div>
 
-          {/* Detailed Product Description - Updated for wood x tech */}
-          <section className='mb-24'>
+          {/* Detailed Product Description */}
+          <section className='mb-24' aria-label='Triết lý chế tác'>
             <div className='bg-card rounded-2xl tech-shadow border border-border p-10 lg:p-16 overflow-hidden relative'>
               <div className='absolute top-0 right-0 w-64 h-64 wood-texture opacity-50 -mr-32 -mt-32 rounded-full' />
               <div className='max-w-4xl mx-auto relative z-10'>
@@ -369,8 +363,8 @@ export default function ProductPageClient({ params }: ProductPageProps) {
           </section>
 
           {/* Related Products */}
-          {relatedProducts && relatedProducts.length > 0 && (
-            <section className='py-12'>
+          {relatedProducts.length > 0 && (
+            <section className='py-12' aria-label='Sản phẩm liên quan'>
               <div className='space-y-8'>
                 <div className='text-center space-y-4'>
                   <h2 className='text-2xl lg:text-3xl font-bold text-gray-900'>
@@ -382,7 +376,7 @@ export default function ProductPageClient({ params }: ProductPageProps) {
                 </div>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-                  {relatedProducts.map((relatedProduct: any) => (
+                  {relatedProducts.map((relatedProduct) => (
                     <ProductCard
                       key={relatedProduct.id}
                       product={relatedProduct}
@@ -425,14 +419,6 @@ function ProductImageGallery({
     null
   )
 
-  const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index)
-  }
-
-  const closePopup = () => {
-    setSelectedImageIndex(null)
-  }
-
   const validImages = images.filter((img) => img && img.trim() !== '')
   const displayImages =
     validImages.length > 0
@@ -442,7 +428,10 @@ function ProductImageGallery({
   return (
     <>
       <div className='space-y-4'>
-        <div className='aspect-square rounded-2xl overflow-hidden cute-shadow cursor-pointer hover:scale-105 transition-transform'>
+        <div
+          className='aspect-square rounded-2xl overflow-hidden cute-shadow cursor-pointer hover:scale-105 transition-transform'
+          onClick={() => setSelectedImageIndex(0)}
+        >
           <Image
             src={displayImages[0] || '/placeholder.svg'}
             alt={productName}
@@ -450,18 +439,16 @@ function ProductImageGallery({
             height={600}
             className='object-cover w-full h-full'
             priority
-            onClick={() => handleImageClick(0)}
           />
         </div>
 
-        {/* Additional images if available */}
         {displayImages.length > 1 && (
           <div className='grid grid-cols-4 gap-2'>
             {displayImages.slice(1, 5).map((image, index) => (
               <div
                 key={index}
                 className='aspect-square rounded-lg overflow-hidden border cursor-pointer hover:scale-105 transition-transform'
-                onClick={() => handleImageClick(index + 1)}
+                onClick={() => setSelectedImageIndex(index + 1)}
               >
                 <Image
                   src={image || '/placeholder.svg'}
@@ -480,7 +467,7 @@ function ProductImageGallery({
         <ImagePopup
           images={displayImages}
           currentIndex={selectedImageIndex}
-          onClose={closePopup}
+          onClose={() => setSelectedImageIndex(null)}
         />
       )}
     </>

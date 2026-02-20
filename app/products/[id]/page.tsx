@@ -1,34 +1,7 @@
-import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
+import { notFound } from 'next/navigation'
 import ProductPageClient from './ProductPageClient'
-
-function createSupabaseClient() {
-  const cookieStore = cookies()
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        }
-      }
-    }
-  )
-}
 
 interface ProductPageProps {
   params: Promise<{ id: string }>
@@ -38,49 +11,52 @@ export async function generateMetadata({
   params
 }: ProductPageProps): Promise<Metadata> {
   const { id } = await params
-  const supabase = createSupabaseClient()
+  const supabase = await createClient()
 
   const { data: product } = await supabase
     .from('products')
-    .select('name, description, images, price')
+    .select(
+      'name, description, images, price, category, seo_title, seo_description, seo_keywords'
+    )
     .eq('id', id)
     .single()
 
   if (!product) {
     return {
-      title: 'Sản phẩm không tìm thấy - Hama Workshop',
+      title: 'Sản phẩm không tìm thấy',
       description: 'Sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.'
     }
   }
 
-  const title = `${product.name} - Hama Workshop`
-  const description =
+  const priceFormatted = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(product.price)
+
+  const title = product.seo_title || `${product.name} - Hama Workshop`
+  const rawDescription =
+    product.seo_description ||
     product.description ||
-    `Mua ${
-      product.name
-    } handmade chất lượng cao tại Hama Workshop. Giá ${new Intl.NumberFormat(
-      'vi-VN',
-      { style: 'currency', currency: 'VND' }
-    ).format(product.price)}`
-  const image = product.images?.[0] || '/placeholder.svg'
+    `Mua ${product.name} handmade chất lượng cao tại Hama Workshop. Giá ${priceFormatted}`
+  const description = rawDescription.slice(0, 160)
+  const keywords =
+    product.seo_keywords ||
+    `gỗ thủ công, in 3d, ${product.name}, ${product.category}, handmade, hama workshop`
+  const image = product.images?.[0] || '/hero-image.jpg'
+  const url = `https://hmworkshop.vn/products/${id}`
 
   return {
     title,
     description,
-    keywords: `crochet, handmade, ${product.name}, đan móc, thủ công`,
+    keywords,
     openGraph: {
       title,
       description,
-      images: [
-        {
-          url: image,
-          width: 600,
-          height: 600,
-          alt: product.name
-        }
-      ],
+      images: [{ url: image, width: 1200, height: 1200, alt: product.name }],
       type: 'website',
-      siteName: 'Hama Workshop'
+      siteName: 'Hama Workshop',
+      url,
+      locale: 'vi_VN'
     },
     twitter: {
       card: 'summary_large_image',
@@ -95,5 +71,32 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  return <ProductPageClient params={await params} />
+  const { id } = await params
+  const supabase = await createClient()
+
+  const { data: product } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (!product) notFound()
+
+  const { data: relatedProducts } = await supabase
+    .from('products')
+    .select(
+      'id, name, description, price, category, images, is_featured, is_available'
+    )
+    .eq('category', product.category)
+    .eq('is_available', true)
+    .neq('id', id)
+    .order('created_at', { ascending: false })
+    .limit(4)
+
+  return (
+    <ProductPageClient
+      product={product}
+      relatedProducts={relatedProducts || []}
+    />
+  )
 }

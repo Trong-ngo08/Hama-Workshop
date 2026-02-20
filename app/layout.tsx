@@ -17,7 +17,7 @@ const spaceMono = Space_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://hama-workshop.vercel.app'),
+  metadataBase: new URL('https://hmworkshop.vn'),
   title: {
     default: 'Cá Nhân Hóa Theo Yêu Cầu | Gỗ Thủ Công × In 3D',
     template: '%s | Gỗ Thủ Công × In 3D'
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'vi_VN',
-    url: 'https://hama-workshop.vercel.app',
+    url: 'https://hmworkshop.vn',
     siteName: 'Hama Workshop',
     title: 'Cá Nhân Hóa Theo Yêu Cầu | Gỗ Thủ Công × In 3D',
     description:
