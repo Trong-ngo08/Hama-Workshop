@@ -9,6 +9,7 @@ interface Product {
   description: string
   price: number
   category: string
+  categories?: string[]
   images: string[]
   is_featured: boolean
   is_available: boolean
@@ -26,6 +27,13 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       currency: "VND",
     }).format(price)
   }
+
+  const displayCategories =
+    product.categories && product.categories.length > 0
+      ? product.categories
+      : product.category
+        ? [product.category]
+        : []
 
   return (
     <Link href={`/products/${product.id}`} className="block h-full">
@@ -65,9 +73,16 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
           <div className="flex items-center justify-between pt-2 border-t border-border/50">
             <span className="font-bold text-lg text-primary">{formatPrice(product.price)}</span>
-            <span className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
-              {product.category}
-            </span>
+            <div className="flex flex-wrap gap-1 justify-end">
+              {displayCategories.map((cat) => (
+                <span
+                  key={cat}
+                  className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium"
+                >
+                  {cat}
+                </span>
+              ))}
+            </div>
           </div>
 
           {!product.is_available && (

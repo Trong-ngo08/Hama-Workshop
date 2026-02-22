@@ -9,14 +9,22 @@ interface EditProductPageProps {
 export default async function EditProductPage({ params }: EditProductPageProps) {
   const supabase = await createClient()
 
-  const { data: product, error } = await supabase.from("products").select("*").eq("id", params.id).single()
+  const { data: product, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", params.id)
+    .single()
 
   if (error || !product) {
     notFound()
   }
 
-  // Get categories for the form
-  const { data: categories } = await supabase.from("categories").select("*").order("name")
+  const [{ data: categories }, { data: productCategories }] = await Promise.all([
+    supabase.from("categories").select("*").order("name"),
+    supabase.from("product_categories").select("category_id").eq("product_id", params.id)
+  ])
+
+  const initialCategoryIds = productCategories?.map((pc) => pc.category_id) ?? []
 
   return (
     <div className="min-h-screen bg-background">
@@ -27,7 +35,11 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
             <p className="text-muted-foreground">Cập nhật thông tin sản phẩm</p>
           </div>
 
-          <ProductForm product={product} categories={categories || []} />
+          <ProductForm
+            product={product}
+            categories={categories || []}
+            initialCategoryIds={initialCategoryIds}
+          />
         </div>
       </main>
     </div>

@@ -14,6 +14,7 @@ interface Product {
   id: string
   name: string
   category: string
+  categories?: string[]
   price: number
   is_featured: boolean
   is_available: boolean
@@ -28,11 +29,18 @@ interface ProductsTableProps {
 export function ProductsTable({ products }: ProductsTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+  const filteredProducts = products.filter((product) => {
+    const categoryList = product.categories?.length
+      ? product.categories
+      : product.category
+        ? [product.category]
+        : []
+    const lowerSearch = searchTerm.toLowerCase()
+    return (
+      product.name.toLowerCase().includes(lowerSearch) ||
+      categoryList.some((cat) => cat.toLowerCase().includes(lowerSearch))
+    )
+  })
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -76,54 +84,65 @@ export function ProductsTable({ products }: ProductsTableProps) {
           </TableHeader>
           <TableBody>
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted">
-                      <Image
-                        src={product.images[0] || "/placeholder.svg?height=48&width=48"}
-                        alt={product.name}
-                        width={48}
-                        height={48}
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <div className="font-medium">{product.name}</div>
-                      {product.is_featured && (
-                        <Badge className="bg-accent text-accent-foreground text-xs">Nổi bật</Badge>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{product.category}</Badge>
-                  </TableCell>
-                  <TableCell className="font-semibold text-primary">{formatPrice(product.price)}</TableCell>
-                  <TableCell>
-                    <Badge variant={product.is_available ? "default" : "destructive"}>
-                      {product.is_available ? "Đang bán" : "Hết hàng"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">{formatDate(product.created_at)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/products/${product.id}`}>
-                          <Eye className="w-4 h-4" />
-                        </Link>
-                      </Button>
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/admin/products/${product.id}/edit`}>
-                          <Edit className="w-4 h-4" />
-                        </Link>
-                      </Button>
-                      <DeleteProductButton productId={product.id} productName={product.name} />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
+              filteredProducts.map((product) => {
+                const categoryList = product.categories?.length
+                  ? product.categories
+                  : product.category
+                    ? [product.category]
+                    : []
+                return (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted">
+                        <Image
+                          src={product.images[0] || "/placeholder.svg?height=48&width=48"}
+                          alt={product.name}
+                          width={48}
+                          height={48}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="font-medium">{product.name}</div>
+                        {product.is_featured && (
+                          <Badge className="bg-accent text-accent-foreground text-xs">Nổi bật</Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {categoryList.map((cat) => (
+                          <Badge key={cat} variant="outline">{cat}</Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-semibold text-primary">{formatPrice(product.price)}</TableCell>
+                    <TableCell>
+                      <Badge variant={product.is_available ? "default" : "destructive"}>
+                        {product.is_available ? "Đang bán" : "Hết hàng"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{formatDate(product.created_at)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/products/${product.id}`}>
+                            <Eye className="w-4 h-4" />
+                          </Link>
+                        </Button>
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link href={`/admin/products/${product.id}/edit`}>
+                            <Edit className="w-4 h-4" />
+                          </Link>
+                        </Button>
+                        <DeleteProductButton productId={product.id} productName={product.name} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
             ) : (
               <TableRow>
                 <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">

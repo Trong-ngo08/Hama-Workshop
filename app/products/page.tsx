@@ -54,36 +54,7 @@ export default async function ProductsPage({
   let totalCount = 0
 
   try {
-    let productsQuery = supabase
-      .from('products')
-      .select('id, name, description, price, category, images, is_featured, is_available', {
-        count: 'exact'
-      })
-      .eq('is_available', true)
-      .order('created_at', { ascending: false })
-      .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
-
-    if (params.category) {
-      const categoryList = params.category.split(',')
-      const filterStr = categoryList.map((cat) => `category.ilike.%${cat}%`).join(',')
-      productsQuery = productsQuery.or(filterStr)
-    }
-
-    if (params.search) {
-      productsQuery = productsQuery.or(
-        `name.ilike.%${params.search}%,description.ilike.%${params.search}%`
-      )
-    }
-
-    const { data, error, count } = await productsQuery
-
-    if (error) {
-      console.error('[products] query error:', error)
-    } else {
-      products = data || []
-      totalCount = count || 0
-    }
-
+    // Fetch all categories for the filter sidebar
     const { data: categoriesData, error: categoriesError } = await supabase
       .from('categories')
       .select('*')
@@ -93,6 +64,70 @@ export default async function ProductsPage({
       console.error('[products] categories error:', categoriesError)
     } else {
       categories = categoriesData || []
+    }
+
+    // Resolve category filter → product IDs via junction table
+    let filteredProductIds: string[] | null = null
+
+    if (params.category) {
+      const categoryNames = params.category.split(',')
+
+      // Match category names case-insensitively
+      const matchingCategoryIds = categories
+        .filter((c) => categoryNames.some((n) => c.name.toLowerCase() === n.toLowerCase()))
+        .map((c) => c.id)
+
+      if (matchingCategoryIds.length > 0) {
+        const { data: junctionData } = await supabase
+          .from('product_categories')
+          .select('product_id')
+          .in('category_id', matchingCategoryIds)
+
+        filteredProductIds = [...new Set((junctionData || []).map((j) => j.product_id))]
+      } else {
+        filteredProductIds = []
+      }
+    }
+
+    // Short-circuit if category filter returns no products
+    if (filteredProductIds !== null && filteredProductIds.length === 0) {
+      products = []
+      totalCount = 0
+    } else {
+      let productsQuery = supabase
+        .from('products')
+        .select(
+          'id, name, description, price, category, images, is_featured, is_available, product_categories(categories(id, name))',
+          { count: 'exact' }
+        )
+        .eq('is_available', true)
+        .order('created_at', { ascending: false })
+        .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
+
+      if (filteredProductIds !== null && filteredProductIds.length > 0) {
+        productsQuery = productsQuery.in('id', filteredProductIds)
+      }
+
+      if (params.search) {
+        productsQuery = productsQuery.or(
+          `name.ilike.%${params.search}%,description.ilike.%${params.search}%`
+        )
+      }
+
+      const { data, error, count } = await productsQuery
+
+      if (error) {
+        console.error('[products] query error:', error)
+      } else {
+        // Flatten joined categories into a string array for each product
+        products = (data || []).map((p) => ({
+          ...p,
+          categories: ((p.product_categories as any[]) || [])
+            .map((pc: any) => pc.categories?.name)
+            .filter(Boolean)
+        }))
+        totalCount = count || 0
+      }
     }
   } catch (error) {
     console.error('[products] connection error:', error)

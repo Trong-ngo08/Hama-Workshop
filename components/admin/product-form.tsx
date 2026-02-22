@@ -2,15 +2,9 @@
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { createClient } from '@/lib/supabase/client'
@@ -49,17 +43,28 @@ interface Product {
 interface ProductFormProps {
   categories: Category[]
   product?: Product
+  initialCategoryIds?: string[]
 }
 
-export function ProductForm({ categories, product }: ProductFormProps) {
+export function ProductForm({ categories, product, initialCategoryIds }: ProductFormProps) {
   const router = useRouter()
   const supabase = createClient()
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Derive initial category IDs: prefer explicit prop, then fall back to matching by name
+  const derivedCategoryIds =
+    initialCategoryIds ??
+    (product?.category
+      ? categories
+          .filter((c) => c.name.toLowerCase() === product.category.toLowerCase())
+          .map((c) => c.id)
+      : [])
+
   const [formData, setFormData] = useState({
     name: product?.name || '',
     description: product?.description || '',
     price: product?.price?.toString() || '',
-    category: product?.category || '',
+    categoryIds: derivedCategoryIds,
     materials: product?.materials || '',
     size_info: product?.size_info || '',
     care_instructions: product?.care_instructions || '',
@@ -85,25 +90,31 @@ export function ProductForm({ categories, product }: ProductFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (formData.categoryIds.length === 0) {
+      alert('Vui lòng chọn ít nhất một danh mục')
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
       const slug = formData.slug || generateSlug(formData.name)
+      const selectedCategories = categories.filter((c) => formData.categoryIds.includes(c.id))
+      const primaryCategory = selectedCategories[0]?.name || ''
 
       const productData = {
         name: formData.name,
         description: formData.description,
         price: Number.parseFloat(formData.price),
-        category: formData.category,
+        category: primaryCategory,
         materials: formData.materials || null,
         size_info: formData.size_info || null,
         care_instructions: formData.care_instructions || null,
         is_featured: formData.is_featured,
         is_available: formData.is_available,
         images: formData.images,
-        sale_price: formData.sale_price
-          ? Number.parseFloat(formData.sale_price)
-          : null,
+        sale_price: formData.sale_price ? Number.parseFloat(formData.sale_price) : null,
         discount_percentage: formData.discount_percentage
           ? Number.parseInt(formData.discount_percentage)
           : null,
@@ -113,21 +124,37 @@ export function ProductForm({ categories, product }: ProductFormProps) {
         slug: slug
       }
 
+      let savedProductId: string
+
       if (product) {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('products')
           .update(productData)
           .eq('id', product.id)
           .select()
-
         if (error) throw error
+        savedProductId = product.id
       } else {
-        const { data, error } = await supabase
-          .from('products')
-          .insert(productData)
-          .select()
-
+        const { data, error } = await supabase.from('products').insert(productData).select()
         if (error) throw error
+        savedProductId = data[0].id
+      }
+
+      // Sync product_categories junction table
+      const { error: deleteError } = await supabase
+        .from('product_categories')
+        .delete()
+        .eq('product_id', savedProductId)
+      if (deleteError) throw deleteError
+
+      if (formData.categoryIds.length > 0) {
+        const { error: insertError } = await supabase.from('product_categories').insert(
+          formData.categoryIds.map((catId) => ({
+            product_id: savedProductId,
+            category_id: catId
+          }))
+        )
+        if (insertError) throw insertError
       }
 
       router.push('/admin/products')
@@ -142,6 +169,13 @@ export function ProductForm({ categories, product }: ProductFormProps) {
 
   const handleChange = (field: string, value: string | boolean | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const toggleCategory = (categoryId: string, checked: boolean) => {
+    const updated = checked
+      ? [...formData.categoryIds, categoryId]
+      : formData.categoryIds.filter((id) => id !== categoryId)
+    handleChange('categoryIds', updated)
   }
 
   return (
@@ -170,22 +204,34 @@ export function ProductForm({ categories, product }: ProductFormProps) {
             </div>
 
             <div className='space-y-2'>
-              <Label htmlFor='category'>Danh mục *</Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) => handleChange('category', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder='Chọn danh mục' />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.name}>
+              <Label>
+                Danh mục *
+                {formData.categoryIds.length > 0 && (
+                  <span className='ml-2 text-xs font-normal text-muted-foreground'>
+                    ({formData.categoryIds.length} đã chọn)
+                  </span>
+                )}
+              </Label>
+              <div className='border rounded-md p-3 space-y-2 max-h-48 overflow-y-auto bg-background'>
+                {categories.map((category) => (
+                  <div key={category.id} className='flex items-center gap-2'>
+                    <Checkbox
+                      id={`cat-${category.id}`}
+                      checked={formData.categoryIds.includes(category.id)}
+                      onCheckedChange={(checked) => toggleCategory(category.id, !!checked)}
+                    />
+                    <Label
+                      htmlFor={`cat-${category.id}`}
+                      className='cursor-pointer font-normal text-sm'
+                    >
                       {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    </Label>
+                  </div>
+                ))}
+              </div>
+              {formData.categoryIds.length === 0 && (
+                <p className='text-xs text-destructive'>Vui lòng chọn ít nhất một danh mục</p>
+              )}
             </div>
 
             <div className='space-y-2'>
@@ -231,9 +277,7 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                 id='care_instructions'
                 placeholder='Ví dụ: Hand wash with mild soap, air dry only'
                 value={formData.care_instructions}
-                onChange={(e) =>
-                  handleChange('care_instructions', e.target.value)
-                }
+                onChange={(e) => handleChange('care_instructions', e.target.value)}
                 rows={3}
               />
             </div>
@@ -251,25 +295,19 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                   <Switch
                     id='is_featured'
                     checked={formData.is_featured}
-                    onCheckedChange={(checked) =>
-                      handleChange('is_featured', checked)
-                    }
+                    onCheckedChange={(checked) => handleChange('is_featured', checked)}
                   />
                 </div>
 
                 <div className='flex items-center justify-between'>
                   <div className='space-y-1'>
                     <Label htmlFor='is_available'>Còn hàng</Label>
-                    <p className='text-xs text-muted-foreground'>
-                      Khách hàng có thể đặt hàng
-                    </p>
+                    <p className='text-xs text-muted-foreground'>Khách hàng có thể đặt hàng</p>
                   </div>
                   <Switch
                     id='is_available'
                     checked={formData.is_available}
-                    onCheckedChange={(checked) =>
-                      handleChange('is_available', checked)
-                    }
+                    onCheckedChange={(checked) => handleChange('is_available', checked)}
                   />
                 </div>
               </CardContent>
@@ -279,9 +317,7 @@ export function ProductForm({ categories, product }: ProductFormProps) {
 
         <Card className='border-pink-200 bg-pink-50/50'>
           <CardContent className='p-6'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-4'>
-              Thông tin khuyến mãi
-            </h3>
+            <h3 className='text-lg font-semibold text-gray-900 mb-4'>Thông tin khuyến mãi</h3>
 
             <div className='grid md:grid-cols-2 gap-4'>
               <div className='space-y-2'>
@@ -293,15 +329,11 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                   value={formData.sale_price}
                   onChange={(e) => handleChange('sale_price', e.target.value)}
                 />
-                <p className='text-xs text-muted-foreground'>
-                  Nhập giá sau khi giảm
-                </p>
+                <p className='text-xs text-muted-foreground'>Nhập giá sau khi giảm</p>
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='discount_percentage'>
-                  Phần trăm giảm giá (%)
-                </Label>
+                <Label htmlFor='discount_percentage'>Phần trăm giảm giá (%)</Label>
                 <Input
                   id='discount_percentage'
                   type='number'
@@ -309,13 +341,9 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                   min='0'
                   max='100'
                   value={formData.discount_percentage}
-                  onChange={(e) =>
-                    handleChange('discount_percentage', e.target.value)
-                  }
+                  onChange={(e) => handleChange('discount_percentage', e.target.value)}
                 />
-                <p className='text-xs text-muted-foreground'>
-                  Chỉ để hiển thị badge giảm giá
-                </p>
+                <p className='text-xs text-muted-foreground'>Chỉ để hiển thị badge giảm giá</p>
               </div>
             </div>
           </CardContent>
@@ -323,9 +351,7 @@ export function ProductForm({ categories, product }: ProductFormProps) {
 
         <Card className='border-blue-200 bg-blue-50/50'>
           <CardContent className='p-6'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-4'>
-              Tối ưu SEO
-            </h3>
+            <h3 className='text-lg font-semibold text-gray-900 mb-4'>Tối ưu SEO</h3>
 
             <div className='space-y-4'>
               <div className='space-y-2'>
@@ -349,9 +375,7 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                   id='seo_description'
                   placeholder='Mô tả ngắn gọn cho công cụ tìm kiếm (150-160 ký tự)'
                   value={formData.seo_description}
-                  onChange={(e) =>
-                    handleChange('seo_description', e.target.value)
-                  }
+                  onChange={(e) => handleChange('seo_description', e.target.value)}
                   maxLength={160}
                   rows={3}
                 />
@@ -368,13 +392,9 @@ export function ProductForm({ categories, product }: ProductFormProps) {
                     type='text'
                     placeholder='từ khóa 1, từ khóa 2, từ khóa 3'
                     value={formData.seo_keywords}
-                    onChange={(e) =>
-                      handleChange('seo_keywords', e.target.value)
-                    }
+                    onChange={(e) => handleChange('seo_keywords', e.target.value)}
                   />
-                  <p className='text-xs text-muted-foreground'>
-                    Phân cách bằng dấu phẩy
-                  </p>
+                  <p className='text-xs text-muted-foreground'>Phân cách bằng dấu phẩy</p>
                 </div>
 
                 <div className='space-y-2'>

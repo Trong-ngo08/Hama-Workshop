@@ -8,10 +8,17 @@ import Link from 'next/link'
 export default async function AdminProductsPage() {
   const supabase = await createClient()
 
-  const { data: products } = await supabase
+  const { data: rawProducts } = await supabase
     .from('products')
-    .select('*')
+    .select('*, product_categories(categories(id, name))')
     .order('created_at', { ascending: false })
+
+  const products = (rawProducts || []).map((p) => ({
+    ...p,
+    categories: ((p.product_categories as any[]) || [])
+      .map((pc: any) => pc.categories?.name)
+      .filter(Boolean) as string[]
+  }))
 
   return (
     <div className='space-y-6'>
