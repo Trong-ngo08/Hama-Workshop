@@ -5,8 +5,8 @@ import { ProductFilters } from '@/components/product-filters'
 import { ProductSkeleton } from '@/components/product-skeleton'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
-import type { Metadata } from 'next'
 import { ChevronLeft, ChevronRight, PackageOpen } from 'lucide-react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
@@ -36,7 +36,9 @@ export async function generateMetadata({
     title,
     description:
       'Khám phá bộ sưu tập sản phẩm gỗ thủ công và in 3D cá nhân hóa của Hama Workshop.',
-    robots: hasFilter ? { index: false, follow: true } : { index: true, follow: true }
+    robots: hasFilter
+      ? { index: false, follow: true }
+      : { index: true, follow: true }
   }
 }
 
@@ -74,7 +76,9 @@ export default async function ProductsPage({
 
       // Match category names case-insensitively
       const matchingCategoryIds = categories
-        .filter((c) => categoryNames.some((n) => c.name.toLowerCase() === n.toLowerCase()))
+        .filter((c) =>
+          categoryNames.some((n) => c.name.toLowerCase() === n.toLowerCase())
+        )
         .map((c) => c.id)
 
       if (matchingCategoryIds.length > 0) {
@@ -83,7 +87,18 @@ export default async function ProductsPage({
           .select('product_id')
           .in('category_id', matchingCategoryIds)
 
-        filteredProductIds = [...new Set((junctionData || []).map((j) => j.product_id))]
+        // AND logic: chỉ lấy sản phẩm xuất hiện trong TẤT CẢ categories đã chọn
+        const productIdCounts = (junctionData || []).reduce(
+          (acc, j) => {
+            acc[j.product_id] = (acc[j.product_id] || 0) + 1
+            return acc
+          },
+          {} as Record<string, number>
+        )
+
+        filteredProductIds = Object.entries(productIdCounts)
+          .filter(([_, count]) => count === matchingCategoryIds.length)
+          .map(([id]) => id)
       } else {
         filteredProductIds = []
       }
@@ -97,7 +112,7 @@ export default async function ProductsPage({
       let productsQuery = supabase
         .from('products')
         .select(
-          'id, name, description, price, category, images, is_featured, is_available, product_categories(categories(id, name))',
+          'id, name, description, price, sale_price, discount_percentage, category, images, is_featured, is_available, product_categories(categories(id, name))',
           { count: 'exact' }
         )
         .eq('is_available', true)
