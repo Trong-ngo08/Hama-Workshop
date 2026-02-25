@@ -31,6 +31,8 @@ interface Product {
   name: string
   description: string
   price: number
+  sale_price?: number
+  discount_percentage?: number
   category: string
   images: string[]
   is_featured: boolean
@@ -199,9 +201,29 @@ export default function ProductPageClient({
                     </Button>
                   </div>
                 </div>
-
-                <div className='text-4xl font-bold text-primary'>
-                  {formatPrice(product.price)}
+                <div className='flex items-start gap-2'>
+                  {product.sale_price ? (
+                    <div className='flex items-start gap-2 flex-col'>
+                      <span className='font-bold text-lg text-primary'>
+                        {formatPrice(product.sale_price)}
+                      </span>
+                      <span className='text-sm text-muted-foreground line-through'>
+                        {formatPrice(product.price)}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className='font-bold text-lg text-primary'>
+                      {formatPrice(product.price)}
+                    </span>
+                  )}
+                  {product.discount_percentage && (
+                    <Badge
+                      variant='destructive'
+                      className='ml-2 text-[10px] uppercase tracking-wider font-bold'
+                    >
+                      -{product.discount_percentage}%
+                    </Badge>
+                  )}
                 </div>
 
                 <p className='text-lg text-muted-foreground leading-relaxed max-w-prose'>
@@ -259,7 +281,7 @@ export default function ProductPageClient({
                 >
                   <Link href='/contact'>
                     <MessageCircle className='w-5 h-5 mr-3' />
-                    Bắt đầu thiết kế riêng
+                    Đặt hàng
                   </Link>
                 </Button>
 
