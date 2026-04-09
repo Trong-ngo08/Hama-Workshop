@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 })
     }
 
-    const fileName = `about-images/${Date.now()}-${Math.random().toString(36).substring(2)}.webp`
+    const fileName = `product-images/${Date.now()}-${Math.random().toString(36).substring(2)}.webp`
     const buffer = Buffer.from(await file.arrayBuffer())
     const publicUrl = await uploadToR2(buffer, fileName, file.type || "image/webp")
 
