@@ -159,10 +159,14 @@ export function FeedbacksManager() {
   const handleLayoutChange = async (newLayout: Layout) => {
     setSavingLayout(true)
     setLayout(newLayout)
-    await supabase
-      .from("site_settings")
-      .upsert({ key: "feedbacks_layout", value: newLayout })
-    setSavingLayout(false)
+    try {
+      const { error } = await supabase
+        .from("site_settings")
+        .upsert({ key: "feedbacks_layout", value: newLayout })
+      if (error) console.error("Error saving layout:", error)
+    } finally {
+      setSavingLayout(false)
+    }
   }
 
   const handleSave = async () => {

@@ -31,7 +31,7 @@ export function FeedbackSlider({ items }: FeedbackSliderProps) {
       <Carousel className="w-full max-w-3xl mx-auto">
         <CarouselContent>
           {items.map((item, index) => (
-            <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem key={item.id}>
               <div
                 className="group rounded-2xl overflow-hidden tech-shadow cursor-pointer bg-card h-full"
                 onClick={() => setSelectedIndex(index)}
