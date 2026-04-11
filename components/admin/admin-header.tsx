@@ -8,6 +8,7 @@ import {
   Home,
   ImageIcon,
   LogOut,
+  MessageSquare,
   Package,
   Settings,
   Users
@@ -29,6 +30,7 @@ export function AdminHeader() {
       href: '/admin/about-images',
       icon: ImageIcon
     },
+    { name: 'Feedbacks', href: '/admin/feedbacks', icon: MessageSquare },
     { name: 'Cài đặt', href: '/admin/settings', icon: Settings }
   ]
 
