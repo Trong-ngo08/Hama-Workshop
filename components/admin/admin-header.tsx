@@ -61,8 +61,8 @@ export function AdminHeader() {
             />
           </Link>
 
-          {/* Desktop Navigation — lg and above only */}
-          <nav className='hidden lg:flex items-center gap-6'>
+          {/* Desktop Navigation — xl and above only */}
+          <nav className='hidden xl:flex items-center gap-5'>
             {navigation.map((item) => {
               const Icon = item.icon
               return (
@@ -81,8 +81,8 @@ export function AdminHeader() {
             })}
           </nav>
 
-          {/* Desktop Actions — lg and above only */}
-          <div className='hidden lg:flex items-center gap-4'>
+          {/* Desktop Actions — xl and above only */}
+          <div className='hidden xl:flex items-center gap-4'>
             <Button variant='ghost' size='sm' asChild>
               <Link href='/' className='text-gray-700 hover:text-primary'>
                 Xem trang chủ
@@ -99,13 +99,13 @@ export function AdminHeader() {
             </Button>
           </div>
 
-          {/* Hamburger — below lg (iPad portrait + phone) */}
+          {/* Hamburger — below xl (iPad portrait + landscape) */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button
                 variant='ghost'
                 size='icon'
-                className='flex lg:hidden h-10 w-10'
+                className='flex xl:hidden h-10 w-10'
                 aria-label='Mở menu'
               >
                 <Menu className='w-5 h-5' />
