@@ -93,9 +93,10 @@ export function FeedbackImageManager({
 
   const handleFiles = async (files: FileList) => {
     setUploading(true)
-    try {
-      const uploaded: LocalImage[] = []
-      for (const file of Array.from(files)) {
+    const uploaded: LocalImage[] = []
+    const errors: string[] = []
+    for (const file of Array.from(files)) {
+      try {
         const fd = new FormData()
         fd.append("file", file)
         const res = await fetch("/api/upload-feedback-image", { method: "POST", body: fd })
@@ -106,14 +107,14 @@ export function FeedbackImageManager({
           image_url: publicUrl,
           display_order: value.length + uploaded.length,
         })
+      } catch {
+        errors.push(file.name)
       }
-      onChange([...value, ...uploaded])
-    } catch {
-      alert("Lỗi khi tải lên hình ảnh")
-    } finally {
-      setUploading(false)
-      if (inputRef.current) inputRef.current.value = ""
     }
+    if (uploaded.length > 0) onChange([...value, ...uploaded])
+    if (errors.length > 0) alert(`Lỗi khi tải lên: ${errors.join(", ")}`)
+    setUploading(false)
+    if (inputRef.current) inputRef.current.value = ""
   }
 
   const handleRemove = (img: LocalImage) => {
