@@ -165,10 +165,10 @@ export function FeedbacksManager() {
 
       if (editingId) {
         const { error } = await supabase.from("feedbacks").update(formData).eq("id", editingId)
-        if (error) { console.error(error); return }
+        if (error) { console.error(error); alert("Lỗi khi lưu feedback"); return }
       } else {
         const { data, error } = await supabase.from("feedbacks").insert([formData]).select().single()
-        if (error) { console.error(error); return }
+        if (error) { console.error(error); alert("Lỗi khi lưu feedback"); return }
         feedbackId = data.id
       }
 

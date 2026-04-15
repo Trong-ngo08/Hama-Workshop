@@ -6,7 +6,7 @@ export default function AdminFeedbacksPage() {
       <div>
         <h1 className='text-2xl font-bold'>Quản lý Feedbacks</h1>
         <p className='text-muted-foreground text-sm mt-1'>
-          Quản lý hình ảnh và nhận xét từ khách hàng, chọn layout hiển thị cho trang public.
+          Quản lý hình ảnh và nhận xét từ khách hàng trên trang public.
         </p>
       </div>
       <FeedbacksManager />
