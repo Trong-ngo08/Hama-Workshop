@@ -165,7 +165,7 @@ export function ImageUpload({ value = [], onChange, maxFiles = 5, disabled }: Im
                         type="button"
                         variant="destructive"
                         size="sm"
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 p-0"
+                        className="absolute top-2 right-2 h-7 w-7 p-0"
                         onClick={() => removeImage(url)}
                       >
                         <X className="h-3 w-3" />
@@ -176,7 +176,7 @@ export function ImageUpload({ value = [], onChange, maxFiles = 5, disabled }: Im
                           variant="secondary"
                           size="sm"
                           title="Đặt làm ảnh chính"
-                          className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 p-0"
+                          className="absolute top-2 left-2 h-7 w-7 p-0"
                           onClick={() => setAsMain(url)}
                         >
                           <Star className="h-3 w-3" />
