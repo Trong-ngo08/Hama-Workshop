@@ -26,20 +26,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Edit, Trash2, Save, X, Upload, GripVertical, LayoutGrid, Rows3, SlidersHorizontal } from "lucide-react"
+import { Plus, Edit, Trash2, Save, X, GripVertical, ImageIcon } from "lucide-react"
 import Image from "next/image"
 import { createBrowserClient } from "@supabase/ssr"
-
-interface FeedbackItem {
-  id: number
-  customer_name: string
-  quote: string
-  image_url: string
-  display_order: number
-  is_active: boolean
-}
-
-type Layout = "grid" | "masonry" | "slider"
+import { FeedbackImageManager, type LocalImage } from "@/components/admin/feedback-image-manager"
+import type { FeedbackItem } from "@/types/feedback"
 
 function SortableItem({
   item,
@@ -53,11 +44,9 @@ function SortableItem({
   disabled: boolean
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  }
+  const style = { transform: CSS.Transform.toString(transform), transition }
+  const coverImage = [...item.feedback_images]
+    .sort((a, b) => a.display_order - b.display_order)[0]
 
   return (
     <Card ref={setNodeRef} style={style}>
@@ -70,14 +59,20 @@ function SortableItem({
           >
             <GripVertical className="w-5 h-5" />
           </button>
-          <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-            <Image
-              src={item.image_url || "/placeholder.svg"}
-              alt={item.customer_name}
-              width={80}
-              height={80}
-              className="w-full h-full object-cover"
-            />
+          <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative">
+            {coverImage ? (
+              <Image
+                src={coverImage.image_url}
+                alt={item.customer_name}
+                fill
+                sizes="80px"
+                className="object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <ImageIcon className="w-6 h-6 text-muted-foreground opacity-40" />
+              </div>
+            )}
           </div>
           <div className="flex-1 space-y-1">
             <div className="flex items-center gap-2">
@@ -85,14 +80,19 @@ function SortableItem({
               <Badge variant={item.is_active ? "default" : "secondary"}>
                 {item.is_active ? "Hiển thị" : "Ẩn"}
               </Badge>
+              {item.feedback_images.length > 0 && (
+                <Badge variant="outline" className="text-xs">
+                  {item.feedback_images.length} ảnh
+                </Badge>
+              )}
             </div>
             <p className="text-xs text-muted-foreground line-clamp-2">"{item.quote}"</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <Button size="icon" variant="outline" className="h-10 w-10" onClick={() => onEdit(item)} disabled={disabled}>
+            <Button size="sm" variant="outline" onClick={() => onEdit(item)} disabled={disabled}>
               <Edit className="w-4 h-4" />
             </Button>
-            <Button size="icon" variant="outline" className="h-10 w-10" onClick={() => onDelete(item.id)} disabled={disabled}>
+            <Button size="sm" variant="outline" onClick={() => onDelete(item.id)} disabled={disabled}>
               <Trash2 className="w-4 h-4" />
             </Button>
           </div>
@@ -102,26 +102,20 @@ function SortableItem({
   )
 }
 
-const LAYOUT_OPTIONS: { value: Layout; label: string; icon: React.ReactNode }[] = [
-  { value: "grid", label: "Grid", icon: <LayoutGrid className="w-4 h-4" /> },
-  { value: "masonry", label: "Masonry", icon: <Rows3 className="w-4 h-4" /> },
-  { value: "slider", label: "Slider", icon: <SlidersHorizontal className="w-4 h-4" /> },
-]
-
 export function FeedbacksManager() {
   const [items, setItems] = useState<FeedbackItem[]>([])
-  const [layout, setLayout] = useState<Layout>("grid")
   const [editingId, setEditingId] = useState<number | null>(null)
   const [isAdding, setIsAdding] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [savingLayout, setSavingLayout] = useState(false)
   const [formData, setFormData] = useState({
     customer_name: "",
     quote: "",
-    image_url: "",
     display_order: 0,
     is_active: true,
   })
+  const [formImages, setFormImages] = useState<LocalImage[]>([])
+  const [deletedImageIds, setDeletedImageIds] = useState<number[]>([])
+  const [deletedUploadedUrls, setDeletedUploadedUrls] = useState<string[]>([])
+  const [saving, setSaving] = useState(false)
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -135,57 +129,90 @@ export function FeedbacksManager() {
 
   useEffect(() => {
     fetchItems()
-    fetchLayout()
   }, [])
 
   const fetchItems = async () => {
     const { data, error } = await supabase
       .from("feedbacks")
-      .select("*")
+      .select("*, feedback_images(id, image_url, display_order)")
       .order("display_order", { ascending: true })
     if (error) { console.error(error); return }
-    setItems(data || [])
+    setItems(
+      (data || []).map((item) => ({
+        ...item,
+        feedback_images: (item.feedback_images || []).sort(
+          (a: { display_order: number }, b: { display_order: number }) => a.display_order - b.display_order
+        ),
+      }))
+    )
   }
 
-  const fetchLayout = async () => {
-    const { data } = await supabase
-      .from("site_settings")
-      .select("value")
-      .eq("key", "feedbacks_layout")
-      .single()
-    if (data?.value) setLayout(data.value as Layout)
-  }
-
-  const handleLayoutChange = async (newLayout: Layout) => {
-    setSavingLayout(true)
-    setLayout(newLayout)
-    try {
-      const { error } = await supabase
-        .from("site_settings")
-        .upsert({ key: "feedbacks_layout", value: newLayout })
-      if (error) console.error("Error saving layout:", error)
-    } finally {
-      setSavingLayout(false)
-    }
+  const resetForm = () => {
+    setEditingId(null)
+    setIsAdding(false)
+    setFormData({ customer_name: "", quote: "", display_order: 0, is_active: true })
+    setFormImages([])
+    setDeletedImageIds([])
+    setDeletedUploadedUrls([])
   }
 
   const handleSave = async () => {
     if (!formData.customer_name.trim()) { alert("Vui lòng nhập tên khách hàng"); return }
     if (!formData.quote.trim()) { alert("Vui lòng nhập nội dung feedback"); return }
-    if (!formData.image_url) { alert("Vui lòng tải lên hình ảnh"); return }
 
-    if (editingId) {
-      const { error } = await supabase.from("feedbacks").update(formData).eq("id", editingId)
-      if (error) { console.error(error); return }
-    } else {
-      const { error } = await supabase.from("feedbacks").insert([formData])
-      if (error) { console.error(error); return }
+    setSaving(true)
+    try {
+      let feedbackId = editingId
+
+      if (editingId) {
+        const { error } = await supabase.from("feedbacks").update(formData).eq("id", editingId)
+        if (error) { console.error(error); return }
+      } else {
+        const { data, error } = await supabase.from("feedbacks").insert([formData]).select().single()
+        if (error) { console.error(error); return }
+        feedbackId = data.id
+      }
+
+      // Delete removed existing images from DB
+      if (deletedImageIds.length > 0) {
+        await supabase.from("feedback_images").delete().in("id", deletedImageIds)
+      }
+
+      // Delete newly uploaded images that were then removed (R2 cleanup)
+      for (const url of deletedUploadedUrls) {
+        await fetch("/api/delete-image", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url }),
+        })
+      }
+
+      // Insert new images (id === null = not yet in DB)
+      const newImages = formImages.filter((img) => img.id === null)
+      if (newImages.length > 0) {
+        await supabase.from("feedback_images").insert(
+          newImages.map((img) => ({
+            feedback_id: feedbackId,
+            image_url: img.image_url,
+            display_order: img.display_order,
+          }))
+        )
+      }
+
+      // Update display_order for existing images that may have been reordered
+      const existingImages = formImages.filter((img) => img.id !== null)
+      for (const img of existingImages) {
+        await supabase
+          .from("feedback_images")
+          .update({ display_order: img.display_order })
+          .eq("id", img.id!)
+      }
+
+      resetForm()
+      fetchItems()
+    } finally {
+      setSaving(false)
     }
-
-    setEditingId(null)
-    setIsAdding(false)
-    setFormData({ customer_name: "", quote: "", image_url: "", display_order: 0, is_active: true })
-    fetchItems()
   }
 
   const handleEdit = (item: FeedbackItem) => {
@@ -193,54 +220,47 @@ export function FeedbacksManager() {
     setFormData({
       customer_name: item.customer_name,
       quote: item.quote,
-      image_url: item.image_url,
       display_order: item.display_order,
       is_active: item.is_active,
     })
+    setFormImages(
+      item.feedback_images.map((img) => ({
+        id: img.id,
+        image_url: img.image_url,
+        display_order: img.display_order,
+      }))
+    )
+    setDeletedImageIds([])
+    setDeletedUploadedUrls([])
   }
 
   const handleDelete = async (id: number) => {
     if (!confirm("Bạn có chắc muốn xóa feedback này?")) return
+    const item = items.find((i) => i.id === id)
+
+    // Delete all R2 images for this feedback
+    if (item) {
+      for (const img of item.feedback_images) {
+        await fetch("/api/delete-image", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: img.image_url }),
+        })
+      }
+    }
+
     const { error } = await supabase.from("feedbacks").delete().eq("id", id)
     if (error) { console.error(error); return }
     fetchItems()
   }
 
-  const handleCancel = () => {
-    setEditingId(null)
-    setIsAdding(false)
-    setFormData({ customer_name: "", quote: "", image_url: "", display_order: 0, is_active: true })
-  }
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-    setUploading(true)
-    try {
-      const fd = new FormData()
-      fd.append("file", file)
-      const response = await fetch("/api/upload-feedback-image", { method: "POST", body: fd })
-      if (!response.ok) throw new Error("Upload failed")
-      const { publicUrl } = await response.json()
-      setFormData((prev) => ({ ...prev, image_url: publicUrl }))
-    } catch (error) {
-      console.error(error)
-      alert("Lỗi khi tải lên hình ảnh")
-    } finally {
-      setUploading(false)
-    }
-  }
-
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event
     if (!over || active.id === over.id) return
-
     const oldIndex = items.findIndex((i) => i.id === active.id)
     const newIndex = items.findIndex((i) => i.id === over.id)
     const newItems = arrayMove(items, oldIndex, newIndex)
-
     setItems(newItems)
-
     await Promise.all(
       newItems.map((item, index) =>
         supabase.from("feedbacks").update({ display_order: index }).eq("id", item.id)
@@ -250,36 +270,6 @@ export function FeedbacksManager() {
 
   return (
     <div className="space-y-8">
-      {/* Layout Picker */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Layout trang Feedbacks</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-3">
-            {LAYOUT_OPTIONS.map((option) => (
-              <Button
-                key={option.value}
-                variant={layout === option.value ? "default" : "outline"}
-                onClick={() => handleLayoutChange(option.value)}
-                disabled={savingLayout}
-                className="flex items-center gap-2"
-              >
-                {option.icon}
-                {option.label}
-                {layout === option.value && savingLayout && (
-                  <span className="text-xs opacity-70">Đang lưu...</span>
-                )}
-              </Button>
-            ))}
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            Thay đổi được lưu ngay lập tức và áp dụng cho trang public.
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Feedback Manager */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold">Danh sách Feedbacks</h2>
@@ -329,46 +319,14 @@ export function FeedbacksManager() {
                 />
               </div>
 
-              <div className="space-y-3">
+              <div>
                 <Label className="mb-1.5 block">Hình ảnh</Label>
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <Input
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                      placeholder="Hoặc nhập URL hình ảnh"
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      disabled={uploading}
-                      className="hidden"
-                      id="feedback-file-upload"
-                    />
-                    <Label htmlFor="feedback-file-upload" className="cursor-pointer">
-                      <Button type="button" disabled={uploading} asChild>
-                        <span>
-                          <Upload className="w-4 h-4 mr-2" />
-                          {uploading ? "Đang tải..." : "Tải lên"}
-                        </span>
-                      </Button>
-                    </Label>
-                  </div>
-                </div>
-                {formData.image_url && (
-                  <div className="w-24 h-24 rounded-lg overflow-hidden bg-gray-100">
-                    <Image
-                      src={formData.image_url || "/placeholder.svg"}
-                      alt="Preview"
-                      width={96}
-                      height={96}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
+                <FeedbackImageManager
+                  value={formImages}
+                  onChange={setFormImages}
+                  onDeleteExisting={(id) => setDeletedImageIds((prev) => [...prev, id])}
+                  onDeleteUploaded={(url) => setDeletedUploadedUrls((prev) => [...prev, url])}
+                />
               </div>
 
               <div className="flex items-center space-x-2">
@@ -381,11 +339,11 @@ export function FeedbacksManager() {
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={handleSave} disabled={uploading}>
+                <Button onClick={handleSave} disabled={saving}>
                   <Save className="w-4 h-4 mr-2" />
-                  Lưu
+                  {saving ? "Đang lưu..." : "Lưu"}
                 </Button>
-                <Button variant="outline" onClick={handleCancel}>
+                <Button variant="outline" onClick={resetForm} disabled={saving}>
                   <X className="w-4 h-4 mr-2" />
                   Hủy
                 </Button>
@@ -396,7 +354,7 @@ export function FeedbacksManager() {
 
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {items.map((item) => (
                 <SortableItem
                   key={item.id}
@@ -411,8 +369,8 @@ export function FeedbacksManager() {
         </DndContext>
 
         {items.length === 0 && !isAdding && (
-          <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-xl">
-            Chưa có feedback nào. Nhấn "Thêm feedback" để bắt đầu.
+          <div className="text-center py-12 text-muted-foreground">
+            <p className="text-sm">Chưa có feedback nào. Nhấn "Thêm feedback" để bắt đầu.</p>
           </div>
         )}
       </div>
