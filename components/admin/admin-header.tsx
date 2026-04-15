@@ -26,25 +26,21 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+const navigation = [
+  { name: 'Dashboard', href: '/admin', icon: Home },
+  { name: 'Sản phẩm', href: '/admin/products', icon: Package },
+  { name: 'Danh mục', href: '/admin/categories', icon: Users },
+  { name: 'Hình ảnh Về chúng tôi', href: '/admin/about-images', icon: ImageIcon },
+  { name: 'Feedbacks', href: '/admin/feedbacks', icon: MessageSquare },
+  { name: 'Cài đặt', href: '/admin/settings', icon: Settings },
+]
+
 export function AdminHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
 
-  const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: Home },
-    { name: 'Sản phẩm', href: '/admin/products', icon: Package },
-    { name: 'Danh mục', href: '/admin/categories', icon: Users },
-    { name: 'Hình ảnh Về chúng tôi', href: '/admin/about-images', icon: ImageIcon },
-    { name: 'Feedbacks', href: '/admin/feedbacks', icon: MessageSquare },
-    { name: 'Cài đặt', href: '/admin/settings', icon: Settings },
-  ]
-
   const isActive = (href: string) =>
     pathname === href || (href !== '/admin' && pathname.startsWith(href))
-
-  const handleLogout = async () => {
-    await logout()
-  }
 
   return (
     <header className='sticky top-0 z-50 w-full border-b bg-white shadow-sm'>
@@ -95,7 +91,7 @@ export function AdminHeader() {
             <Button
               variant='ghost'
               size='sm'
-              onClick={handleLogout}
+              onClick={logout}
               className='text-gray-700 hover:text-primary'
             >
               <LogOut className='w-4 h-4 mr-2' />
@@ -156,7 +152,7 @@ export function AdminHeader() {
                 <Button
                   variant='ghost'
                   size='sm'
-                  onClick={handleLogout}
+                  onClick={logout}
                   className='w-full justify-start h-11 text-gray-700'
                 >
                   <LogOut className='w-4 h-4 mr-2' />
