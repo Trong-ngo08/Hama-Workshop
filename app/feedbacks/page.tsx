@@ -22,7 +22,7 @@ async function getFeedbacks(): Promise<FeedbackItem[]> {
 
   const { data, error } = await supabase
     .from('feedbacks')
-    .select('*, feedback_images(id, feedback_id, image_url, display_order)')
+    .select('*, feedback_images(id, image_url, display_order)')
     .eq('is_active', true)
     .order('display_order', { ascending: true })
 
@@ -33,9 +33,7 @@ async function getFeedbacks(): Promise<FeedbackItem[]> {
 
   return (data || []).map((item) => ({
     ...item,
-    feedback_images: (item.feedback_images || []).sort(
-      (a: { display_order: number }, b: { display_order: number }) => a.display_order - b.display_order
-    ),
+    feedback_images: item.feedback_images || [],
   }))
 }
 
