@@ -188,7 +188,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
       </Button>
 
       <form onSubmit={handleSubmit} className='space-y-6'>
-        <div className='grid md:grid-cols-2 gap-6'>
+        <div className='grid lg:grid-cols-2 gap-6'>
           {/* Basic Information */}
           <div className='space-y-4'>
             <div className='space-y-2'>
