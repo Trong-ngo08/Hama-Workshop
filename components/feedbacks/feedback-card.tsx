@@ -27,10 +27,11 @@ export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
             src={coverImage.image_url}
             alt={item.customer_name}
             fill
+            sizes="192px"
             className="object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
             <ImageIcon className="w-8 h-8 opacity-30" />
           </div>
         )}
@@ -61,13 +62,14 @@ export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
                     src={img.image_url}
                     alt=""
                     fill
+                    sizes="32px"
                     className="object-cover"
                   />
                 </div>
               ))}
               {extraCount > 0 && (
                 <div className="w-8 h-8 rounded-md bg-muted border border-border flex items-center justify-center text-[9px] font-bold text-muted-foreground flex-shrink-0">
-                  +{extraCount + 1}
+                  +{extraCount}
                 </div>
               )}
             </div>
