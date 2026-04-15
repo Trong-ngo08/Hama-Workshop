@@ -1,6 +1,5 @@
 "use client"
 
-import type React from "react"
 import { useState, useEffect } from "react"
 import {
   DndContext,
@@ -192,7 +191,7 @@ export function FeedbacksManager() {
       if (newImages.length > 0) {
         await supabase.from("feedback_images").insert(
           newImages.map((img) => ({
-            feedback_id: feedbackId,
+            feedback_id: feedbackId!,
             image_url: img.image_url,
             display_order: img.display_order,
           }))
