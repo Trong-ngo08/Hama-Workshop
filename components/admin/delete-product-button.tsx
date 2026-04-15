@@ -78,7 +78,7 @@ export function DeleteProductButton({ productId, productName }: DeleteProductBut
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+        <Button variant="ghost" size="icon" className="h-10 w-10 text-destructive hover:text-destructive">
           <Trash2 className="w-4 h-4" />
         </Button>
       </AlertDialogTrigger>

@@ -89,10 +89,10 @@ function SortableItem({
             <p className="text-xs text-muted-foreground line-clamp-2">"{item.quote}"</p>
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <Button size="sm" variant="outline" onClick={() => onEdit(item)} disabled={disabled}>
+            <Button size="icon" variant="outline" className="h-10 w-10" onClick={() => onEdit(item)} disabled={disabled}>
               <Edit className="w-4 h-4" />
             </Button>
-            <Button size="sm" variant="outline" onClick={() => onDelete(item.id)} disabled={disabled}>
+            <Button size="icon" variant="outline" className="h-10 w-10" onClick={() => onDelete(item.id)} disabled={disabled}>
               <Trash2 className="w-4 h-4" />
             </Button>
           </div>
@@ -297,7 +297,7 @@ export function FeedbacksManager() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="customer_name">Tên khách hàng</Label>
+                  <Label htmlFor="customer_name" className="mb-1.5 block">Tên khách hàng</Label>
                   <Input
                     id="customer_name"
                     value={formData.customer_name}
@@ -306,7 +306,7 @@ export function FeedbacksManager() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="display_order">Thứ tự hiển thị</Label>
+                  <Label htmlFor="display_order" className="mb-1.5 block">Thứ tự hiển thị</Label>
                   <Input
                     id="display_order"
                     type="number"
@@ -319,7 +319,7 @@ export function FeedbacksManager() {
               </div>
 
               <div>
-                <Label htmlFor="quote">Nội dung feedback</Label>
+                <Label htmlFor="quote" className="mb-1.5 block">Nội dung feedback</Label>
                 <Textarea
                   id="quote"
                   value={formData.quote}
@@ -330,7 +330,7 @@ export function FeedbacksManager() {
               </div>
 
               <div className="space-y-3">
-                <Label>Hình ảnh</Label>
+                <Label className="mb-1.5 block">Hình ảnh</Label>
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <Input

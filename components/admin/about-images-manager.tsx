@@ -302,16 +302,18 @@ export function AboutImagesManager() {
                 </div>
                 <div className="flex gap-2">
                   <Button
-                    size="sm"
+                    size="icon"
                     variant="outline"
+                    className="h-10 w-10"
                     onClick={() => handleEdit(image)}
                     disabled={editingId !== null || isAdding}
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
                   <Button
-                    size="sm"
+                    size="icon"
                     variant="outline"
+                    className="h-10 w-10"
                     onClick={() => handleDelete(image.id)}
                     disabled={editingId !== null || isAdding}
                   >

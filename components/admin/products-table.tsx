@@ -69,7 +69,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border">
+      <div className="rounded-lg border overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -127,12 +127,12 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     <TableCell className="text-muted-foreground">{formatDate(product.created_at)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="icon" className="h-10 w-10" asChild>
                           <Link href={`/products/${product.id}`}>
                             <Eye className="w-4 h-4" />
                           </Link>
                         </Button>
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button variant="ghost" size="icon" className="h-10 w-10" asChild>
                           <Link href={`/admin/products/${product.id}/edit`}>
                             <Edit className="w-4 h-4" />
                           </Link>
