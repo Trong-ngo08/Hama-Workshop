@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Image from "next/image"
 import { X, ChevronLeft, ChevronRight } from "lucide-react"
 import type { FeedbackItem } from "@/types/feedback"
@@ -11,7 +11,10 @@ interface FeedbackModalProps {
 }
 
 export function FeedbackModal({ item, onClose }: FeedbackModalProps) {
-  const images = [...item.feedback_images].sort((a, b) => a.display_order - b.display_order)
+  const images = useMemo(
+    () => [...item.feedback_images].sort((a, b) => a.display_order - b.display_order),
+    [item.feedback_images]
+  )
   const [activeIndex, setActiveIndex] = useState(0)
 
   useEffect(() => {
@@ -23,6 +26,12 @@ export function FeedbackModal({ item, onClose }: FeedbackModalProps) {
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
   }, [images.length, onClose])
+
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => { document.body.style.overflow = prev }
+  }, [])
 
   return (
     <div
@@ -73,6 +82,7 @@ export function FeedbackModal({ item, onClose }: FeedbackModalProps) {
                 <button
                   key={img.id}
                   onClick={() => setActiveIndex(i)}
+                  aria-label={`Xem ảnh ${i + 1}`}
                   className={`w-12 h-12 rounded-md overflow-hidden flex-shrink-0 border-2 transition-colors relative ${
                     i === activeIndex ? "border-amber-500" : "border-transparent opacity-60 hover:opacity-100"
                   }`}
