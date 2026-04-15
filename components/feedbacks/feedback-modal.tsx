@@ -38,7 +38,7 @@ export function FeedbackModal({ item, onClose }: FeedbackModalProps) {
       className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="relative bg-[#1a110a] rounded-2xl overflow-hidden flex w-full max-w-3xl max-h-[90vh]">
+      <div className="relative bg-[#1a110a] rounded-2xl overflow-hidden flex w-full max-w-5xl max-h-[90vh]">
         {/* Close button */}
         <button
           className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
@@ -48,8 +48,8 @@ export function FeedbackModal({ item, onClose }: FeedbackModalProps) {
         </button>
 
         {/* Gallery panel */}
-        <div className="flex-[1.4] flex flex-col min-h-[360px]">
-          <div className="flex-1 relative bg-black/40 min-h-[280px]">
+        <div className="flex-[1.4] flex flex-col min-h-[500px]">
+          <div className="flex-1 relative bg-black/40 min-h-[420px]">
             {images[activeIndex] && (
               <Image
                 src={images[activeIndex].image_url}
