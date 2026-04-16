@@ -29,6 +29,7 @@ import { Plus, Edit, Trash2, Save, X, GripVertical, ImageIcon } from "lucide-rea
 import Image from "next/image"
 import { createBrowserClient } from "@supabase/ssr"
 import { FeedbackImageManager, type LocalImage } from "@/components/admin/feedback-image-manager"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { FeedbackItem } from "@/types/feedback"
 
 function SortableItem({
@@ -36,28 +37,34 @@ function SortableItem({
   onEdit,
   onDelete,
   disabled,
+  confirmDeleteId,
+  setConfirmDeleteId,
 }: {
   item: FeedbackItem
   onEdit: (item: FeedbackItem) => void
   onDelete: (id: number) => void
   disabled: boolean
+  confirmDeleteId: number | null
+  setConfirmDeleteId: (id: number | null) => void
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id })
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id })
   const style = { transform: CSS.Transform.toString(transform), transition }
   const coverImage = [...item.feedback_images]
     .sort((a, b) => a.display_order - b.display_order)[0]
+  const isConfirming = confirmDeleteId === item.id
 
   return (
-    <Card ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style}>
+      <Card className={isDragging ? "opacity-50 shadow-xl" : ""}>
       <CardContent className="p-4">
         <div className="flex gap-4">
-          <button
-            className="cursor-grab text-muted-foreground hover:text-foreground touch-none"
+          <div
+            className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground touch-none flex items-center"
             {...attributes}
             {...listeners}
           >
             <GripVertical className="w-5 h-5" />
-          </button>
+          </div>
           <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative">
             {coverImage ? (
               <Image
@@ -87,17 +94,56 @@ function SortableItem({
             </div>
             <p className="text-xs text-muted-foreground line-clamp-2">"{item.quote}"</p>
           </div>
-          <div className="flex gap-2 flex-shrink-0">
-            <Button size="sm" variant="outline" onClick={() => onEdit(item)} disabled={disabled}>
-              <Edit className="w-4 h-4" />
-            </Button>
-            <Button size="sm" variant="outline" onClick={() => onDelete(item.id)} disabled={disabled}>
-              <Trash2 className="w-4 h-4" />
-            </Button>
+          <div className="flex gap-2 flex-shrink-0 items-center">
+            {isConfirming ? (
+              <>
+                <span className="text-xs text-muted-foreground">Xóa?</span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => onDelete(item.id)}
+                  disabled={disabled}
+                >
+                  Xác nhận
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setConfirmDeleteId(null)}
+                  disabled={disabled}
+                >
+                  Hủy
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onEdit(item)}
+                  disabled={disabled}
+                >
+                  <Edit className="w-4 h-4" />
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setConfirmDeleteId(item.id)}
+                  disabled={disabled}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </CardContent>
-    </Card>
+      </Card>
+    </div>
   )
 }
 
@@ -115,6 +161,8 @@ export function FeedbacksManager() {
   const [deletedImageIds, setDeletedImageIds] = useState<number[]>([])
   const [deletedUploadedUrls, setDeletedUploadedUrls] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null)
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -122,7 +170,7 @@ export function FeedbacksManager() {
   )
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
@@ -131,11 +179,12 @@ export function FeedbacksManager() {
   }, [])
 
   const fetchItems = async () => {
+    setLoading(true)
     const { data, error } = await supabase
       .from("feedbacks")
       .select("*, feedback_images(id, image_url, display_order)")
       .order("display_order", { ascending: true })
-    if (error) { console.error(error); return }
+    if (error) { console.error(error); setLoading(false); return }
     setItems(
       (data || []).map((item) => ({
         ...item,
@@ -144,6 +193,7 @@ export function FeedbacksManager() {
         ),
       }))
     )
+    setLoading(false)
   }
 
   const resetForm = () => {
@@ -234,7 +284,6 @@ export function FeedbacksManager() {
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Bạn có chắc muốn xóa feedback này?")) return
     const item = items.find((i) => i.id === id)
 
     // Delete all R2 images for this feedback
@@ -249,7 +298,8 @@ export function FeedbacksManager() {
     }
 
     const { error } = await supabase.from("feedbacks").delete().eq("id", id)
-    if (error) { console.error(error); return }
+    if (error) { console.error(error); alert("Lỗi khi xóa: " + error.message); return }
+    setConfirmDeleteId(null)
     fetchItems()
   }
 
@@ -351,26 +401,57 @@ export function FeedbacksManager() {
           </Card>
         )}
 
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
-            <div className="space-y-2">
-              {items.map((item) => (
-                <SortableItem
-                  key={item.id}
-                  item={item}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  disabled={isAdding || editingId !== null}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
-
-        {items.length === 0 && !isAdding && (
-          <div className="text-center py-12 text-muted-foreground">
-            <p className="text-sm">Chưa có feedback nào. Nhấn "Thêm feedback" để bắt đầu.</p>
+        {loading ? (
+          <div className="space-y-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i}>
+                <CardContent className="p-4">
+                  <div className="flex gap-4 items-center">
+                    <Skeleton className="w-5 h-5 rounded" />
+                    <Skeleton className="w-20 h-20 rounded-lg flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-4 w-28" />
+                        <Skeleton className="h-5 w-14 rounded-full" />
+                      </div>
+                      <Skeleton className="h-3 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <Skeleton className="h-8 w-8 rounded-md" />
+                      <Skeleton className="h-8 w-8 rounded-md" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        ) : (
+          <>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+              <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+                <div className="space-y-2">
+                  {items.map((item) => (
+                    <SortableItem
+                      key={item.id}
+                      item={item}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                      disabled={isAdding || editingId !== null}
+                      confirmDeleteId={confirmDeleteId}
+                      setConfirmDeleteId={setConfirmDeleteId}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+
+            {items.length === 0 && !isAdding && (
+              <div className="text-center py-12 text-muted-foreground">
+                <p className="text-sm">Chưa có feedback nào. Nhấn "Thêm feedback" để bắt đầu.</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

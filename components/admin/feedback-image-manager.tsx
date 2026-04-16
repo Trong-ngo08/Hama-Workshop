@@ -50,29 +50,29 @@ function SortableThumb({
   const style = { transform: CSS.Transform.toString(transform), transition }
 
   return (
-    <div ref={setNodeRef} style={style} className="relative flex-shrink-0 group">
-      <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-border relative">
-        <Image src={img.image_url} alt="" fill sizes="80px" className="object-cover" />
+    <div ref={setNodeRef} style={style} className="relative flex-shrink-0">
+      <div
+        className="w-24 h-24 rounded-lg overflow-hidden border-2 border-border relative cursor-grab touch-none"
+        {...attributes}
+        {...listeners}
+      >
+        <Image src={img.image_url} alt="" fill sizes="96px" className="object-cover" />
         {index === 0 && (
           <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[9px] text-center py-0.5 font-semibold">
             Bìa
           </div>
         )}
+        <div className="absolute top-1 left-1 bg-black/40 rounded p-0.5">
+          <GripVertical className="w-3 h-3 text-white drop-shadow" />
+        </div>
       </div>
       <button
         type="button"
         onClick={onRemove}
-        className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-md hover:bg-destructive/80 transition-colors"
       >
-        <X className="w-3 h-3" />
+        <X className="w-3.5 h-3.5" />
       </button>
-      <div
-        className="absolute bottom-1 left-1 cursor-grab touch-none"
-        {...attributes}
-        {...listeners}
-      >
-        <GripVertical className="w-3 h-3 text-white drop-shadow" />
-      </div>
     </div>
   )
 }
@@ -87,7 +87,7 @@ export function FeedbackImageManager({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
