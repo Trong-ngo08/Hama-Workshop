@@ -62,14 +62,6 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             <h3 className='font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tight text-sm'>
               {product.name}
             </h3>
-            {product.is_featured && (
-              <Badge
-                variant='secondary'
-                className='bg-primary/10 text-primary border-none text-[10px] uppercase tracking-wider font-bold'
-              >
-                Bản giới hạn
-              </Badge>
-            )}
           </div>
 
           <p className='text-sm text-muted-foreground line-clamp-2 leading-relaxed min-h-[56px]'>

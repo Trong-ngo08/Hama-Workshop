@@ -10,19 +10,18 @@ import { Separator } from '@/components/ui/separator'
 import {
   ArrowLeft,
   Box,
-  Heart,
+  Check,
   MessageCircle,
   Palette,
   PenTool,
   Printer,
-  Ruler,
   Share2,
-  Shield,
-  Sparkles
+  Shield
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 const BASE_URL = 'https://hmworkshop.vn'
 
@@ -51,6 +50,25 @@ export default function ProductPageClient({
   product,
   relatedProducts
 }: ProductPageClientProps) {
+  const [copied, setCopied] = useState(false)
+
+  const handleShare = async () => {
+    const url = `${BASE_URL}/products/${product.id}`
+    try {
+      await navigator.clipboard.writeText(url)
+    } catch {
+      const input = document.createElement('input')
+      input.value = url
+      document.body.appendChild(input)
+      input.select()
+      document.execCommand('copy')
+      document.body.removeChild(input)
+    }
+    setCopied(true)
+    toast.success('Đã copy đường dẫn thành công')
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   const formatPrice = (price: number) =>
     new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -175,12 +193,6 @@ export default function ProductPageClient({
                       >
                         {product.category}
                       </Badge>
-                      {product.is_featured && (
-                        <Badge className='bg-primary/10 text-primary border-none rounded-none px-3 uppercase tracking-wider text-[10px] font-bold'>
-                          <Sparkles className='w-3 h-3 mr-1' />
-                          Phiên bản giới hạn
-                        </Badge>
-                      )}
                     </div>
                   </div>
 
@@ -188,16 +200,15 @@ export default function ProductPageClient({
                     <Button
                       variant='ghost'
                       size='icon'
+                      onClick={handleShare}
+                      title={copied ? 'Đã copy link' : 'Copy link'}
                       className='text-muted-foreground hover:text-primary rounded-full'
                     >
-                      <Heart className='w-5 h-5' />
-                    </Button>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      className='text-muted-foreground hover:text-primary rounded-full'
-                    >
-                      <Share2 className='w-5 h-5' />
+                      {copied ? (
+                        <Check className='w-5 h-5 text-primary' />
+                      ) : (
+                        <Share2 className='w-5 h-5' />
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -251,20 +262,11 @@ export default function ProductPageClient({
                   </div>
                   <div className='flex items-center justify-between py-2 border-b border-border/30'>
                     <div className='flex items-center gap-3 text-muted-foreground'>
-                      <Ruler className='w-4 h-4' />
-                      <span>Kích thước:</span>
-                    </div>
-                    <span className='font-semibold text-foreground'>
-                      {product.size_info || 'Chỉnh sửa mm theo ý muốn'}
-                    </span>
-                  </div>
-                  <div className='flex items-center justify-between py-2 border-b border-border/30'>
-                    <div className='flex items-center gap-3 text-muted-foreground'>
                       <PenTool className='w-4 h-4' />
                       <span>Khắc tên/Logo:</span>
                     </div>
                     <span className='font-semibold text-foreground'>
-                      Dấu ấn cá nhân miễn phí
+                      Khắc theo yêu cầu
                     </span>
                   </div>
                 </div>
