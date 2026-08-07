@@ -16,15 +16,16 @@ export async function generateMetadata({
   const { data: product } = await supabase
     .from('products')
     .select(
-      'name, description, images, price, sale_price, discount_percentage, category, seo_title, seo_description, seo_keywords'
+      'name, description, images, price, sale_price, discount_percentage, category, seo_title, seo_description, seo_keywords, is_visible'
     )
     .eq('id', id)
     .single()
 
-  if (!product) {
+  if (!product || product.is_visible === false) {
     return {
       title: 'Sản phẩm không tìm thấy',
-      description: 'Sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.'
+      description: 'Sản phẩm bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.',
+      robots: { index: false, follow: false }
     }
   }
 
@@ -80,7 +81,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .eq('id', id)
     .single()
 
-  if (!product) notFound()
+  if (!product || product.is_visible === false) notFound()
 
   const { data: relatedProducts } = await supabase
     .from('products')
@@ -88,7 +89,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       'id, name, description, price, category, images, is_featured, is_available'
     )
     .eq('category', product.category)
-    .eq('is_available', true)
+    .eq('is_visible', true)
     .neq('id', id)
     .order('created_at', { ascending: false })
     .limit(4)

@@ -18,6 +18,7 @@ interface Product {
   price: number
   is_featured: boolean
   is_available: boolean
+  is_visible: boolean
   images: string[]
   created_at: string
 }
@@ -120,9 +121,14 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     </TableCell>
                     <TableCell className="font-semibold text-primary">{formatPrice(product.price)}</TableCell>
                     <TableCell>
-                      <Badge variant={product.is_available ? "default" : "destructive"}>
-                        {product.is_available ? "Đang bán" : "Hết hàng"}
-                      </Badge>
+                      <div className="flex flex-wrap gap-1">
+                        <Badge variant={product.is_visible === false ? "secondary" : "outline"}>
+                          {product.is_visible === false ? "Đang ẩn" : "Đang hiện"}
+                        </Badge>
+                        <Badge variant={product.is_available ? "default" : "destructive"}>
+                          {product.is_available ? "Còn hàng" : "Hết hàng"}
+                        </Badge>
+                      </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">{formatDate(product.created_at)}</TableCell>
                     <TableCell>

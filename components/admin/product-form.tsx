@@ -31,6 +31,7 @@ interface Product {
   care_instructions: string | null
   is_featured: boolean
   is_available: boolean
+  is_visible: boolean
   images: string[]
   sale_price?: number | null
   discount_percentage?: number | null
@@ -70,6 +71,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
     care_instructions: product?.care_instructions || '',
     is_featured: product?.is_featured || false,
     is_available: product?.is_available ?? true,
+    is_visible: product?.is_visible ?? true,
     images: product?.images || [],
     sale_price: product?.sale_price?.toString() || '',
     discount_percentage: product?.discount_percentage?.toString() || '',
@@ -113,6 +115,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
         care_instructions: formData.care_instructions || null,
         is_featured: formData.is_featured,
         is_available: formData.is_available,
+        is_visible: formData.is_visible,
         images: formData.images,
         sale_price: formData.sale_price ? Number.parseFloat(formData.sale_price) : null,
         discount_percentage: formData.discount_percentage
@@ -285,6 +288,20 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
             {/* Settings */}
             <Card className='border-0 bg-muted/30'>
               <CardContent className='p-4 space-y-4'>
+                <div className='flex items-center justify-between'>
+                  <div className='space-y-1'>
+                    <Label htmlFor='is_visible'>Hiển thị trên website</Label>
+                    <p className='text-xs text-muted-foreground'>
+                      Tắt để ẩn sản phẩm khỏi tất cả trang của khách hàng
+                    </p>
+                  </div>
+                  <Switch
+                    id='is_visible'
+                    checked={formData.is_visible}
+                    onCheckedChange={(checked) => handleChange('is_visible', checked)}
+                  />
+                </div>
+
                 <div className='flex items-center justify-between'>
                   <div className='space-y-1'>
                     <Label htmlFor='is_featured'>Sản phẩm nổi bật</Label>

@@ -12,6 +12,7 @@ interface Product {
   price: number
   is_featured: boolean
   is_available: boolean
+  is_visible: boolean
   images: string[]
   created_at: string
 }
@@ -61,6 +62,11 @@ export function RecentProducts({ products }: RecentProductsProps) {
                         </Badge>
                         {product.is_featured && (
                           <Badge className="bg-accent text-accent-foreground text-xs">Nổi bật</Badge>
+                        )}
+                        {product.is_visible === false && (
+                          <Badge variant="secondary" className="text-xs">
+                            Đang ẩn
+                          </Badge>
                         )}
                         {!product.is_available && (
                           <Badge variant="destructive" className="text-xs">

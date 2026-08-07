@@ -115,7 +115,7 @@ export default async function ProductsPage({
           'id, name, description, price, sale_price, discount_percentage, category, images, is_featured, is_available, product_categories(categories(id, name))',
           { count: 'exact' }
         )
-        .eq('is_available', true)
+        .eq('is_visible', true)
         .order('created_at', { ascending: false })
         .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
 
