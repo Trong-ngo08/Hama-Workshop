@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -42,6 +42,29 @@ export function ProductsTable({ products }: ProductsTableProps) {
   // Optimistic overrides only. Anything not in here falls back to the prop, so
   // a router.refresh() bringing fresh rows never fights with stale local state.
   const [pendingVisibility, setPendingVisibility] = useState<Record<string, boolean>>({})
+
+  // Prune overrides once the incoming prop agrees with them (or the product
+  // is gone), so a stale override can never outlive its purpose.
+  useEffect(() => {
+    setPendingVisibility((prev) => {
+      const ids = Object.keys(prev)
+      if (ids.length === 0) return prev
+
+      let changed = false
+      const next = { ...prev }
+
+      for (const id of ids) {
+        const product = products.find((p) => p.id === id)
+        const settled = !product || (product.is_visible !== false) === prev[id]
+        if (settled) {
+          delete next[id]
+          changed = true
+        }
+      }
+
+      return changed ? next : prev
+    })
+  }, [products])
 
   const isProductVisible = (product: Product) =>
     pendingVisibility[product.id] ?? product.is_visible !== false
