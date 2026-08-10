@@ -1,3 +1,5 @@
+import { applyDiscountSettingToOne } from '@/lib/pricing'
+import { getDiscountsEnabled } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -83,6 +85,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   if (!product || product.is_visible === false) notFound()
 
+  const discountsEnabled = await getDiscountsEnabled()
+  const visibleProduct = applyDiscountSettingToOne(product, discountsEnabled)
+
   const { data: relatedProducts } = await supabase
     .from('products')
     .select(
@@ -96,7 +101,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <ProductPageClient
-      product={product}
+      product={visibleProduct}
       relatedProducts={relatedProducts || []}
     />
   )

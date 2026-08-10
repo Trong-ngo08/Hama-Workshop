@@ -4,6 +4,8 @@ import { Header } from '@/components/header'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { getIconComponent } from '@/lib/category-icons'
+import { applyDiscountSetting } from '@/lib/pricing'
+import { getDiscountsEnabled } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
 import {
   ArrowRight,
@@ -87,6 +89,9 @@ export default async function HomePage() {
       .limit(6),
     supabase.from('categories').select('*').order('name').limit(8)
   ])
+
+  const discountsEnabled = await getDiscountsEnabled()
+  const featured = applyDiscountSetting(featuredProducts ?? [], discountsEnabled)
 
   return (
     <div className='min-h-screen'>
@@ -239,7 +244,7 @@ export default async function HomePage() {
             </AnimateIn>
 
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-              {(featuredProducts ?? []).map((product, i) => (
+              {featured.map((product, i) => (
                 <AnimateIn key={product.id} delay={i * 80}>
                   <ProductCard product={product} priority={i < 3} />
                 </AnimateIn>
