@@ -7,8 +7,12 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Link from "next/link"
 import Image from "next/image"
-import { Eye, Edit, Search } from "lucide-react"
+import { Edit, Search } from "lucide-react"
 import { DeleteProductButton } from "./delete-product-button"
+import { Switch } from "@/components/ui/switch"
+import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface Product {
   id: string
@@ -31,6 +35,39 @@ interface ProductsTableProps {
 
 export function ProductsTable({ products }: ProductsTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
+
+  const router = useRouter()
+  const supabase = createClient()
+
+  // Optimistic overrides only. Anything not in here falls back to the prop, so
+  // a router.refresh() bringing fresh rows never fights with stale local state.
+  const [pendingVisibility, setPendingVisibility] = useState<Record<string, boolean>>({})
+
+  const isProductVisible = (product: Product) =>
+    pendingVisibility[product.id] ?? product.is_visible !== false
+
+  const handleVisibilityChange = async (product: Product, checked: boolean) => {
+    setPendingVisibility((prev) => ({ ...prev, [product.id]: checked }))
+
+    const { error } = await supabase
+      .from("products")
+      .update({ is_visible: checked })
+      .eq("id", product.id)
+
+    if (error) {
+      setPendingVisibility((prev) => {
+        const next = { ...prev }
+        delete next[product.id]
+        return next
+      })
+      console.error("[admin/products] visibility error:", error)
+      toast.error("Không đổi được trạng thái hiển thị")
+      return
+    }
+
+    toast.success(checked ? `Đã hiện "${product.name}"` : `Đã ẩn "${product.name}"`)
+    router.refresh()
+  }
 
   const filteredProducts = products.filter((product) => {
     const categoryList = product.categories?.length
@@ -94,6 +131,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
                   : product.category
                     ? [product.category]
                     : []
+                const visible = isProductVisible(product)
                 return (
                   <TableRow key={product.id}>
                     <TableCell>
@@ -139,8 +177,8 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        <Badge variant={product.is_visible === false ? "secondary" : "outline"}>
-                          {product.is_visible === false ? "Đang ẩn" : "Đang hiện"}
+                        <Badge variant={visible ? "outline" : "secondary"}>
+                          {visible ? "Đang hiện" : "Đang ẩn"}
                         </Badge>
                         <Badge variant={product.is_available ? "default" : "destructive"}>
                           {product.is_available ? "Còn hàng" : "Hết hàng"}
@@ -150,11 +188,11 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     <TableCell className="text-muted-foreground">{formatDate(product.created_at)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" className="h-10 w-10" asChild>
-                          <Link href={`/products/${product.id}`}>
-                            <Eye className="w-4 h-4" />
-                          </Link>
-                        </Button>
+                        <Switch
+                          checked={visible}
+                          onCheckedChange={(checked) => handleVisibilityChange(product, checked)}
+                          aria-label={visible ? `Ẩn ${product.name}` : `Hiện ${product.name}`}
+                        />
                         <Button variant="ghost" size="icon" className="h-10 w-10" asChild>
                           <Link href={`/admin/products/${product.id}/edit`}>
                             <Edit className="w-4 h-4" />
