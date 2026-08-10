@@ -4,6 +4,8 @@ import { ProductCard } from '@/components/product-card'
 import { ProductFilters } from '@/components/product-filters'
 import { ProductSkeleton } from '@/components/product-skeleton'
 import { Button } from '@/components/ui/button'
+import { applyDiscountSetting } from '@/lib/pricing'
+import { getDiscountsEnabled } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
 import { ChevronLeft, ChevronRight, PackageOpen } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -135,12 +137,16 @@ export default async function ProductsPage({
         console.error('[products] query error:', error)
       } else {
         // Flatten joined categories into a string array for each product
-        products = (data || []).map((p) => ({
-          ...p,
-          categories: ((p.product_categories as any[]) || [])
-            .map((pc: any) => pc.categories?.name)
-            .filter(Boolean)
-        }))
+        const discountsEnabled = await getDiscountsEnabled()
+        products = applyDiscountSetting(
+          (data || []).map((p) => ({
+            ...p,
+            categories: ((p.product_categories as any[]) || [])
+              .map((pc: any) => pc.categories?.name)
+              .filter(Boolean)
+          })),
+          discountsEnabled
+        )
         totalCount = count || 0
       }
     }
@@ -207,6 +213,7 @@ export default async function ProductsPage({
                           key={product.id}
                           product={product}
                           priority={index < 3}
+                          index={index}
                         />
                       ))}
                     </div>

@@ -227,14 +227,14 @@ export default function ProductPageClient({
                       {formatPrice(product.price)}
                     </span>
                   )}
-                  {product.discount_percentage && (
+                  {product.discount_percentage ? (
                     <Badge
                       variant='destructive'
                       className='ml-2 text-[10px] uppercase tracking-wider font-bold'
                     >
                       -{product.discount_percentage}%
                     </Badge>
-                  )}
+                  ) : null}
                 </div>
 
                 <p className='text-lg text-muted-foreground leading-relaxed max-w-prose'>
@@ -400,10 +400,11 @@ export default function ProductPageClient({
                 </div>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
-                  {relatedProducts.map((relatedProduct) => (
+                  {relatedProducts.map((relatedProduct, index) => (
                     <ProductCard
                       key={relatedProduct.id}
                       product={relatedProduct}
+                      index={index}
                     />
                   ))}
                 </div>

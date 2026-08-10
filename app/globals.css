@@ -204,6 +204,26 @@
   will-change: transform;
 }
 
+/* ── Product card alt image (mobile auto-swap) ───────────────── */
+/* Touch devices have no hover, so the second image cross-fades on a loop.
+   Cards stagger via an inline animation-delay so they don't blink in unison. */
+@media (hover: none) {
+  @keyframes altImageCycle {
+    0%, 42%   { opacity: 0; }
+    50%, 92%  { opacity: 1; }
+    100%      { opacity: 0; }
+  }
+  .card-alt-image {
+    animation: altImageCycle 5s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-alt-image {
+    animation: none;
+  }
+}
+
 /* Stagger delay helpers */
 .delay-75  { animation-delay:  75ms; }
 .delay-150 { animation-delay: 150ms; }

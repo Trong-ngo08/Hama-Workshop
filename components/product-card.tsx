@@ -20,16 +20,18 @@ interface Product {
 interface ProductCardProps {
   product: Product
   priority?: boolean
+  index?: number
 }
 
-export function ProductCard({ product, priority = false }: ProductCardProps) {
-  console.log('🚀 ~ ProductCard ~ product:', product)
+export function ProductCard({ product, priority = false, index = 0 }: ProductCardProps) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND'
     }).format(price)
   }
+
+  const secondImage = product.images?.[1]
 
   const displayCategories =
     product.categories && product.categories.length > 0
@@ -41,7 +43,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   return (
     <Link href={`/products/${product.id}`} className='block h-full'>
       <Card className='group h-full overflow-hidden border border-border tech-shadow hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card relative'>
-        <div className='aspect-[4/5] overflow-hidden bg-muted'>
+        <div className='aspect-[4/5] overflow-hidden bg-muted relative'>
           <Image
             src={product.images[0] || '/placeholder.svg?height=400&width=320'}
             alt={product.name}
@@ -51,6 +53,17 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             priority={priority}
             className='object-cover w-full h-full group-hover:scale-110 transition-transform duration-700'
           />
+          {secondImage && (
+            <Image
+              src={secondImage}
+              alt={`${product.name} — ảnh 2`}
+              width={320}
+              height={400}
+              sizes='(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
+              className='card-alt-image absolute inset-0 object-cover w-full h-full opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:scale-110'
+              style={{ animationDelay: `${(index % 4) * 1.2}s` }}
+            />
+          )}
           <div className='absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center'>
             <span className='bg-background text-foreground px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500'>
               Xem chi tiết
@@ -84,14 +97,14 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
                   {formatPrice(product.price)}
                 </span>
               )}
-              {product.discount_percentage && (
+              {product.discount_percentage ? (
                 <Badge
                   variant='destructive'
                   className='ml-2 text-[10px] uppercase tracking-wider font-bold'
                 >
                   -{product.discount_percentage}%
                 </Badge>
-              )}
+              ) : null}
             </div>
             <div className='flex flex-wrap gap-1 justify-end'>
               {displayCategories.map((cat) => (

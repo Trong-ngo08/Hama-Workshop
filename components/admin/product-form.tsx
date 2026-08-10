@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { computeDiscountPercentage } from '@/lib/pricing'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
@@ -74,7 +75,6 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
     is_visible: product?.is_visible ?? true,
     images: product?.images || [],
     sale_price: product?.sale_price?.toString() || '',
-    discount_percentage: product?.discount_percentage?.toString() || '',
     seo_title: product?.seo_title || '',
     seo_description: product?.seo_description || '',
     seo_keywords: product?.seo_keywords || '',
@@ -90,11 +90,26 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
       .trim()
   }
 
+  const parsedPrice = Number.parseFloat(formData.price)
+  const parsedSalePrice =
+    formData.sale_price.trim() === '' ? null : Number.parseFloat(formData.sale_price)
+  const previewDiscount = computeDiscountPercentage(parsedPrice, parsedSalePrice)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (formData.categoryIds.length === 0) {
       alert('Vui lòng chọn ít nhất một danh mục')
+      return
+    }
+
+    if (!(parsedPrice > 0)) {
+      alert('Giá gốc phải lớn hơn 0')
+      return
+    }
+
+    if (parsedSalePrice !== null && !(parsedSalePrice > 0 && parsedSalePrice < parsedPrice)) {
+      alert('Giá khuyến mãi phải lớn hơn 0 và nhỏ hơn giá gốc')
       return
     }
 
@@ -117,10 +132,8 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
         is_available: formData.is_available,
         is_visible: formData.is_visible,
         images: formData.images,
-        sale_price: formData.sale_price ? Number.parseFloat(formData.sale_price) : null,
-        discount_percentage: formData.discount_percentage
-          ? Number.parseInt(formData.discount_percentage)
-          : null,
+        sale_price: parsedSalePrice,
+        discount_percentage: computeDiscountPercentage(parsedPrice, parsedSalePrice),
         seo_title: formData.seo_title || null,
         seo_description: formData.seo_description || null,
         seo_keywords: formData.seo_keywords || null,
@@ -242,6 +255,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
               <Input
                 id='price'
                 type='number'
+                min='0'
                 placeholder='0'
                 value={formData.price}
                 onChange={(e) => handleChange('price', e.target.value)}
@@ -350,17 +364,17 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='discount_percentage'>Phần trăm giảm giá (%)</Label>
-                <Input
-                  id='discount_percentage'
-                  type='number'
-                  placeholder='0'
-                  min='0'
-                  max='100'
-                  value={formData.discount_percentage}
-                  onChange={(e) => handleChange('discount_percentage', e.target.value)}
-                />
-                <p className='text-xs text-muted-foreground'>Chỉ để hiển thị badge giảm giá</p>
+                <Label>Phần trăm giảm giá</Label>
+                <div className='flex h-9 items-center rounded-md border border-input bg-muted/40 px-3 text-sm'>
+                  {previewDiscount !== null ? (
+                    <span className='font-semibold text-primary'>-{previewDiscount}%</span>
+                  ) : (
+                    <span className='text-muted-foreground'>—</span>
+                  )}
+                </div>
+                <p className='text-xs text-muted-foreground'>
+                  Tự tính từ giá gốc và giá khuyến mãi
+                </p>
               </div>
             </div>
           </CardContent>
