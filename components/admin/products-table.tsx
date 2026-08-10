@@ -383,6 +383,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
                               size="icon"
                               className="h-10 w-10"
                               onClick={() => startEdit(product)}
+                              disabled={savingId !== null}
                               aria-label="Sửa nhanh"
                             >
                               <Edit className="w-4 h-4" />
