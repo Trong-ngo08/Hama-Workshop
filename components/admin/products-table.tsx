@@ -7,12 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Link from "next/link"
 import Image from "next/image"
-import { Edit, Search } from "lucide-react"
+import { Check, Edit, Search, X } from "lucide-react"
 import { DeleteProductButton } from "./delete-product-button"
 import { Switch } from "@/components/ui/switch"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { computeDiscountPercentage } from "@/lib/pricing"
+import type React from "react"
 
 interface Product {
   id: string
@@ -92,6 +94,95 @@ export function ProductsTable({ products }: ProductsTableProps) {
     router.refresh()
   }
 
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [savingId, setSavingId] = useState<string | null>(null)
+  const [draft, setDraft] = useState({ name: "", price: "", sale_price: "" })
+
+  const startEdit = (product: Product) => {
+    setEditingId(product.id)
+    setDraft({
+      name: product.name,
+      price: product.price?.toString() ?? "",
+      sale_price: product.sale_price != null ? product.sale_price.toString() : "",
+    })
+  }
+
+  const cancelEdit = () => {
+    setEditingId(null)
+    setDraft({ name: "", price: "", sale_price: "" })
+  }
+
+  // Returns null and shows a toast when the draft is unusable, so the caller
+  // can bail without the row leaving edit mode or losing what was typed.
+  const validateDraft = () => {
+    const name = draft.name.trim()
+    if (!name) {
+      toast.error("Tên sản phẩm không được để trống")
+      return null
+    }
+
+    const price = Number(draft.price)
+    if (!Number.isFinite(price) || price <= 0) {
+      toast.error("Giá phải là số lớn hơn 0")
+      return null
+    }
+
+    const rawSale = draft.sale_price.trim()
+    if (rawSale === "") return { name, price, salePrice: null as number | null }
+
+    const salePrice = Number(rawSale)
+    if (!Number.isFinite(salePrice) || salePrice <= 0) {
+      toast.error("Giá đã giảm phải lớn hơn 0")
+      return null
+    }
+    if (salePrice >= price) {
+      toast.error("Giá đã giảm phải nhỏ hơn giá gốc")
+      return null
+    }
+
+    return { name, price, salePrice }
+  }
+
+  const saveEdit = async (productId: string) => {
+    const valid = validateDraft()
+    if (!valid) return
+
+    setSavingId(productId)
+
+    const { error } = await supabase
+      .from("products")
+      .update({
+        name: valid.name,
+        price: valid.price,
+        sale_price: valid.salePrice,
+        discount_percentage: computeDiscountPercentage(valid.price, valid.salePrice),
+      })
+      .eq("id", productId)
+
+    setSavingId(null)
+
+    if (error) {
+      console.error("[admin/products] quick edit error:", error)
+      toast.error("Lưu thất bại. Thử lại nhé.")
+      return
+    }
+
+    toast.success("Đã lưu")
+    cancelEdit()
+    router.refresh()
+  }
+
+  const handleEditKeyDown = (e: React.KeyboardEvent, productId: string) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      saveEdit(productId)
+    }
+    if (e.key === "Escape") {
+      e.preventDefault()
+      cancelEdit()
+    }
+  }
+
   const filteredProducts = products.filter((product) => {
     const categoryList = product.categories?.length
       ? product.categories
@@ -125,7 +216,10 @@ export function ProductsTable({ products }: ProductsTableProps) {
           <Input
             placeholder="Tìm kiếm sản phẩm..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              cancelEdit()
+              setSearchTerm(e.target.value)
+            }}
             className="pl-10"
           />
         </div>
@@ -155,6 +249,8 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     ? [product.category]
                     : []
                 const visible = isProductVisible(product)
+                const isEditing = editingId === product.id
+                const isSaving = savingId === product.id
                 return (
                   <TableRow key={product.id}>
                     <TableCell>
@@ -169,12 +265,28 @@ export function ProductsTable({ products }: ProductsTableProps) {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="font-medium">{product.name}</div>
-                        {product.is_featured && (
-                          <Badge className="bg-accent text-accent-foreground text-xs">Nổi bật</Badge>
-                        )}
-                      </div>
+                      {isEditing ? (
+                        <Input
+                          value={draft.name}
+                          onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+                          onKeyDown={(e) => handleEditKeyDown(e, product.id)}
+                          disabled={isSaving}
+                          autoFocus
+                          className="h-9 min-w-[180px]"
+                        />
+                      ) : (
+                        <div className="space-y-1">
+                          <Link
+                            href={`/admin/products/${product.id}/edit`}
+                            className="font-medium hover:text-primary hover:underline"
+                          >
+                            {product.name}
+                          </Link>
+                          {product.is_featured && (
+                            <Badge className="bg-accent text-accent-foreground text-xs">Nổi bật</Badge>
+                          )}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
@@ -183,9 +295,34 @@ export function ProductsTable({ products }: ProductsTableProps) {
                         ))}
                       </div>
                     </TableCell>
-                    <TableCell className="font-semibold text-primary">{formatPrice(product.price)}</TableCell>
+                    <TableCell className="font-semibold text-primary">
+                      {isEditing ? (
+                        <Input
+                          type="number"
+                          min="0"
+                          value={draft.price}
+                          onChange={(e) => setDraft({ ...draft, price: e.target.value })}
+                          onKeyDown={(e) => handleEditKeyDown(e, product.id)}
+                          disabled={isSaving}
+                          className="h-9 w-28"
+                        />
+                      ) : (
+                        formatPrice(product.price)
+                      )}
+                    </TableCell>
                     <TableCell>
-                      {product.sale_price ? (
+                      {isEditing ? (
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="Để trống"
+                          value={draft.sale_price}
+                          onChange={(e) => setDraft({ ...draft, sale_price: e.target.value })}
+                          onKeyDown={(e) => handleEditKeyDown(e, product.id)}
+                          disabled={isSaving}
+                          className="h-9 w-28"
+                        />
+                      ) : product.sale_price ? (
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-primary">{formatPrice(product.sale_price)}</span>
                           {product.discount_percentage ? (
@@ -216,12 +353,43 @@ export function ProductsTable({ products }: ProductsTableProps) {
                           onCheckedChange={(checked) => handleVisibilityChange(product, checked)}
                           aria-label={visible ? `Ẩn ${product.name}` : `Hiện ${product.name}`}
                         />
-                        <Button variant="ghost" size="icon" className="h-10 w-10" asChild>
-                          <Link href={`/admin/products/${product.id}/edit`}>
-                            <Edit className="w-4 h-4" />
-                          </Link>
-                        </Button>
-                        <DeleteProductButton productId={product.id} productName={product.name} />
+                        {isEditing ? (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-10 w-10 text-green-600 hover:text-green-700"
+                              onClick={() => saveEdit(product.id)}
+                              disabled={isSaving}
+                              aria-label="Lưu"
+                            >
+                              <Check className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={cancelEdit}
+                              disabled={isSaving}
+                              aria-label="Huỷ"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-10 w-10"
+                              onClick={() => startEdit(product)}
+                              aria-label="Sửa nhanh"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                            <DeleteProductButton productId={product.id} productName={product.name} />
+                          </>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
