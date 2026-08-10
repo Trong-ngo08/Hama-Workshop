@@ -8,7 +8,9 @@ interface Discountable {
  * Sale price is the single source of truth. The percentage badge is always
  * derived from it, never typed by hand.
  *
- * Returns null when there is no valid discount to show.
+ * Returns null when there is no valid discount to show, including when the
+ * rounded percentage would be 0 (a discount that rounds down to nothing is
+ * not a discount worth representing).
  */
 export function computeDiscountPercentage(
   price: number,
@@ -19,7 +21,8 @@ export function computeDiscountPercentage(
   if (!Number.isFinite(salePrice) || salePrice <= 0) return null
   if (salePrice >= price) return null
 
-  return Math.round(((price - salePrice) / price) * 100)
+  const percentage = Math.round(((price - salePrice) / price) * 100)
+  return percentage === 0 ? null : percentage
 }
 
 /**
