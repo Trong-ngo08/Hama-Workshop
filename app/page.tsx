@@ -246,7 +246,7 @@ export default async function HomePage() {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
               {featured.map((product, i) => (
                 <AnimateIn key={product.id} delay={i * 80}>
-                  <ProductCard product={product} priority={i < 3} />
+                  <ProductCard product={product} priority={i < 3} index={i} />
                 </AnimateIn>
               ))}
             </div>

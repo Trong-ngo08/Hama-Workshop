@@ -213,6 +213,7 @@ export default async function ProductsPage({
                           key={product.id}
                           product={product}
                           priority={index < 3}
+                          index={index}
                         />
                       ))}
                     </div>
