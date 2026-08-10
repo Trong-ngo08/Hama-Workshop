@@ -24,7 +24,8 @@ export async function getDiscountsEnabled(): Promise<boolean> {
 
     if (!data) return true
 
-    return data.value !== 'false'
+    const normalized = String(data.value ?? '').trim().toLowerCase()
+    return normalized !== 'false' && normalized !== '0'
   } catch (error) {
     console.error('[settings] discounts_enabled connection error:', error)
     return true

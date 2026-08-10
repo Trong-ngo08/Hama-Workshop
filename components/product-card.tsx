@@ -97,14 +97,14 @@ export function ProductCard({ product, priority = false, index = 0 }: ProductCar
                   {formatPrice(product.price)}
                 </span>
               )}
-              {product.discount_percentage && (
+              {product.discount_percentage ? (
                 <Badge
                   variant='destructive'
                   className='ml-2 text-[10px] uppercase tracking-wider font-bold'
                 >
                   -{product.discount_percentage}%
                 </Badge>
-              )}
+              ) : null}
             </div>
             <div className='flex flex-wrap gap-1 justify-end'>
               {displayCategories.map((cat) => (

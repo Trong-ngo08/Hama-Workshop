@@ -103,6 +103,11 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
       return
     }
 
+    if (!(parsedPrice > 0)) {
+      alert('Giá gốc phải lớn hơn 0')
+      return
+    }
+
     if (parsedSalePrice !== null && !(parsedSalePrice > 0 && parsedSalePrice < parsedPrice)) {
       alert('Giá khuyến mãi phải lớn hơn 0 và nhỏ hơn giá gốc')
       return
@@ -250,6 +255,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
               <Input
                 id='price'
                 type='number'
+                min='0'
                 placeholder='0'
                 value={formData.price}
                 onChange={(e) => handleChange('price', e.target.value)}

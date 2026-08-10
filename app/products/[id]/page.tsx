@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { data: product } = await supabase
     .from('products')
     .select(
-      'name, description, images, price, sale_price, discount_percentage, category, seo_title, seo_description, seo_keywords, is_visible'
+      'name, description, images, price, category, seo_title, seo_description, seo_keywords, is_visible'
     )
     .eq('id', id)
     .single()

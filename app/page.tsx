@@ -77,20 +77,21 @@ const PRINT_FEATURES = [
 export default async function HomePage() {
   const supabase = await createClient()
 
-  const [{ data: featuredProducts }, { data: categories }] = await Promise.all([
-    supabase
-      .from('products')
-      .select(
-        'id, name, description, price, category, images, is_featured, is_available, sale_price, discount_percentage'
-      )
-      .eq('is_featured', true)
-      .eq('is_visible', true)
-      .order('created_at', { ascending: false })
-      .limit(6),
-    supabase.from('categories').select('*').order('name').limit(8)
-  ])
+  const [{ data: featuredProducts }, { data: categories }, discountsEnabled] =
+    await Promise.all([
+      supabase
+        .from('products')
+        .select(
+          'id, name, description, price, category, images, is_featured, is_available, sale_price, discount_percentage'
+        )
+        .eq('is_featured', true)
+        .eq('is_visible', true)
+        .order('created_at', { ascending: false })
+        .limit(6),
+      supabase.from('categories').select('*').order('name').limit(8),
+      getDiscountsEnabled()
+    ])
 
-  const discountsEnabled = await getDiscountsEnabled()
   const featured = applyDiscountSetting(featuredProducts ?? [], discountsEnabled)
 
   return (
