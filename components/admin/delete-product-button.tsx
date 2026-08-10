@@ -20,9 +20,10 @@ import { Trash2 } from "lucide-react"
 interface DeleteProductButtonProps {
   productId: string
   productName: string
+  disabled?: boolean
 }
 
-export function DeleteProductButton({ productId, productName }: DeleteProductButtonProps) {
+export function DeleteProductButton({ productId, productName, disabled }: DeleteProductButtonProps) {
   const router = useRouter()
   const supabase = createClient()
   const [loading, setLoading] = useState(false)
@@ -78,7 +79,12 @@ export function DeleteProductButton({ productId, productName }: DeleteProductBut
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-10 w-10 text-destructive hover:text-destructive">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-10 w-10 text-destructive hover:text-destructive"
+          disabled={disabled}
+        >
           <Trash2 className="w-4 h-4" />
         </Button>
       </AlertDialogTrigger>

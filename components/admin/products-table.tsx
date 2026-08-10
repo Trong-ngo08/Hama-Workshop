@@ -74,24 +74,42 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const handleVisibilityChange = async (product: Product, checked: boolean) => {
     setPendingVisibility((prev) => ({ ...prev, [product.id]: checked }))
 
-    const { error } = await supabase
-      .from("products")
-      .update({ is_visible: checked })
-      .eq("id", product.id)
-
-    if (error) {
+    const rollbackVisibility = () => {
       setPendingVisibility((prev) => {
         const next = { ...prev }
         delete next[product.id]
         return next
       })
-      console.error("[admin/products] visibility error:", error)
-      toast.error("Không đổi được trạng thái hiển thị")
-      return
     }
 
-    toast.success(checked ? `Đã hiện "${product.name}"` : `Đã ẩn "${product.name}"`)
-    router.refresh()
+    try {
+      const { data, error } = await supabase
+        .from("products")
+        .update({ is_visible: checked })
+        .eq("id", product.id)
+        .select("id")
+
+      if (error) {
+        rollbackVisibility()
+        console.error("[admin/products] visibility error:", error)
+        toast.error("Không đổi được trạng thái hiển thị")
+        return
+      }
+
+      if (!data || data.length === 0) {
+        rollbackVisibility()
+        console.error("[admin/products] visibility error: update matched no rows", product.id)
+        toast.error("Không đổi được trạng thái hiển thị")
+        return
+      }
+
+      toast.success(checked ? `Đã hiện "${product.name}"` : `Đã ẩn "${product.name}"`)
+      router.refresh()
+    } catch (error) {
+      rollbackVisibility()
+      console.error("[admin/products] visibility error:", error)
+      toast.error("Không đổi được trạng thái hiển thị")
+    }
   }
 
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -149,27 +167,39 @@ export function ProductsTable({ products }: ProductsTableProps) {
 
     setSavingId(productId)
 
-    const { error } = await supabase
-      .from("products")
-      .update({
-        name: valid.name,
-        price: valid.price,
-        sale_price: valid.salePrice,
-        discount_percentage: computeDiscountPercentage(valid.price, valid.salePrice),
-      })
-      .eq("id", productId)
+    try {
+      const { data, error } = await supabase
+        .from("products")
+        .update({
+          name: valid.name,
+          price: valid.price,
+          sale_price: valid.salePrice,
+          discount_percentage: computeDiscountPercentage(valid.price, valid.salePrice),
+        })
+        .eq("id", productId)
+        .select("id")
 
-    setSavingId(null)
+      if (error) {
+        console.error("[admin/products] quick edit error:", error)
+        toast.error("Lưu thất bại. Thử lại nhé.")
+        return
+      }
 
-    if (error) {
+      if (!data || data.length === 0) {
+        console.error("[admin/products] quick edit error: update matched no rows", productId)
+        toast.error("Lưu thất bại. Thử lại nhé.")
+        return
+      }
+
+      toast.success("Đã lưu")
+      cancelEdit()
+      router.refresh()
+    } catch (error) {
       console.error("[admin/products] quick edit error:", error)
       toast.error("Lưu thất bại. Thử lại nhé.")
-      return
+    } finally {
+      setSavingId(null)
     }
-
-    toast.success("Đã lưu")
-    cancelEdit()
-    router.refresh()
   }
 
   const handleEditKeyDown = (e: React.KeyboardEvent, productId: string) => {
@@ -237,7 +267,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
               <TableHead>Giá đã giảm</TableHead>
               <TableHead>Trạng thái</TableHead>
               <TableHead>Ngày tạo</TableHead>
-              <TableHead className="w-32">Thao tác</TableHead>
+              <TableHead className="w-44">Thao tác</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -388,7 +418,11 @@ export function ProductsTable({ products }: ProductsTableProps) {
                             >
                               <Edit className="w-4 h-4" />
                             </Button>
-                            <DeleteProductButton productId={product.id} productName={product.name} />
+                            <DeleteProductButton
+                              productId={product.id}
+                              productName={product.name}
+                              disabled={savingId !== null}
+                            />
                           </>
                         )}
                       </div>
