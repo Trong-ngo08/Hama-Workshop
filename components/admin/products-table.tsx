@@ -16,6 +16,8 @@ interface Product {
   category: string
   categories?: string[]
   price: number
+  sale_price?: number | null
+  discount_percentage?: number | null
   is_featured: boolean
   is_available: boolean
   is_visible: boolean
@@ -78,6 +80,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
               <TableHead>Tên sản phẩm</TableHead>
               <TableHead>Danh mục</TableHead>
               <TableHead>Giá</TableHead>
+              <TableHead>Giá đã giảm</TableHead>
               <TableHead>Trạng thái</TableHead>
               <TableHead>Ngày tạo</TableHead>
               <TableHead className="w-32">Thao tác</TableHead>
@@ -121,6 +124,20 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     </TableCell>
                     <TableCell className="font-semibold text-primary">{formatPrice(product.price)}</TableCell>
                     <TableCell>
+                      {product.sale_price ? (
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-primary">{formatPrice(product.sale_price)}</span>
+                          {product.discount_percentage ? (
+                            <Badge variant="destructive" className="text-[10px] font-bold">
+                              -{product.discount_percentage}%
+                            </Badge>
+                          ) : null}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
                       <div className="flex flex-wrap gap-1">
                         <Badge variant={product.is_visible === false ? "secondary" : "outline"}>
                           {product.is_visible === false ? "Đang ẩn" : "Đang hiện"}
@@ -151,7 +168,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
               })
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                   {searchTerm ? "Không tìm thấy sản phẩm nào" : "Chưa có sản phẩm nào"}
                 </TableCell>
               </TableRow>
