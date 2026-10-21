@@ -1,9 +1,13 @@
 import { DiscountSettingCard } from '@/components/admin/discount-setting-card'
-import { getDiscountsEnabled } from '@/lib/settings'
+import { HeroSettingCard } from '@/components/admin/hero-setting-card'
+import { getDiscountsEnabled, getHeroContent } from '@/lib/settings'
 import { Settings } from 'lucide-react'
 
 export default async function SettingsPage() {
-  const discountsEnabled = await getDiscountsEnabled()
+  const [discountsEnabled, heroContent] = await Promise.all([
+    getDiscountsEnabled(),
+    getHeroContent()
+  ])
 
   return (
     <div className='space-y-6'>
@@ -14,6 +18,8 @@ export default async function SettingsPage() {
         </h1>
         <p className='text-muted-foreground'>Cấu hình và quản lý hệ thống</p>
       </div>
+
+      <HeroSettingCard initialContent={heroContent} />
 
       <DiscountSettingCard initialEnabled={discountsEnabled} />
     </div>

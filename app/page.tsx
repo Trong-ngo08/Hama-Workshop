@@ -5,7 +5,7 @@ import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { getIconComponent } from '@/lib/category-icons'
 import { applyDiscountSetting } from '@/lib/pricing'
-import { getDiscountsEnabled } from '@/lib/settings'
+import { getDiscountsEnabled, getHeroContent } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
 import {
   ArrowRight,
@@ -21,6 +21,8 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+
+const STAT_COLORS = ['text-primary', 'text-accent', 'text-foreground']
 
 const PROCESS_STEPS = [
   {
@@ -77,20 +79,25 @@ const PRINT_FEATURES = [
 export default async function HomePage() {
   const supabase = await createClient()
 
-  const [{ data: featuredProducts }, { data: categories }, discountsEnabled] =
-    await Promise.all([
-      supabase
-        .from('products')
-        .select(
-          'id, name, description, price, category, images, is_featured, is_available, sale_price, discount_percentage'
-        )
-        .eq('is_featured', true)
-        .eq('is_visible', true)
-        .order('created_at', { ascending: false })
-        .limit(6),
-      supabase.from('categories').select('*').order('name').limit(8),
-      getDiscountsEnabled()
-    ])
+  const [
+    { data: featuredProducts },
+    { data: categories },
+    discountsEnabled,
+    hero
+  ] = await Promise.all([
+    supabase
+      .from('products')
+      .select(
+        'id, name, description, price, category, images, is_featured, is_available, sale_price, discount_percentage'
+      )
+      .eq('is_featured', true)
+      .eq('is_visible', true)
+      .order('created_at', { ascending: false })
+      .limit(6),
+    supabase.from('categories').select('*').order('name').limit(8),
+    getDiscountsEnabled(),
+    getHeroContent()
+  ])
 
   const featured = applyDiscountSetting(featuredProducts ?? [], discountsEnabled)
 
@@ -116,22 +123,21 @@ export default async function HomePage() {
                 {/* Badge */}
                 <div className='animate-fade-in-down inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm font-medium'>
                   <Sparkles className='w-4 h-4 text-primary' />
-                  Cá nhân hóa theo yêu cầu
+                  {hero.badge}
                 </div>
 
                 {/* Headline */}
                 <div className='space-y-2'>
                   <h1 className='animate-fade-in-up delay-150 text-5xl lg:text-6xl font-bold leading-tight text-foreground'>
-                    Gỗ thủ công
+                    {hero.titleLine1}
                   </h1>
                   <h1 className='animate-fade-in-up delay-300 text-5xl lg:text-6xl font-bold leading-tight text-primary'>
-                    × Công nghệ in 3D
+                    {hero.titleLine2}
                   </h1>
                 </div>
 
                 <p className='animate-fade-in-up delay-400 text-xl text-muted-foreground leading-relaxed max-w-xl'>
-                  Không chỉ là sản phẩm – đó là phiên bản dành riêng cho bạn.
-                  Không đại trà. Không rập khuôn.
+                  {hero.description}
                 </p>
 
                 {/* CTAs */}
@@ -143,7 +149,7 @@ export default async function HomePage() {
                   >
                     <Link href='/products'>
                       <Box className='w-4 h-4 mr-2' />
-                      Khám phá sản phẩm
+                      {hero.primaryCta}
                       <ArrowRight className='w-4 h-4 ml-2 transition-transform group-hover:translate-x-1' />
                     </Link>
                   </Button>
@@ -153,28 +159,16 @@ export default async function HomePage() {
                     size='lg'
                     className='border-primary text-primary hover:bg-primary/10 bg-transparent'
                   >
-                    <Link href='/about'>Câu chuyện thương hiệu</Link>
+                    <Link href='/about'>{hero.secondaryCta}</Link>
                   </Button>
                 </div>
 
                 {/* Stats */}
                 <div className='animate-fade-in-up delay-600 grid grid-cols-3 gap-6 pt-4 max-w-md'>
-                  {[
-                    { value: '100%', label: 'Thủ công' },
-                    {
-                      value: 'Custom',
-                      label: 'Theo yêu cầu',
-                      color: 'text-accent'
-                    },
-                    {
-                      value: 'Độc đáo',
-                      label: 'Cho bạn',
-                      color: 'text-foreground'
-                    }
-                  ].map(({ value, label, color }) => (
-                    <div key={label} className='space-y-1'>
+                  {hero.stats.map(({ value, label }, i) => (
+                    <div key={i} className='space-y-1'>
                       <div
-                        className={`text-3xl font-bold ${color ?? 'text-primary'}`}
+                        className={`text-3xl font-bold ${STAT_COLORS[i]}`}
                       >
                         {value}
                       </div>
@@ -190,7 +184,7 @@ export default async function HomePage() {
               <div className='animate-fade-in-scale delay-300 relative'>
                 <div className='aspect-square rounded-2xl overflow-hidden tech-shadow animate-float'>
                   <Image
-                    src='/hero-image.jpg'
+                    src={hero.imageUrl}
                     alt='Sản phẩm gỗ thủ công và in 3D của Hama Workshop'
                     width={600}
                     height={600}
@@ -205,7 +199,7 @@ export default async function HomePage() {
                       "
                     </span>
                     <p className='text-sm italic text-muted-foreground leading-relaxed'>
-                      Mỗi chi tiết đều có lý do tồn tại.
+                      {hero.quote}
                     </p>
                   </div>
                 </div>

@@ -15,6 +15,8 @@ interface SingleImageUploadProps {
   disabled?: boolean
   placeholder?: string
   uploadEndpoint?: string
+  /** When false, removing only clears the value; the file stays in storage. */
+  deleteOnRemove?: boolean
 }
 
 const COMPRESSION_OPTIONS = {
@@ -31,6 +33,7 @@ export function SingleImageUpload({
   disabled,
   placeholder = "Tải ảnh lên",
   uploadEndpoint = "/api/upload-about-image",
+  deleteOnRemove = true,
 }: SingleImageUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -82,6 +85,11 @@ export function SingleImageUpload({
 
   const removeImage = async () => {
     if (disabled || !value) return
+
+    if (!deleteOnRemove) {
+      onChange(undefined)
+      return
+    }
 
     try {
       await fetch("/api/delete-image", {
