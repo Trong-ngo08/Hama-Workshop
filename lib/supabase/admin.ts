@@ -1,0 +1,13 @@
+import { createClient } from '@supabase/supabase-js'
+
+/**
+ * Service-role client that bypasses RLS. Server-only: never import this from
+ * a Client Component, and only use it after the caller is verified as admin.
+ */
+export function createAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  )
+}

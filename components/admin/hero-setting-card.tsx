@@ -13,7 +13,6 @@ import {
   parseHeroContent,
   type HeroContent
 } from '@/lib/hero-content'
-import { createClient } from '@/lib/supabase/client'
 import { RotateCcw } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -37,7 +36,6 @@ interface HeroSettingCardProps {
 
 export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [saved, setSaved] = useState(initialContent)
   const [form, setForm] = useState(initialContent)
   const [isSaving, setIsSaving] = useState(false)
@@ -60,19 +58,20 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
     const next = parseHeroContent(form)
     setIsSaving(true)
 
-    const { error } = await supabase.from('site_settings').upsert(
-      {
-        key: HERO_CONTENT_KEY,
-        value: JSON.stringify(next),
-        updated_at: new Date().toISOString()
-      },
-      { onConflict: 'key' }
-    )
+    const ok = await fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: HERO_CONTENT_KEY, value: next })
+    })
+      .then((res) => res.ok)
+      .catch((error) => {
+        console.error('[settings] hero save error:', error)
+        return false
+      })
 
     setIsSaving(false)
 
-    if (error) {
-      console.error('[settings] hero save error:', error)
+    if (!ok) {
       toast.error('Không lưu được nội dung hero. Thử lại nhé.')
       return
     }

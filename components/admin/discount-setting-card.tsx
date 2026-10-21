@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { DISCOUNTS_ENABLED_KEY } from '@/lib/settings-keys'
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -15,7 +14,6 @@ interface DiscountSettingCardProps {
 
 export function DiscountSettingCard({ initialEnabled }: DiscountSettingCardProps) {
   const router = useRouter()
-  const supabase = createClient()
   const [enabled, setEnabled] = useState(initialEnabled)
   const [isSaving, setIsSaving] = useState(false)
 
@@ -24,20 +22,21 @@ export function DiscountSettingCard({ initialEnabled }: DiscountSettingCardProps
     setEnabled(checked)
     setIsSaving(true)
 
-    const { error } = await supabase.from('site_settings').upsert(
-      {
-        key: DISCOUNTS_ENABLED_KEY,
-        value: checked ? 'true' : 'false',
-        updated_at: new Date().toISOString()
-      },
-      { onConflict: 'key' }
-    )
+    const ok = await fetch('/api/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: DISCOUNTS_ENABLED_KEY, value: checked })
+    })
+      .then((res) => res.ok)
+      .catch((error) => {
+        console.error('[settings] discount toggle error:', error)
+        return false
+      })
 
     setIsSaving(false)
 
-    if (error) {
+    if (!ok) {
       setEnabled(previous)
-      console.error('[settings] discount toggle error:', error)
       toast.error('Không lưu được cài đặt. Thử lại nhé.')
       return
     }

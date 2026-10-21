@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { uploadToR2 } from "@/lib/r2/storage"
-import { verifyToken } from "@/lib/jwt"
-import { createClient } from "@/lib/supabase/server"
+import { isAdminRequest } from "@/lib/admin-auth"
 
 const ALLOWED_TYPES: Record<string, string> = {
   "image/webp": "webp",
@@ -9,27 +8,6 @@ const ALLOWED_TYPES: Record<string, string> = {
   "image/png": "png",
 }
 const MAX_SIZE_BYTES = 5 * 1024 * 1024
-
-async function isAdminRequest(request: NextRequest): Promise<boolean> {
-  const token = request.cookies.get("admin_token")?.value
-  if (!token) return false
-
-  try {
-    await verifyToken(token)
-  } catch {
-    return false
-  }
-
-  const supabase = await createClient()
-  const { data: session } = await supabase
-    .from("admin_sessions")
-    .select("id")
-    .eq("session_token", token)
-    .gt("expires_at", new Date().toISOString())
-    .maybeSingle()
-
-  return !!session
-}
 
 export async function POST(request: NextRequest) {
   try {
