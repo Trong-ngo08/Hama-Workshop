@@ -1,6 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { uploadToR2 } from "@/lib/r2/storage"
-import { isAdminRequest } from "@/lib/admin-auth"
 
 const ALLOWED_TYPES: Record<string, string> = {
   "image/webp": "webp",
@@ -11,10 +10,6 @@ const MAX_SIZE_BYTES = 5 * 1024 * 1024
 
 export async function POST(request: NextRequest) {
   try {
-    if (!(await isAdminRequest(request))) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
     const formData = await request.formData()
     const file = formData.get("file")
 
