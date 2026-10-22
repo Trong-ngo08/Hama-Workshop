@@ -44,7 +44,7 @@ export async function generateMetadata({
   const description = rawDescription.slice(0, 160)
   const keywords =
     product.seo_keywords ||
-    `gỗ thủ công, in 3d, ${product.name}, ${product.category}, handmade, hama workshop`
+    `in 3d, quà tặng cá nhân hóa,${product.name}, ${product.category}, handmade, hama workshop`
   const image = product.images?.[0] || '/hero-image.jpg'
   const url = `https://hmworkshop.vn/products/${id}`
 

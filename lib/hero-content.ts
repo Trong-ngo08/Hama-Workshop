@@ -25,17 +25,17 @@ export interface HeroContent {
 export const DEFAULT_HERO_CONTENT: HeroContent = {
   imageUrl: DEFAULT_HERO_IMAGE,
   badge: 'Cá nhân hóa theo yêu cầu',
-  titleLine1: 'Gỗ thủ công',
-  titleLine2: '× Công nghệ in 3D',
+  titleLine1: 'In 3D theo ý bạn',
+  titleLine2: '× Thiết kế độc bản',
   description:
-    'Không chỉ là sản phẩm – đó là phiên bản dành riêng cho bạn. Không đại trà. Không rập khuôn.',
+    'Từ một ý tưởng, một tấm ảnh hay một cái tên — chúng tôi biến nó thành món đồ chỉ thuộc về bạn. Không đại trà. Không rập khuôn.',
   primaryCta: 'Khám phá sản phẩm',
   secondaryCta: 'Câu chuyện thương hiệu',
-  quote: 'Mỗi chi tiết đều có lý do tồn tại.',
+  quote: 'Mỗi lớp in đều mang một phần câu chuyện của bạn.',
   stats: [
-    { value: '100%', label: 'Thủ công' },
-    { value: 'Custom', label: 'Theo yêu cầu' },
-    { value: 'Độc đáo', label: 'Cho bạn' }
+    { value: '100%', label: 'Thiết kế riêng' },
+    { value: 'Custom', label: 'Màu & kích thước' },
+    { value: 'Độc bản', label: 'Chỉ dành cho bạn' }
   ]
 }
 

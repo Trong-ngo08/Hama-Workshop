@@ -293,7 +293,7 @@ export default function ProductPageClient({
                       <Box className='w-7 h-7 text-primary' />
                     </div>
                     <div className='text-[11px] uppercase tracking-widest text-muted-foreground font-bold'>
-                      Thủ công
+                      Thiết kế riêng
                     </div>
                   </div>
                   <div className='space-y-3'>
@@ -320,15 +320,14 @@ export default function ProductPageClient({
           {/* Detailed Product Description */}
           <section className='mb-24' aria-label='Triết lý chế tác'>
             <div className='bg-card rounded-2xl tech-shadow border border-border p-10 lg:p-16 overflow-hidden relative'>
-              <div className='absolute top-0 right-0 w-64 h-64 wood-texture opacity-50 -mr-32 -mt-32 rounded-full' />
+              <div className='absolute top-0 right-0 w-64 h-64 warm-texture opacity-50 -mr-32 -mt-32 rounded-full' />
               <div className='max-w-4xl mx-auto relative z-10'>
                 <div className='text-center mb-12 space-y-4'>
                   <h2 className='text-3xl lg:text-4xl font-bold text-foreground'>
                     Triết lý chế tác
                   </h2>
                   <p className='text-lg text-muted-foreground leading-relaxed'>
-                    Kết hợp giữa sự mộc mạc của gỗ và độ chính xác của công
-                    nghệ.
+                    Độ chính xác của công nghệ, sự chăm chút của con người.
                   </p>
                 </div>
 
@@ -340,16 +339,15 @@ export default function ProductPageClient({
                           Vật liệu & Quy trình
                         </h3>
                         <p className='leading-relaxed'>
-                          Chúng tôi tuyển chọn những loại gỗ tự nhiên tốt nhất
-                          như Walnut, Oak và Ash. Mỗi thớ gỗ đều mang một câu
-                          chuyện riêng, được chế tác tỉ mỉ bởi những người thợ
-                          lành nghề.
+                          Mỗi sản phẩm bắt đầu từ một mô hình 3D được thiết kế
+                          riêng, sau đó in bằng công nghệ FDM/SLA với nhựa PETG
+                          / PLA+ cao cấp — bền, nhẹ và giữ màu tốt theo thời
+                          gian.
                         </p>
                         <p className='leading-relaxed'>
-                          Song song đó, công nghệ in 3D FDM/SLA được áp dụng để
-                          tạo ra những chi tiết cơ khí hoặc hình khối mà thủ
-                          công truyền thống khó lòng đạt được sự chính xác đến
-                          từng micromet.
+                          Sau khi in, sản phẩm được xử lý bề mặt, lắp ráp và
+                          kiểm tra kỹ lưỡng. Những hình khối phức tạp, chi tiết
+                          nhỏ đến từng milimet đều được tái hiện sắc nét.
                         </p>
                       </div>
 
@@ -377,7 +375,7 @@ export default function ProductPageClient({
                         />
                       </div>
                       <p className='text-xs uppercase tracking-widest text-muted-foreground text-center font-bold'>
-                        Độ chính xác kỹ thuật cao × Vẻ đẹp thủ công
+                        Độ chính xác kỹ thuật cao × Hoàn thiện tỉ mỉ
                       </p>
                     </div>
                   </div>

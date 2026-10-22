@@ -20,19 +20,20 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://hmworkshop.vn'),
   title: {
-    default: 'Cá Nhân Hóa Theo Yêu Cầu | Gỗ Thủ Công × In 3D',
-    template: '%s | Gỗ Thủ Công × In 3D'
+    default: 'In 3D Cá Nhân Hóa Theo Yêu Cầu | Hama Workshop',
+    template: '%s | Hama Workshop – In 3D theo yêu cầu'
   },
   description:
-    'Sản phẩm gỗ thủ công và in 3D cá nhân hóa theo yêu cầu. Thiết kế riêng, không đại trà, phù hợp làm quà tặng, decor và sử dụng lâu dài.',
+    'Xưởng in 3D cá nhân hóa theo yêu cầu: quà tặng khắc tên, đèn ngủ, decor, mô hình. Thiết kế riêng, không đại trà, tư vấn miễn phí, giao hàng toàn quốc.',
   keywords: [
-    'gỗ thủ công',
     'in 3d',
+    'in 3d theo yêu cầu',
+    'in 3d nha trang',
     'cá nhân hóa',
-    'đồ gỗ decor',
     'quà tặng cá nhân hóa',
-    'sản phẩm in 3d',
-    'đồ gỗ handmade'
+    'đèn ngủ in 3d',
+    'decor in 3d',
+    'sản phẩm in 3d'
   ],
   authors: [{ name: 'Hama Workshop' }],
   creator: 'Hama Workshop',
@@ -54,24 +55,24 @@ export const metadata: Metadata = {
     locale: 'vi_VN',
     url: 'https://hmworkshop.vn',
     siteName: 'Hama Workshop',
-    title: 'Cá Nhân Hóa Theo Yêu Cầu | Gỗ Thủ Công × In 3D',
+    title: 'In 3D Cá Nhân Hóa Theo Yêu Cầu | Hama Workshop',
     description:
-      'Gỗ thủ công kết hợp in 3D hiện đại. Mỗi sản phẩm được thiết kế riêng cho đúng người sử dụng.',
+      'In 3D theo yêu cầu – mỗi sản phẩm được thiết kế riêng cho đúng người sử dụng.',
     images: [
       {
         url: '/hero-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Gỗ thủ công và in 3D cá nhân hóa'
+        alt: 'Sản phẩm in 3D cá nhân hóa – Hama Workshop'
       }
     ]
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'Cá Nhân Hóa Theo Yêu Cầu | Gỗ Thủ Công × In 3D',
+    title: 'In 3D Cá Nhân Hóa Theo Yêu Cầu | Hama Workshop',
     description:
-      'Sản phẩm gỗ thủ công và in 3D cá nhân hóa. Không rập khuôn, không đại trà.',
+      'Sản phẩm in 3D cá nhân hóa. Không rập khuôn, không đại trà.',
     images: ['/hero-image.jpg']
   },
 

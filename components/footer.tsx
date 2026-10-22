@@ -26,8 +26,8 @@ export function Footer() {
               />
             </Link>
             <p className='text-sm text-muted-foreground leading-relaxed font-medium'>
-              Cá nhân hóa theo yêu cầu. Gỗ thủ công kết hợp công nghệ in 3D hiện
-              đại. Tương lai của sự sáng tạo nằm ở đôi bàn tay bạn.
+              Xưởng in 3D cá nhân hóa theo yêu cầu. Quà tặng, đèn ngủ, decor và
+              mọi ý tưởng bạn muốn biến thành hiện thực.
             </p>
           </div>
 
@@ -42,18 +42,6 @@ export function Footer() {
                 className='text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Bộ sưu tập
-              </Link>
-              <Link
-                href='/products?category=wood'
-                className='text-sm text-muted-foreground hover:text-primary transition-colors'
-              >
-                Đồ gỗ thủ công
-              </Link>
-              <Link
-                href='/products?category=3d-print'
-                className='text-sm text-muted-foreground hover:text-primary transition-colors'
-              >
-                In 3D hiện đại
               </Link>
               <Link
                 href='/contact'
@@ -104,7 +92,7 @@ export function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-start gap-2 group'
                 >
                   <Facebook className='w-5 h-5' />
-                  <span>Hmworkshop Wooden Gift and Decor Ornament</span>
+                  <span>Hama Workshop trên Facebook</span>
                 </Link>
               </div>
             </div>

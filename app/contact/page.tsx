@@ -123,8 +123,8 @@ export default function ContactPage() {
 
                       <div className='text-center'>
                         <p className='text-sm text-muted-foreground'>
-                          🪵 Xem quy trình gia công đồ gỗ | 🖨️ Mẫu in 3D mới
-                          nhất | 💬 Tư vấn & báo giá trực tiếp
+                          🎬 Xem quá trình in 3D | 🖨️ Mẫu in 3D mới nhất | 💬
+                          Tư vấn & báo giá trực tiếp
                         </p>
                       </div>
                     </div>

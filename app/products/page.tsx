@@ -37,7 +37,7 @@ export async function generateMetadata({
   return {
     title,
     description:
-      'Khám phá bộ sưu tập sản phẩm gỗ thủ công và in 3D cá nhân hóa của Hama Workshop.',
+      'Khám phá bộ sưu tập sản phẩm in 3D cá nhân hóa của Hama Workshop.',
     robots: hasFilter
       ? { index: false, follow: true }
       : { index: true, follow: true }
@@ -177,9 +177,8 @@ export default async function ProductsPage({
               <span className='text-primary italic'>Độc bản</span>
             </h1>
             <p className='text-sm lg:text-base text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium uppercase tracking-widest'>
-              Từ những tấm gỗ mang vẻ đẹp tự nhiên đến từng lớp nhựa in 3D chính
-              xác. Sự giao thoa giữa thủ công truyền thống và công nghệ tương
-              lai.
+              Từng lớp nhựa in 3D chính xác, từng chi tiết hoàn thiện tỉ mỉ.
+              Mỗi sản phẩm đều có thể tùy chỉnh để trở thành của riêng bạn.
             </p>
           </div>
 

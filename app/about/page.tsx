@@ -63,7 +63,7 @@ export default async function AboutPage() {
                 Câu chuyện thương hiệu
               </div>
               <h1 className='text-4xl lg:text-5xl font-bold text-balance text-foreground'>
-                Gỗ × Công nghệ × Cá nhân
+                Ý tưởng × In 3D × Cá nhân
               </h1>
             </div>
 
@@ -86,9 +86,10 @@ export default async function AboutPage() {
 
               <div className='space-y-8 text-lg leading-relaxed text-muted-foreground'>
                 <p>
-                  Từ những tấm gỗ mang vẻ đẹp tự nhiên đến từng lớp nhựa in 3D
-                  chính xác đến từng milimet, chúng tôi không tạo ra sản phẩm để
-                  bán đại trà.
+                  Hama Workshop là một xưởng in 3D nhỏ ở Nha Trang. Từng sản
+                  phẩm được dựng mô hình, in từng lớp nhựa chính xác đến từng
+                  milimet rồi hoàn thiện cẩn thận — chúng tôi không tạo ra sản
+                  phẩm để bán đại trà.
                 </p>
                 <p className='text-xl font-medium text-foreground'>
                   Chúng tôi tạo ra sản phẩm để phù hợp với từng người sử dụng.
@@ -131,8 +132,8 @@ export default async function AboutPage() {
                 <div className='grid md:grid-cols-2 gap-6'>
                   <div className='aspect-square rounded-2xl overflow-hidden tech-shadow'>
                     <Image
-                      src='/placeholder.svg?height=500&width=500&text=Wood+Crafting'
-                      alt='Quy trình làm gỗ thủ công'
+                      src='/placeholder.svg?height=500&width=500&text=3D+Design'
+                      alt='Thiết kế mô hình 3D theo yêu cầu'
                       width={500}
                       height={500}
                       className='object-cover w-full h-full'
@@ -169,10 +170,10 @@ export default async function AboutPage() {
                   <div className='w-16 h-16 mx-auto rounded-xl bg-primary/10 flex items-center justify-center'>
                     <Box className='w-8 h-8 text-primary' />
                   </div>
-                  <h3 className='text-xl font-semibold'>Thủ công tinh xảo</h3>
+                  <h3 className='text-xl font-semibold'>Hoàn thiện tỉ mỉ</h3>
                   <p className='text-muted-foreground text-sm leading-relaxed'>
-                    Mỗi sản phẩm gỗ đều được chế tác bằng tay với kỹ thuật
-                    truyền thống và sự tỉ mỉ tuyệt đối.
+                    Sau khi in, mỗi sản phẩm đều được xử lý bề mặt, lắp ráp và
+                    kiểm tra kỹ từng chi tiết trước khi đến tay bạn.
                   </p>
                 </CardContent>
               </Card>
@@ -217,8 +218,8 @@ export default async function AboutPage() {
                   </h2>
                   <p className='text-lg text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed'>
                     Chia sẻ ý tưởng của bạn và chúng tôi sẽ biến nó thành hiện
-                    thực với sự kết hợp độc đáo giữa gỗ thủ công và công nghệ in
-                    3D.
+                    thực bằng công nghệ in 3D — từ bản thiết kế đầu tiên đến món
+                    đồ hoàn chỉnh trên tay bạn.
                   </p>
                 </div>
 

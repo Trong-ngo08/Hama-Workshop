@@ -11,13 +11,16 @@ import {
   ArrowRight,
   Box,
   CheckCircle2,
-  Hammer,
+  Gift,
+  Lamp,
   MessageCircle,
   Package,
   Pencil,
+  PencilRuler,
+  PenTool,
+  Shapes,
   Printer,
-  Sparkles,
-  Trees
+  Sparkles
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -29,44 +32,67 @@ const PROCESS_STEPS = [
     icon: MessageCircle,
     step: '01',
     title: 'Tư vấn',
-    desc: 'Chia sẻ ý tưởng, yêu cầu thiết kế và ngân sách. Chúng tôi tư vấn miễn phí.'
+    desc: 'Gửi ý tưởng, hình ảnh tham khảo hoặc chỉ một dòng mô tả. Chúng tôi tư vấn và báo giá miễn phí.'
   },
   {
     icon: Pencil,
     step: '02',
-    title: 'Thiết kế',
-    desc: 'Phác thảo bản thiết kế 2D/3D, chỉnh sửa đến khi bạn hoàn toàn hài lòng.'
+    title: 'Thiết kế 3D',
+    desc: 'Dựng mô hình 3D, gửi bản xem trước và chỉnh sửa đến khi bạn thật sự ưng ý.'
   },
   {
-    icon: Hammer,
+    icon: Printer,
     step: '03',
-    title: 'Chế tác',
-    desc: 'Thợ lành nghề gia công thủ công kết hợp công nghệ in 3D chính xác cao.'
+    title: 'In & hoàn thiện',
+    desc: 'In từng lớp trên máy đã hiệu chỉnh kỹ, sau đó xử lý bề mặt, lắp ráp và kiểm tra từng chi tiết.'
   },
   {
     icon: Package,
     step: '04',
     title: 'Giao hàng',
-    desc: 'Đóng gói bảo vệ kỹ lưỡng, giao tận nơi trên toàn quốc.'
+    desc: 'Đóng gói chống va đập cẩn thận, giao tận nơi trên toàn quốc.'
   }
 ]
 
 const MARQUEE_ITEMS = [
-  'GỖ THỦ CÔNG',
   'IN 3D',
   'CÁ NHÂN HÓA',
   'ĐỘC BẢN',
   'KHÔNG ĐẠI TRÀ',
   'HAMA WORKSHOP',
   'THIẾT KẾ RIÊNG',
-  'CHẤT LƯỢNG CAO'
+  'QUÀ TẶNG Ý NGHĨA',
+  'HOÀN THIỆN TỈ MỈ'
 ]
 
-const WOOD_FEATURES = [
-  'Gỗ Walnut nhập khẩu',
-  'Gỗ Oak nguyên khối',
-  'Gỗ Ash tự nhiên',
-  'Hoàn thiện dầu tự nhiên'
+const DESIGN_FEATURES = [
+  'Dựng mô hình từ ảnh hoặc bản phác tay',
+  'Xem trước bản 3D trước khi in',
+  'Khắc tên, logo, lời nhắn riêng',
+  'Tùy chỉnh kích thước & màu sắc'
+]
+
+const USE_CASES = [
+  {
+    icon: Gift,
+    title: 'Quà tặng cá nhân hóa',
+    desc: 'Khắc tên, ngày kỷ niệm hay lời nhắn riêng — món quà không ai khác có được.'
+  },
+  {
+    icon: Lamp,
+    title: 'Đèn ngủ & decor',
+    desc: 'Đèn ngủ, vật trang trí góc phòng với ánh sáng ấm áp và hình khối độc đáo.'
+  },
+  {
+    icon: Shapes,
+    title: 'Mô hình & figure',
+    desc: 'Nhân vật, mô hình thu nhỏ, kỷ vật được tái hiện sắc nét từng chi tiết.'
+  },
+  {
+    icon: PencilRuler,
+    title: 'Phụ kiện tiện ích',
+    desc: 'Giá đỡ, hộp đựng, phụ kiện bàn làm việc thiết kế vừa khít nhu cầu của bạn.'
+  }
 ]
 
 const PRINT_FEATURES = [
@@ -108,7 +134,7 @@ export default async function HomePage() {
       <main>
         {/* ── Hero ─────────────────────────────────────────── */}
         <section className='relative py-24 lg:py-36 overflow-hidden'>
-          <div className='absolute inset-0 wood-texture' />
+          <div className='absolute inset-0 warm-texture' />
           {/* Decorative spinning ring */}
           <div className='absolute -top-32 -right-32 w-96 h-96 rounded-full border border-primary/10 animate-spin-slow pointer-events-none' />
           <div
@@ -185,7 +211,7 @@ export default async function HomePage() {
                 <div className='aspect-square rounded-2xl overflow-hidden tech-shadow animate-float'>
                   <Image
                     src={hero.imageUrl}
-                    alt='Sản phẩm gỗ thủ công và in 3D của Hama Workshop'
+                    alt='Sản phẩm in 3D cá nhân hóa của Hama Workshop'
                     width={600}
                     height={600}
                     className='object-cover w-full h-full'
@@ -306,39 +332,44 @@ export default async function HomePage() {
         </section>
 
         {/* ── Materials showcase ────────────────────────────── */}
-        <section className='py-20 lg:py-28 overflow-hidden'>
+        <section className='py-20 lg:py-28 overflow-hidden bg-muted/30'>
           <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
             <AnimateIn className='text-center mb-16 space-y-4'>
               <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
-                Vật liệu
+                Thiết kế & Công nghệ
               </p>
               <h2 className='text-3xl lg:text-5xl font-bold text-foreground font-mono tracking-tighter'>
-                Hai thế giới,{' '}
-                <span className='text-primary italic'>một sản phẩm</span>
+                Từng lớp nhựa,{' '}
+                <span className='text-primary italic'>một dấu ấn</span>
               </h2>
+              <p className='text-muted-foreground max-w-xl mx-auto'>
+                Ý tưởng của bạn được dựng thành mô hình 3D, rồi in ra thành vật
+                thể thật — chính xác đến từng chi tiết nhỏ.
+              </p>
             </AnimateIn>
 
             <div className='grid lg:grid-cols-2 gap-8'>
-              {/* Wood */}
+              {/* Custom 3D design */}
               <AnimateIn from='left'>
                 <div className='group relative rounded-3xl overflow-hidden bg-foreground min-h-[400px] flex flex-col justify-end p-8 lg:p-10'>
-                  <div className='absolute inset-0 wood-texture opacity-30' />
+                  <div className='absolute inset-0 warm-texture opacity-30' />
                   <div className='absolute top-8 right-8 w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center'>
-                    <Trees className='w-9 h-9 text-primary' />
+                    <PenTool className='w-9 h-9 text-primary' />
                   </div>
                   <div className='relative z-10 space-y-4'>
                     <p className='text-xs uppercase tracking-[0.25em] text-primary font-bold'>
-                      Thủ công truyền thống
+                      Thiết kế theo yêu cầu
                     </p>
                     <h3 className='text-3xl font-bold text-primary-foreground'>
-                      Gỗ tự nhiên
+                      Mô hình hóa ý tưởng
                     </h3>
                     <p className='text-primary-foreground/70 text-sm leading-relaxed max-w-sm'>
-                      Chọn lọc từ những cánh rừng bền vững. Mỗi thớ gỗ là một
-                      câu chuyện, được đôi bàn tay thợ lành nghề thổi hồn vào.
+                      Một tấm ảnh, một bản phác tay hay chỉ một câu mô tả là đủ.
+                      Chúng tôi dựng mô hình 3D, gửi bạn duyệt trước rồi mới bắt
+                      đầu in.
                     </p>
                     <ul className='space-y-2 pt-2'>
-                      {WOOD_FEATURES.map((f) => (
+                      {DESIGN_FEATURES.map((f) => (
                         <li
                           key={f}
                           className='flex items-center gap-2 text-sm text-primary-foreground/80'
@@ -375,9 +406,9 @@ export default async function HomePage() {
                       In 3D chính xác
                     </h3>
                     <p className='text-muted-foreground text-sm leading-relaxed max-w-sm'>
-                      Công nghệ FDM & SLA tạo ra những chi tiết phức tạp với độ
-                      chính xác đến từng micromet mà thủ công không thể đạt
-                      được.
+                      Công nghệ FDM & SLA tạo nên những hình khối phức tạp, đường
+                      nét sắc sảo và bề mặt mịn — điều mà cách làm truyền thống
+                      khó lòng đạt được.
                     </p>
                     <ul className='space-y-2 pt-2'>
                       {PRINT_FEATURES.map((f) => (
@@ -393,6 +424,42 @@ export default async function HomePage() {
                   </div>
                 </div>
               </AnimateIn>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Use cases ─────────────────────────────────────── */}
+        <section className='py-20 lg:py-28'>
+          <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+            <AnimateIn className='text-center mb-16 space-y-4'>
+              <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
+                Ứng dụng
+              </p>
+              <h2 className='text-3xl lg:text-5xl font-bold text-foreground font-mono tracking-tighter'>
+                In được gì?{' '}
+                <span className='text-primary italic'>Gần như mọi thứ</span>
+              </h2>
+              <p className='text-muted-foreground max-w-xl mx-auto'>
+                Chỉ cần bạn hình dung được, chúng tôi sẽ tìm cách in ra nó.
+              </p>
+            </AnimateIn>
+
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
+              {USE_CASES.map(({ icon: Icon, title, desc }, i) => (
+                <AnimateIn key={title} delay={i * 100}>
+                  <div className='group h-full p-6 rounded-2xl bg-card border border-border hover:border-accent/40 hover:-translate-y-1 hover:shadow-lg transition-all duration-300'>
+                    <div className='w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-5 group-hover:bg-accent/20 transition-colors'>
+                      <Icon className='w-6 h-6 text-accent' />
+                    </div>
+                    <h3 className='text-lg font-bold text-foreground mb-2'>
+                      {title}
+                    </h3>
+                    <p className='text-sm text-muted-foreground leading-relaxed'>
+                      {desc}
+                    </p>
+                  </div>
+                </AnimateIn>
+              ))}
             </div>
           </div>
         </section>

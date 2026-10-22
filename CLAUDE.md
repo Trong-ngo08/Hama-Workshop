@@ -15,7 +15,7 @@ There are no test commands configured in this project.
 
 ## Architecture
 
-**Hama Workshop** is a Vietnamese e-commerce site for handcrafted wood and 3D-printed products, built with Next.js App Router.
+**Hama Workshop** is a Vietnamese e-commerce site for custom 3D-printed products (wood line discontinued), built with Next.js App Router.
 
 ### Tech Stack
 - **Next.js 14** with App Router, **React 19**, **TypeScript**

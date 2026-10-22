@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color palette for wood × 3D print brand: warm natural tones + modern accents */
+  /* Color palette: warm natural tones + modern accents */
   --background: #faf9f6; /* Soft off-white */
   --foreground: #3d3731; /* Warm dark brown */
   --card: #ffffff;
@@ -76,7 +76,7 @@
 }
 
 @theme inline {
-  /* Updated font-sans to Be Vietnam Pro and adjusted radius for "wood-tech" aesthetic */
+  /* Updated font-sans to Be Vietnam Pro and adjusted radius */
   --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-background: var(--background);
@@ -133,8 +133,8 @@
   }
 }
 
-/* Added custom styles for wood × tech minimal aesthetic */
-.wood-texture {
+/* Subtle warm gradient used behind hero/feature blocks */
+.warm-texture {
   background-image: linear-gradient(135deg, rgba(139, 111, 71, 0.03) 0%, rgba(139, 111, 71, 0.06) 100%);
 }
 
