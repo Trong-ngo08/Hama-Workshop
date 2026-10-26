@@ -45,13 +45,17 @@ export function HeroTikTok({ videoId }: { videoId: string }) {
   }, [])
 
   return (
-    <div className='relative w-full h-full'>
+    // The player's own overlays (channel header, TikTok logo, like/share
+    // column, controls) sit along its edges and can't be hidden from outside
+    // the iframe, so the player is zoomed past the frame edges until hovered.
+    // Zooming back in is instant; showing controls on hover eases in.
+    <div className='group relative w-full h-full overflow-hidden'>
       <iframe
         ref={frame}
         src={`https://www.tiktok.com/player/v1/${videoId}?${PLAYER_PARAMS}`}
         title='Clip TikTok của HMWorkshop'
         allow='autoplay; fullscreen; encrypted-media'
-        className='absolute inset-0 w-full h-full border-0'
+        className='absolute inset-0 w-full h-full border-0 scale-[1.25] transition-none group-hover:scale-100 group-hover:transition-transform group-hover:duration-200'
       />
       <button
         type='button'
