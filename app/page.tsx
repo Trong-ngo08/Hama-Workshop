@@ -151,11 +151,11 @@ export default async function HomePage() {
         </section>
 
         {/* ── Marquee banner ───────────────────────────────── */}
-        <div className='border-y border-primary/20 bg-foreground overflow-hidden py-4'>
+        <div className='border-y border-primary/20 bg-foreground dark:bg-[#2e2620] overflow-hidden py-4'>
           <div className='animate-marquee'>
             {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
               <span key={i} className='inline-flex items-center gap-6 px-6'>
-                <span className='text-primary-foreground/90 text-xs font-bold tracking-[0.25em] uppercase whitespace-nowrap'>
+                <span className='text-primary-foreground/90 dark:text-foreground/75 text-xs font-bold tracking-[0.25em] uppercase whitespace-nowrap'>
                   {item}
                 </span>
                 <span className='text-primary text-lg'>×</span>
