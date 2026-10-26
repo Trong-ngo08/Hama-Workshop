@@ -18,10 +18,9 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-type TextField = Exclude<keyof HeroContent, 'imageUrl' | 'stats'>
+type TextField = Exclude<keyof HeroContent, 'imageUrl'>
 
 const TEXT_FIELDS: { key: TextField; label: string; multiline?: boolean }[] = [
-  { key: 'badge', label: 'Nhãn nhỏ phía trên' },
   { key: 'titleLine1', label: 'Tiêu đề dòng 1' },
   { key: 'titleLine2', label: 'Tiêu đề dòng 2 (màu nhấn)' },
   { key: 'description', label: 'Mô tả', multiline: true },
@@ -43,14 +42,6 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
 
   const setField = (key: TextField, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }))
-
-  const setStat = (index: number, field: 'value' | 'label', value: string) =>
-    setForm((prev) => {
-      const stats = prev.stats.map((s, i) =>
-        i === index ? { ...s, [field]: value } : s
-      ) as HeroContent['stats']
-      return { ...prev, stats }
-    })
 
   const handleSave = async () => {
     // Normalise so blank fields are stored (and shown) as their defaults.
@@ -148,30 +139,6 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
                     onChange={(e) => setField(key, e.target.value)}
                   />
                 )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className='space-y-2'>
-          <Label>Chỉ số (3 ô dưới nút)</Label>
-          <div className='grid sm:grid-cols-3 gap-4'>
-            {form.stats.map((stat, i) => (
-              <div key={i} className='space-y-2 rounded-lg border border-border p-3'>
-                <Input
-                  aria-label={`Chỉ số ${i + 1} – giá trị`}
-                  value={stat.value}
-                  placeholder={DEFAULT_HERO_CONTENT.stats[i].value}
-                  disabled={isSaving}
-                  onChange={(e) => setStat(i, 'value', e.target.value)}
-                />
-                <Input
-                  aria-label={`Chỉ số ${i + 1} – nhãn`}
-                  value={stat.label}
-                  placeholder={DEFAULT_HERO_CONTENT.stats[i].label}
-                  disabled={isSaving}
-                  onChange={(e) => setStat(i, 'label', e.target.value)}
-                />
               </div>
             ))}
           </div>

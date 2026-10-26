@@ -1,4 +1,4 @@
-import { Box, Facebook, Mail } from 'lucide-react'
+import { Facebook, Mail } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -14,9 +14,6 @@ export function Footer() {
               href='/'
               className='flex items-center gap-2 font-bold text-2xl uppercase tracking-tighter font-mono'
             >
-              <div className='w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20'>
-                <Box className='w-5 h-5 text-primary-foreground' />
-              </div>
               <Image
                 src='/logo.png'
                 alt='HMWorkshop'

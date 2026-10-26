@@ -7,15 +7,9 @@ import { Button } from '@/components/ui/button'
 import { applyDiscountSetting } from '@/lib/pricing'
 import { getDiscountsEnabled, getHeroContent } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
-import {
-  ArrowRight,
-  Box,
-  Sparkles
-} from 'lucide-react'
+import { ArrowRight, Box } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-
-const STAT_COLORS = ['text-primary', 'text-accent', 'text-foreground']
 
 const MARQUEE_ITEMS = [
   'IN 3D',
@@ -57,7 +51,7 @@ export default async function HomePage() {
 
       <main>
         {/* ── Hero ─────────────────────────────────────────── */}
-        <section className='relative pt-24 lg:pt-36 pb-12 overflow-hidden'>
+        <section className='relative pt-12 lg:pt-20 pb-14 overflow-hidden'>
           <div className='absolute inset-0 warm-texture' />
           {/* Decorative spinning ring */}
           <div className='absolute -top-32 -right-32 w-96 h-96 rounded-full border border-primary/10 animate-spin-slow pointer-events-none' />
@@ -67,31 +61,20 @@ export default async function HomePage() {
           />
 
           <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
-            <div className='grid lg:grid-cols-2 gap-16 items-center'>
-              {/* Left – Text */}
-              <div className='space-y-8'>
-                {/* Badge */}
-                <div className='animate-fade-in-down inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm font-medium'>
-                  <Sparkles className='w-4 h-4 text-primary' />
-                  {hero.badge}
-                </div>
-
+            <div className='grid lg:grid-cols-2 gap-12 lg:gap-16 items-center'>
+              {/* Left – Text + quote calculator */}
+              <div className='space-y-6'>
                 {/* Headline */}
-                <div className='space-y-2'>
-                  <h1 className='animate-fade-in-up delay-150 text-5xl lg:text-6xl font-bold leading-tight text-foreground'>
-                    {hero.titleLine1}
-                  </h1>
-                  <h1 className='animate-fade-in-up delay-300 text-5xl lg:text-6xl font-bold leading-tight text-primary'>
-                    {hero.titleLine2}
-                  </h1>
-                </div>
+                <h1 className='animate-fade-in-up delay-150 text-4xl lg:text-5xl font-bold leading-tight text-foreground text-balance'>
+                  {hero.titleLine1}{' '}
+                  <span className='block text-primary'>{hero.titleLine2}</span>
+                </h1>
 
-                <p className='animate-fade-in-up delay-400 text-xl text-muted-foreground leading-relaxed max-w-xl'>
+                <p className='animate-fade-in-up delay-300 text-lg text-muted-foreground leading-relaxed max-w-xl'>
                   {hero.description}
                 </p>
 
-                {/* CTAs */}
-                <div className='animate-fade-in-up delay-500 flex flex-col sm:flex-row gap-4'>
+                <div className='animate-fade-in-up delay-400'>
                   <Button
                     asChild
                     size='lg'
@@ -105,20 +88,8 @@ export default async function HomePage() {
                   </Button>
                 </div>
 
-                {/* Stats */}
-                <div className='animate-fade-in-up delay-600 grid grid-cols-3 gap-6 pt-4 max-w-md'>
-                  {hero.stats.map(({ value, label }, i) => (
-                    <div key={i} className='space-y-1'>
-                      <div
-                        className={`text-3xl font-bold ${STAT_COLORS[i]}`}
-                      >
-                        {value}
-                      </div>
-                      <div className='text-sm text-muted-foreground leading-tight'>
-                        {label}
-                      </div>
-                    </div>
-                  ))}
+                <div className='animate-fade-in-up delay-500 max-w-xl'>
+                  <PrintQuoteCalculator />
                 </div>
               </div>
 
@@ -152,41 +123,13 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ── Print quote calculator ───────────────────────── */}
-        <section
-          id='tinh-gia'
-          className='pt-4 pb-0 bg-muted/30 scroll-mt-20'
-        >
-          <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-            <AnimateIn className='text-center mb-12 space-y-4'>
-              <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
-                Báo giá nhanh
-              </p>
-              <h2 className='text-3xl lg:text-5xl font-bold text-foreground font-mono tracking-tighter'>
-                Tính giá in{' '}
-                <span className='text-primary italic'>theo yêu cầu</span>
-              </h2>
-              <p className='text-muted-foreground max-w-xl mx-auto'>
-                Dán link mẫu trên MakerWorld để xem giá tham khảo khi in bằng
-                nhựa PETG.
-              </p>
-            </AnimateIn>
-            <AnimateIn>
-              <PrintQuoteCalculator />
-            </AnimateIn>
-          </div>
-        </section>
-
         {/* ── Featured Products ─────────────────────────────── */}
-        <section className='pt-6 pb-20 lg:pb-28 bg-muted/30'>
+        <section className='pt-12 lg:pt-16 pb-20 lg:pb-28 bg-muted/30'>
           <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
             <AnimateIn className='flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-12'>
               <div className='space-y-3'>
-                <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
-                  Nổi bật
-                </p>
                 <h2 className='text-3xl lg:text-4xl font-bold text-foreground'>
-                  Sản phẩm nổi bật
+                  Mẫu có sẵn
                 </h2>
                 <p className='text-muted-foreground max-w-xl'>
                   Mỗi sản phẩm là một bản thiết kế riêng — có thể thay đổi màu

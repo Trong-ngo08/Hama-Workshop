@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { Box, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -29,9 +29,6 @@ export function Header() {
             href='/'
             className='flex items-center gap-2 font-bold text-xl group'
           >
-            <div className='w-8 h-8 rounded-lg bg-primary flex items-center justify-center transition-transform group-hover:rotate-12 duration-300'>
-              <Box className='w-4 h-4 text-primary-foreground' />
-            </div>
             <Image
               src='/logo.png'
               alt='HMWorkshop'

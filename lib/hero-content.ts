@@ -5,36 +5,23 @@ export const HERO_CONTENT_KEY = 'hero_content'
 
 export const DEFAULT_HERO_IMAGE = '/hero-image.jpg'
 
-export interface HeroStat {
-  value: string
-  label: string
-}
-
 export interface HeroContent {
   imageUrl: string
-  badge: string
   titleLine1: string
   titleLine2: string
   description: string
   primaryCta: string
   quote: string
-  stats: [HeroStat, HeroStat, HeroStat]
 }
 
 export const DEFAULT_HERO_CONTENT: HeroContent = {
   imageUrl: DEFAULT_HERO_IMAGE,
-  badge: 'Cá nhân hóa theo yêu cầu',
   titleLine1: 'In 3D theo ý bạn',
   titleLine2: '× Thiết kế độc bản',
   description:
     'Từ một ý tưởng, một tấm ảnh hay một cái tên — chúng tôi biến nó thành món đồ chỉ thuộc về bạn. Không đại trà. Không rập khuôn.',
   primaryCta: 'Khám phá sản phẩm',
-  quote: 'Mỗi lớp in đều mang một phần câu chuyện của bạn.',
-  stats: [
-    { value: '100%', label: 'Thiết kế riêng' },
-    { value: 'Custom', label: 'Màu & kích thước' },
-    { value: 'Độc bản', label: 'Chỉ dành cho bạn' }
-  ]
+  quote: 'Mỗi lớp in đều mang một phần câu chuyện của bạn.'
 }
 
 function pick(value: unknown, fallback: string): string {
@@ -59,22 +46,13 @@ export function parseHeroContent(raw: unknown): HeroContent {
   }
 
   const d = DEFAULT_HERO_CONTENT
-  const stats = Array.isArray(data.stats) ? data.stats : []
 
   return {
     imageUrl: pick(data.imageUrl, d.imageUrl),
-    badge: pick(data.badge, d.badge),
     titleLine1: pick(data.titleLine1, d.titleLine1),
     titleLine2: pick(data.titleLine2, d.titleLine2),
     description: pick(data.description, d.description),
     primaryCta: pick(data.primaryCta, d.primaryCta),
-    quote: pick(data.quote, d.quote),
-    stats: d.stats.map((fallback, i) => {
-      const s = (stats[i] ?? {}) as Record<string, unknown>
-      return {
-        value: pick(s.value, fallback.value),
-        label: pick(s.label, fallback.label)
-      }
-    }) as HeroContent['stats']
+    quote: pick(data.quote, d.quote)
   }
 }
