@@ -37,7 +37,7 @@ export async function generateMetadata({
   return {
     title,
     description:
-      'Khám phá bộ sưu tập sản phẩm in 3D cá nhân hóa của Hama Workshop.',
+      'Khám phá bộ sưu tập sản phẩm in 3D cá nhân hóa của HMWorkshop.',
     robots: hasFilter
       ? { index: false, follow: true }
       : { index: true, follow: true }

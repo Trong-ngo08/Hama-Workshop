@@ -40,11 +40,11 @@ export async function generateMetadata({
   const rawDescription =
     product.seo_description ||
     product.description ||
-    `Mua ${product.name} in 3D bằng nhựa PETG tại Hama Workshop. Giá ${priceFormatted}`
+    `Mua ${product.name} in 3D bằng nhựa PETG tại HMWorkshop. Giá ${priceFormatted}`
   const description = rawDescription.slice(0, 160)
   const keywords =
     product.seo_keywords ||
-    `in 3d, quà tặng cá nhân hóa, ${product.name}, ${product.category}, nhựa petg, hama workshop`
+    `in 3d, quà tặng cá nhân hóa, ${product.name}, ${product.category}, nhựa petg, hmworkshop`
   const image = product.images?.[0] || '/hero-image.jpg'
   const url = `https://hmworkshop.vn/products/${id}`
 
@@ -57,7 +57,7 @@ export async function generateMetadata({
       description,
       images: [{ url: image, width: 1200, height: 1200, alt: product.name }],
       type: 'website',
-      siteName: 'Hama Workshop',
+      siteName: 'HMWorkshop',
       url,
       locale: 'vi_VN'
     },

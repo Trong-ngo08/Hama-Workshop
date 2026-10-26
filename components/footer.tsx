@@ -19,7 +19,7 @@ export function Footer() {
               </div>
               <Image
                 src='/logo.png'
-                alt='Hama Workshop'
+                alt='HMWorkshop'
                 width={100}
                 height={40}
                 className='h-[40px] w-auto'
@@ -92,7 +92,7 @@ export function Footer() {
                   className='text-muted-foreground hover:text-primary transition-colors flex items-start gap-2 group'
                 >
                   <Facebook className='w-5 h-5' />
-                  <span>Hama Workshop trên Facebook</span>
+                  <span>HMWorkshop trên Facebook</span>
                 </Link>
               </div>
             </div>
@@ -102,7 +102,7 @@ export function Footer() {
         {/* <CHANGE> Removed policy links section to simplify footer */}
         <div className='mt-24 pt-8 border-t border-border/50 text-center'>
           <p className='text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold'>
-            © 2025 Hama Workshop. Chế tác những phiên bản độc bản cho những con
+            © 2025 HMWorkshop. Chế tác những phiên bản độc bản cho những con
             người duy nhất.
           </p>
         </div>

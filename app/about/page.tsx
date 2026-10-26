@@ -86,7 +86,7 @@ export default async function AboutPage() {
 
               <div className='space-y-8 text-lg leading-relaxed text-muted-foreground'>
                 <p>
-                  Hama Workshop là một xưởng in 3D nhỏ ở Nha Trang. Từng sản
+                  HMWorkshop là một xưởng in 3D nhỏ ở Nha Trang. Từng sản
                   phẩm được dựng mô hình, in từng lớp nhựa chính xác đến từng
                   milimet rồi hoàn thiện cẩn thận — chúng tôi không tạo ra sản
                   phẩm để bán đại trà.

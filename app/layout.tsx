@@ -20,8 +20,8 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://hmworkshop.vn'),
   title: {
-    default: 'In 3D cá nhân hóa theo yêu cầu | Hama Workshop',
-    template: '%s | Hama Workshop – In 3D theo yêu cầu'
+    default: 'In 3D cá nhân hóa theo yêu cầu | HMWorkshop',
+    template: '%s | HMWorkshop – In 3D theo yêu cầu'
   },
   description:
     'Xưởng in 3D cá nhân hóa theo yêu cầu: quà tặng khắc tên, đèn ngủ, decor, mô hình. Thiết kế riêng, không đại trà, tư vấn miễn phí, giao hàng toàn quốc.',
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     'decor in 3d',
     'sản phẩm in 3d'
   ],
-  authors: [{ name: 'Hama Workshop' }],
-  creator: 'Hama Workshop',
-  publisher: 'Hama Workshop',
+  authors: [{ name: 'HMWorkshop' }],
+  creator: 'HMWorkshop',
+  publisher: 'HMWorkshop',
 
   robots: {
     index: true,
@@ -54,8 +54,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'vi_VN',
     url: 'https://hmworkshop.vn',
-    siteName: 'Hama Workshop',
-    title: 'In 3D cá nhân hóa theo yêu cầu | Hama Workshop',
+    siteName: 'HMWorkshop',
+    title: 'In 3D cá nhân hóa theo yêu cầu | HMWorkshop',
     description:
       'In 3D theo yêu cầu – mỗi sản phẩm được thiết kế riêng cho đúng người sử dụng.',
     images: [
@@ -63,14 +63,14 @@ export const metadata: Metadata = {
         url: '/hero-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Sản phẩm in 3D cá nhân hóa – Hama Workshop'
+        alt: 'Sản phẩm in 3D cá nhân hóa – HMWorkshop'
       }
     ]
   },
 
   twitter: {
     card: 'summary_large_image',
-    title: 'In 3D cá nhân hóa theo yêu cầu | Hama Workshop',
+    title: 'In 3D cá nhân hóa theo yêu cầu | HMWorkshop',
     description:
       'Sản phẩm in 3D cá nhân hóa. Không rập khuôn, không đại trà.',
     images: ['/hero-image.jpg']

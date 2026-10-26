@@ -35,7 +35,7 @@ export function Header() {
             </div>
             <Image
               src='/logo.png'
-              alt='Logo'
+              alt='HMWorkshop'
               width={200}
               className='h-[40px] w-auto'
               height={64}

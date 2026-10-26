@@ -32,7 +32,7 @@ export async function GET(request: Request) {
   let res: Response
   try {
     res = await fetch(DESIGN_API + designId, {
-      headers: { 'user-agent': 'Mozilla/5.0 (HamaWorkshop quote)' },
+      headers: { 'user-agent': 'Mozilla/5.0 (HMWorkshop quote)' },
       next: { revalidate: 3600 }
     })
   } catch {

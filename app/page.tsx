@@ -60,7 +60,7 @@ const MARQUEE_ITEMS = [
   'CÁ NHÂN HÓA',
   'ĐỘC BẢN',
   'KHÔNG ĐẠI TRÀ',
-  'HAMA WORKSHOP',
+  'HMWorkshop',
   'THIẾT KẾ RIÊNG',
   'QUÀ TẶNG Ý NGHĨA',
   'HOÀN THIỆN TỈ MỈ'
@@ -212,7 +212,7 @@ export default async function HomePage() {
                 <div className='aspect-square rounded-2xl overflow-hidden tech-shadow animate-float'>
                   <Image
                     src={hero.imageUrl}
-                    alt='Sản phẩm in 3D cá nhân hóa của Hama Workshop'
+                    alt='Sản phẩm in 3D cá nhân hóa của HMWorkshop'
                     width={600}
                     height={600}
                     className='object-cover w-full h-full'
@@ -234,6 +234,28 @@ export default async function HomePage() {
                 <div className='absolute -top-4 -right-4 w-8 h-8 rounded-full bg-accent/20 border border-accent/40 animate-pulse-dot' />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── Print quote calculator ───────────────────────── */}
+        <section id='tinh-gia' className='py-20 lg:py-28 scroll-mt-20'>
+          <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+            <AnimateIn className='text-center mb-12 space-y-4'>
+              <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
+                Báo giá nhanh
+              </p>
+              <h2 className='text-3xl lg:text-5xl font-bold text-foreground font-mono tracking-tighter'>
+                Tính giá in{' '}
+                <span className='text-primary italic'>theo yêu cầu</span>
+              </h2>
+              <p className='text-muted-foreground max-w-xl mx-auto'>
+                Dán link mẫu trên MakerWorld để xem giá tham khảo khi in bằng
+                nhựa PETG.
+              </p>
+            </AnimateIn>
+            <AnimateIn>
+              <PrintQuoteCalculator />
+            </AnimateIn>
           </div>
         </section>
 
@@ -272,28 +294,6 @@ export default async function HomePage() {
                 </AnimateIn>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* ── Print quote calculator ───────────────────────── */}
-        <section id='tinh-gia' className='py-20 lg:py-28 scroll-mt-20'>
-          <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-            <AnimateIn className='text-center mb-12 space-y-4'>
-              <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
-                Báo giá nhanh
-              </p>
-              <h2 className='text-3xl lg:text-5xl font-bold text-foreground font-mono tracking-tighter'>
-                Tính giá in{' '}
-                <span className='text-primary italic'>theo yêu cầu</span>
-              </h2>
-              <p className='text-muted-foreground max-w-xl mx-auto'>
-                Tải lên file STL, 3MF hoặc dán link MakerWorld để xem giá tham
-                khảo khi in bằng nhựa PETG.
-              </p>
-            </AnimateIn>
-            <AnimateIn>
-              <PrintQuoteCalculator />
-            </AnimateIn>
           </div>
         </section>
 

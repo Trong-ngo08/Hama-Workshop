@@ -43,7 +43,7 @@ export default function FeedbacksLoading() {
                 Feedbacks thực tế
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Những hình ảnh và cảm nhận từ khách hàng đã tin tưởng Hama Workshop.
+                Những hình ảnh và cảm nhận từ khách hàng đã tin tưởng HMWorkshop.
               </p>
             </div>
 

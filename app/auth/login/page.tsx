@@ -69,7 +69,7 @@ export default function LoginPage() {
             <div className='w-10 h-10 rounded-full bg-primary flex items-center justify-center'>
               <Heart className='w-5 h-5 text-primary-foreground' />
             </div>
-            <span className='gradient-text'>Hama Workshop</span>
+            <span className='gradient-text'>HMWorkshop</span>
           </Link>
           <p className='text-muted-foreground mt-2'>
             Đăng nhập vào trang quản trị
@@ -89,7 +89,7 @@ export default function LoginPage() {
                   <Input
                     id='email'
                     type='email'
-                    placeholder='admin@hamaworkshop.com'
+                    placeholder='admin@hmworkshop.vn'
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}

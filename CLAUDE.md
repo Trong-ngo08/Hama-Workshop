@@ -13,9 +13,14 @@ npm run lint    # Run ESLint
 
 There are no test commands configured in this project.
 
+## Deploy
+
+Vercel deploys production automatically from `main` (https://www.hmworkshop.vn).
+When the user says "deploy", commit the working tree and push straight to `main` on origin — no feature branch, no PR, no confirmation needed. Then check the Vercel status on the pushed commit (`gh api repos/Trong-ngo08/Hama-Workshop/commits/<sha>/status`). Keep `.claude/launch.json` (machine-local) out of commits.
+
 ## Architecture
 
-**Hama Workshop** is a Vietnamese e-commerce site for custom 3D-printed products (wood line discontinued), built with Next.js App Router.
+**HMWorkshop** is a Vietnamese e-commerce site for custom 3D-printed products (wood line discontinued), built with Next.js App Router.
 
 ### Tech Stack
 - **Next.js 14** with App Router, **React 19**, **TypeScript**

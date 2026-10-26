@@ -92,12 +92,12 @@ export default function ProductPageClient({
         : 'https://schema.org/OutOfStock',
       seller: {
         '@type': 'Organization',
-        name: 'Hama Workshop'
+        name: 'HMWorkshop'
       }
     },
     brand: {
       '@type': 'Brand',
-      name: 'Hama Workshop'
+      name: 'HMWorkshop'
     },
     category: product.category,
     material: 'PETG'

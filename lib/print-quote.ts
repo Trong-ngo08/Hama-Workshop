@@ -5,6 +5,8 @@
 
 export const PRICE_PER_GRAM = 800
 export const PRICE_PER_HOUR = 8000
+/** Smallest custom print order the shop accepts. */
+export const MIN_ORDER = 50000
 
 export const PETG_DENSITY = 1.27 // g/cm³
 
@@ -31,13 +33,6 @@ const TIME_FACTORS: Record<string, number> = {
   PLA: 1.15,
   TPU: 0.8
 }
-
-/** Average PETG throughput used when only the mesh is known (g per hour). */
-const PETG_GRAMS_PER_HOUR = 15
-/** Heating, bed levelling and purge before every print (hours). */
-const PRINT_OVERHEAD_HOURS = 0.1
-/** Effective thickness of walls plus top/bottom skins (cm). */
-const SHELL_THICKNESS_CM = 0.1
 
 /** "PLA Basic", "PETG-HF", "PLA-CF" → "PLA", "PETG", "PLA". */
 export function baseMaterial(type: string): string {
@@ -83,32 +78,17 @@ export function petgTimeFactor(filaments: FilamentUsage[]): number {
   )
 }
 
-export interface MeshStats {
-  volumeCm3: number
-  areaCm2: number
-}
-
-/**
- * Rough slicer substitute: a solid shell around the surface plus sparse
- * infill inside. Supports are not included.
- */
-export function estimateFromMesh(mesh: MeshStats, infill: number) {
-  const shell = Math.min(mesh.volumeCm3, mesh.areaCm2 * SHELL_THICKNESS_CM)
-  const inner = Math.max(mesh.volumeCm3 - shell, 0) * infill
-  const grams = (shell + inner) * PETG_DENSITY
-  const hours = grams / PETG_GRAMS_PER_HOUR + PRINT_OVERHEAD_HOURS
-  return { grams, hours }
-}
-
 export function quote(grams: number, hours: number) {
   const materialCost = grams * PRICE_PER_GRAM
   const timeCost = hours * PRICE_PER_HOUR
   const total = materialCost + timeCost
+  const rounded = Math.ceil(total / 1000) * 1000
   return {
     materialCost,
     timeCost,
     total,
-    rounded: Math.ceil(total / 1000) * 1000
+    belowMinimum: rounded < MIN_ORDER,
+    final: Math.max(rounded, MIN_ORDER)
   }
 }
 
