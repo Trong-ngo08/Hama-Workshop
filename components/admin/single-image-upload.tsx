@@ -14,7 +14,7 @@ interface SingleImageUploadProps {
   onChange: (url: string | undefined) => void
   disabled?: boolean
   placeholder?: string
-  uploadEndpoint?: string
+  uploadEndpoint: string
   /** When false, removing only clears the value; the file stays in storage. */
   deleteOnRemove?: boolean
 }
@@ -32,7 +32,7 @@ export function SingleImageUpload({
   onChange,
   disabled,
   placeholder = "Tải ảnh lên",
-  uploadEndpoint = "/api/upload-about-image",
+  uploadEndpoint,
   deleteOnRemove = true,
 }: SingleImageUploadProps) {
   const [uploading, setUploading] = useState(false)

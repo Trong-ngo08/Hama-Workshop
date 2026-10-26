@@ -57,7 +57,7 @@ export default async function HomePage() {
 
       <main>
         {/* ── Hero ─────────────────────────────────────────── */}
-        <section className='relative py-24 lg:py-36 overflow-hidden'>
+        <section className='relative pt-24 lg:pt-36 pb-12 overflow-hidden'>
           <div className='absolute inset-0 warm-texture' />
           {/* Decorative spinning ring */}
           <div className='absolute -top-32 -right-32 w-96 h-96 rounded-full border border-primary/10 animate-spin-slow pointer-events-none' />
@@ -102,14 +102,6 @@ export default async function HomePage() {
                       {hero.primaryCta}
                       <ArrowRight className='w-4 h-4 ml-2 transition-transform group-hover:translate-x-1' />
                     </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant='outline'
-                    size='lg'
-                    className='border-primary text-primary hover:bg-primary/10 bg-transparent'
-                  >
-                    <Link href='/about'>{hero.secondaryCta}</Link>
                   </Button>
                 </div>
 
@@ -163,7 +155,7 @@ export default async function HomePage() {
         {/* ── Print quote calculator ───────────────────────── */}
         <section
           id='tinh-gia'
-          className='pt-20 lg:pt-28 pb-0 bg-muted/30 scroll-mt-20'
+          className='pt-4 pb-0 bg-muted/30 scroll-mt-20'
         >
           <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
             <AnimateIn className='text-center mb-12 space-y-4'>

@@ -188,7 +188,7 @@ export function PrintQuoteCalculator() {
               sẽ được quy đổi sang PETG.
             </p>
             <p className='font-semibold text-foreground'>
-              In theo yêu cầu tối thiểu từ {formatVnd(MIN_ORDER)}.
+              Nhận đơn theo yêu cầu từ {formatVnd(MIN_ORDER)}.
             </p>
           </div>
         ) : (
@@ -263,7 +263,7 @@ export function PrintQuoteCalculator() {
               Thời gian in khoảng {formatDuration(hours)}, lấy từ profile in
               trên MakerWorld.{' '}
               {price.belowMinimum &&
-                `Đơn in theo yêu cầu tối thiểu ${formatVnd(MIN_ORDER)}. `}
+                `Shop nhận đơn theo yêu cầu từ ${formatVnd(MIN_ORDER)}. `}
               Giá chưa gồm hậu kỳ, lắp ráp và phí vận chuyển; shop sẽ báo giá
               chính xác sau khi xem mẫu.
             </p>

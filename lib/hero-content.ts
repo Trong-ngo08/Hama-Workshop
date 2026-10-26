@@ -17,7 +17,6 @@ export interface HeroContent {
   titleLine2: string
   description: string
   primaryCta: string
-  secondaryCta: string
   quote: string
   stats: [HeroStat, HeroStat, HeroStat]
 }
@@ -30,7 +29,6 @@ export const DEFAULT_HERO_CONTENT: HeroContent = {
   description:
     'Từ một ý tưởng, một tấm ảnh hay một cái tên — chúng tôi biến nó thành món đồ chỉ thuộc về bạn. Không đại trà. Không rập khuôn.',
   primaryCta: 'Khám phá sản phẩm',
-  secondaryCta: 'Câu chuyện thương hiệu',
   quote: 'Mỗi lớp in đều mang một phần câu chuyện của bạn.',
   stats: [
     { value: '100%', label: 'Thiết kế riêng' },
@@ -70,7 +68,6 @@ export function parseHeroContent(raw: unknown): HeroContent {
     titleLine2: pick(data.titleLine2, d.titleLine2),
     description: pick(data.description, d.description),
     primaryCta: pick(data.primaryCta, d.primaryCta),
-    secondaryCta: pick(data.secondaryCta, d.secondaryCta),
     quote: pick(data.quote, d.quote),
     stats: d.stats.map((fallback, i) => {
       const s = (stats[i] ?? {}) as Record<string, unknown>

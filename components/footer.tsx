@@ -59,12 +59,6 @@ export function Footer() {
             </h3>
             <nav className='flex flex-col gap-3'>
               <Link
-                href='/about'
-                className='text-sm text-muted-foreground hover:text-primary transition-colors'
-              >
-                Câu chuyện
-              </Link>
-              <Link
                 href='/contact'
                 className='text-sm text-muted-foreground hover:text-primary transition-colors'
               >

@@ -26,7 +26,6 @@ const TEXT_FIELDS: { key: TextField; label: string; multiline?: boolean }[] = [
   { key: 'titleLine2', label: 'Tiêu đề dòng 2 (màu nhấn)' },
   { key: 'description', label: 'Mô tả', multiline: true },
   { key: 'primaryCta', label: 'Nút chính (→ Sản phẩm)' },
-  { key: 'secondaryCta', label: 'Nút phụ (→ Về chúng tôi)' },
   { key: 'quote', label: 'Câu quote dưới ảnh' }
 ]
 

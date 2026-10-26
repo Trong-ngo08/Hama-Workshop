@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils'
 import {
   Box,
   Home,
-  ImageIcon,
   LogOut,
   Menu,
   MessageSquare,
@@ -30,7 +29,6 @@ const navigation = [
   { name: 'Dashboard', href: '/admin', icon: Home },
   { name: 'Sản phẩm', href: '/admin/products', icon: Package },
   { name: 'Danh mục', href: '/admin/categories', icon: Users },
-  { name: 'Hình ảnh Về chúng tôi', href: '/admin/about-images', icon: ImageIcon },
   { name: 'Feedbacks', href: '/admin/feedbacks', icon: MessageSquare },
   { name: 'Cài đặt', href: '/admin/settings', icon: Settings },
 ]

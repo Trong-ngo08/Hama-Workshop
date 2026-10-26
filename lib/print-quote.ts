@@ -6,7 +6,7 @@
 export const PRICE_PER_GRAM = 800
 export const PRICE_PER_HOUR = 8000
 /** Smallest custom print order the shop accepts. */
-export const MIN_ORDER = 50000
+export const MIN_ORDER = 100000
 
 export const PETG_DENSITY = 1.27 // g/cm³
 
