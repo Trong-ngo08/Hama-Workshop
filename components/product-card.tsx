@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -21,9 +22,16 @@ interface ProductCardProps {
   product: Product
   priority?: boolean
   index?: number
+  /** Square image, name and price only — for dense rows like the homepage. */
+  compact?: boolean
 }
 
-export function ProductCard({ product, priority = false, index = 0 }: ProductCardProps) {
+export function ProductCard({
+  product,
+  priority = false,
+  index = 0,
+  compact = false
+}: ProductCardProps) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -43,7 +51,12 @@ export function ProductCard({ product, priority = false, index = 0 }: ProductCar
   return (
     <Link href={`/products/${product.id}`} className='block h-full'>
       <Card className='group h-full overflow-hidden border border-border tech-shadow hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card relative'>
-        <div className='aspect-[4/5] overflow-hidden bg-muted relative'>
+        <div
+          className={cn(
+            'overflow-hidden bg-muted relative',
+            compact ? 'aspect-square' : 'aspect-[4/5]'
+          )}
+        >
           <Image
             src={product.images[0] || '/placeholder.svg?height=400&width=320'}
             alt={product.name}
@@ -70,18 +83,35 @@ export function ProductCard({ product, priority = false, index = 0 }: ProductCar
             </span>
           </div>
         </div>
-        <CardContent className='p-5 space-y-4 bg-background/50 backdrop-blur-sm'>
+        <CardContent
+          className={cn(
+            'bg-background/50 backdrop-blur-sm',
+            compact ? 'p-3 space-y-2' : 'p-5 space-y-4'
+          )}
+        >
           <div className='flex items-start justify-between gap-2'>
-            <h3 className='font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tight text-sm'>
+            <h3
+              className={cn(
+                'font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tight',
+                compact ? 'text-xs min-h-[2.5em]' : 'text-sm'
+              )}
+            >
               {product.name}
             </h3>
           </div>
 
-          <p className='text-sm text-muted-foreground line-clamp-2 leading-relaxed min-h-[56px]'>
-            {product.description}
-          </p>
+          {!compact && (
+            <p className='text-sm text-muted-foreground line-clamp-2 leading-relaxed min-h-[56px]'>
+              {product.description}
+            </p>
+          )}
 
-          <div className='flex items-center justify-between pt-2 border-t border-border/50'>
+          <div
+            className={cn(
+              'flex items-center justify-between border-t border-border/50',
+              compact ? 'pt-1.5' : 'pt-2'
+            )}
+          >
             <div className='flex items-start gap-2'>
               {product.sale_price ? (
                 <div className='flex items-start gap-2 flex-col'>
@@ -106,16 +136,18 @@ export function ProductCard({ product, priority = false, index = 0 }: ProductCar
                 </Badge>
               ) : null}
             </div>
-            <div className='flex flex-wrap gap-1 justify-end'>
-              {displayCategories.map((cat) => (
-                <span
-                  key={cat}
-                  className='text-[11px] uppercase tracking-widest text-muted-foreground font-medium'
-                >
-                  {cat}
-                </span>
-              ))}
-            </div>
+            {!compact && (
+              <div className='flex flex-wrap gap-1 justify-end'>
+                {displayCategories.map((cat) => (
+                  <span
+                    key={cat}
+                    className='text-[11px] uppercase tracking-widest text-muted-foreground font-medium'
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           {!product.is_available && (

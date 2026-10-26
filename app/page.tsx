@@ -124,9 +124,9 @@ export default async function HomePage() {
         </section>
 
         {/* ── Featured Products ─────────────────────────────── */}
-        <section className='pt-12 lg:pt-16 pb-20 lg:pb-28 bg-muted/30'>
+        <section className='pt-12 lg:pt-16 pb-16 lg:pb-20 bg-muted/30'>
           <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-            <AnimateIn className='flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-12'>
+            <AnimateIn className='flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-8'>
               <div className='space-y-3'>
                 <h2 className='text-3xl lg:text-4xl font-bold text-foreground'>
                   Mẫu có sẵn
@@ -148,10 +148,10 @@ export default async function HomePage() {
               </Button>
             </AnimateIn>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+            <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 lg:gap-5'>
               {featured.map((product, i) => (
                 <AnimateIn key={product.id} delay={i * 80}>
-                  <ProductCard product={product} priority={i < 3} index={i} />
+                  <ProductCard product={product} priority={i < 3} index={i} compact />
                 </AnimateIn>
               ))}
             </div>
