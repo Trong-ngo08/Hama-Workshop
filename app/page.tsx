@@ -240,7 +240,7 @@ export default async function HomePage() {
         {/* ── Print quote calculator ───────────────────────── */}
         <section
           id='tinh-gia'
-          className='pt-20 lg:pt-28 pb-8 bg-muted/30 scroll-mt-20'
+          className='pt-20 lg:pt-28 pb-0 bg-muted/30 scroll-mt-20'
         >
           <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
             <AnimateIn className='text-center mb-12 space-y-4'>
@@ -263,7 +263,7 @@ export default async function HomePage() {
         </section>
 
         {/* ── Featured Products ─────────────────────────────── */}
-        <section className='pt-8 pb-20 lg:pb-28 bg-muted/30'>
+        <section className='pt-6 pb-20 lg:pb-28 bg-muted/30'>
           <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
             <AnimateIn className='flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-12'>
               <div className='space-y-3'>
