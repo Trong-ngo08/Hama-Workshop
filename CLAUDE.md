@@ -66,6 +66,7 @@ JWT_SECRET
 - Images are unoptimized (`images.unoptimized: true`) — use standard `<img>` or Next.js `<Image>` freely
 - Fonts: **Be Vietnam Pro** (primary) and **Space Mono** (monospace), loaded via Google Fonts in `app/layout.tsx`
 - Brand colors defined as CSS variables in `app/globals.css` (walnut brown primary, warm beige secondary)
+- Brand name in copy is **HMWorkshop**. The logo (`public/logo.png`, "HAMA WORKSHOP" artwork) must never be changed, replaced or edited, even when renaming the brand elsewhere.
 Instructions for using these Agent Skills with Claude Code and Claude.ai.
 
 For contribution guidelines and skill authoring, see [AGENTS.md](AGENTS.md).
