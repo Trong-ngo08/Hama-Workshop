@@ -67,7 +67,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
     description: product?.description || '',
     price: product?.price?.toString() || '',
     categoryIds: derivedCategoryIds,
-    materials: product?.materials || '',
+    materials: product?.materials || 'Nhựa PETG',
     size_info: product?.size_info || '',
     care_instructions: product?.care_instructions || '',
     is_featured: product?.is_featured || false,
@@ -268,7 +268,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
               <Input
                 id='materials'
                 type='text'
-                placeholder='Ví dụ: Cotton yarn, polyester filling'
+                placeholder='Nhựa PETG'
                 value={formData.materials}
                 onChange={(e) => handleChange('materials', e.target.value)}
               />

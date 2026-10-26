@@ -53,7 +53,7 @@ export default async function FeedbacksPage() {
                 Khách hàng nói gì
               </div>
               <h1 className='text-4xl lg:text-5xl font-bold text-balance text-foreground'>
-                Feedbacks thực tế
+                Feedback thực tế
               </h1>
               <p className='text-lg text-muted-foreground max-w-2xl mx-auto text-pretty'>
                 Những hình ảnh và cảm nhận từ khách hàng đã tin tưởng Hama Workshop.

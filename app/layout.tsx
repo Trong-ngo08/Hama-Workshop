@@ -20,7 +20,7 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://hmworkshop.vn'),
   title: {
-    default: 'In 3D Cá Nhân Hóa Theo Yêu Cầu | Hama Workshop',
+    default: 'In 3D cá nhân hóa theo yêu cầu | Hama Workshop',
     template: '%s | Hama Workshop – In 3D theo yêu cầu'
   },
   description:
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     locale: 'vi_VN',
     url: 'https://hmworkshop.vn',
     siteName: 'Hama Workshop',
-    title: 'In 3D Cá Nhân Hóa Theo Yêu Cầu | Hama Workshop',
+    title: 'In 3D cá nhân hóa theo yêu cầu | Hama Workshop',
     description:
       'In 3D theo yêu cầu – mỗi sản phẩm được thiết kế riêng cho đúng người sử dụng.',
     images: [
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'In 3D Cá Nhân Hóa Theo Yêu Cầu | Hama Workshop',
+    title: 'In 3D cá nhân hóa theo yêu cầu | Hama Workshop',
     description:
       'Sản phẩm in 3D cá nhân hóa. Không rập khuôn, không đại trà.',
     images: ['/hero-image.jpg']

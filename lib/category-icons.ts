@@ -50,7 +50,7 @@ export const ICON_REGISTRY: Record<string, LucideIcon> = {
 }
 
 export const CATEGORY_ICONS: { name: string; label: string }[] = [
-  { name: 'Trees', label: 'Gỗ / Cây' },
+  { name: 'Trees', label: 'Cây cối' },
   { name: 'Printer', label: 'In 3D' },
   { name: 'Box', label: 'Mô hình' },
   { name: 'Gift', label: 'Quà tặng' },
@@ -62,7 +62,7 @@ export const CATEGORY_ICONS: { name: string; label: string }[] = [
   { name: 'Package', label: 'Đóng gói' },
   { name: 'Puzzle', label: 'Đồ chơi' },
   { name: 'Wrench', label: 'Cơ khí' },
-  { name: 'Hammer', label: 'Thủ công' },
+  { name: 'Hammer', label: 'Công cụ' },
   { name: 'Paintbrush', label: 'Nghệ thuật' },
   { name: 'Gem', label: 'Trang sức' },
   { name: 'Watch', label: 'Đồng hồ' },

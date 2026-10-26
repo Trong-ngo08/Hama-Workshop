@@ -25,7 +25,7 @@ export default function ContactPage() {
             </h1>
             <p className='text-lg text-muted-foreground max-w-2xl mx-auto text-pretty'>
               Chúng tôi luôn sẵn sàng lắng nghe và biến ý tưởng của bạn thành
-              những sản phẩm handmade độc đáo
+              những sản phẩm in 3D độc đáo
             </p>
           </div>
 
@@ -123,7 +123,7 @@ export default function ContactPage() {
 
                       <div className='text-center'>
                         <p className='text-sm text-muted-foreground'>
-                          🎬 Xem quá trình in 3D | 🖨️ Mẫu in 3D mới nhất | 💬
+                          Xem quá trình in 3D · Mẫu in 3D mới nhất ·
                           Tư vấn & báo giá trực tiếp
                         </p>
                       </div>
