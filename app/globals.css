@@ -130,6 +130,10 @@
   /* Added smooth scrolling for better UX */
   html {
     scroll-behavior: smooth;
+    /* Every size is rem-based, so growing the root font scales the whole
+       layout on wide screens (like browser zoom). 16px up to ~1760px wide,
+       ~23px at 2560px, capped at 28px. */
+    font-size: clamp(16px, calc(100vw / 110), 28px);
   }
 }
 

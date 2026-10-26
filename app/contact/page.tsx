@@ -88,7 +88,11 @@ export default function ContactPage() {
                           className='rounded-full bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100'
                           asChild
                         >
-                          <Link href='tel:0325311497'>
+                          <Link
+                            href='https://zalo.me/0325311497'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
                             <Image
                               src='/zalo.png'
                               alt='Zalo'

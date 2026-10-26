@@ -19,7 +19,7 @@ export function Footer() {
                 alt='HMWorkshop'
                 width={100}
                 height={40}
-                className='h-[40px] w-auto'
+                className='h-10 w-auto'
               />
             </Link>
             <p className='text-sm text-muted-foreground leading-relaxed font-medium'>

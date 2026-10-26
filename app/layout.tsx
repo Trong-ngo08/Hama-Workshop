@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Be_Vietnam_Pro, Space_Mono } from 'next/font/google'
 import type React from 'react'
+import { FloatingContact } from '@/components/floating-contact'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -98,6 +99,7 @@ export default function RootLayout({
         style={{ backgroundColor: '#faf9f6' }}
       >
         {children}
+        <FloatingContact />
         <Toaster position='top-center' richColors />
         <Analytics />
       </body>

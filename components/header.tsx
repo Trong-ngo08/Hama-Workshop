@@ -15,7 +15,6 @@ export function Header() {
   const navigation = [
     { name: 'Trang chủ', href: '/' },
     { name: 'Sản phẩm', href: '/products' },
-    { name: 'Tính giá in', href: '/#tinh-gia' },
     { name: 'Feedback', href: '/feedbacks' },
     { name: 'Liên hệ', href: '/contact' }
   ]
@@ -33,7 +32,7 @@ export function Header() {
               src='/logo.png'
               alt='HMWorkshop'
               width={200}
-              className='h-[40px] w-auto'
+              className='h-10 w-auto'
               height={64}
             />
           </Link>
