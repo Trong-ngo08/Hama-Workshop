@@ -4,7 +4,6 @@ import { Header } from '@/components/header'
 import { PrintQuoteCalculator } from '@/components/print-quote-calculator'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
-import { getIconComponent } from '@/lib/category-icons'
 import { applyDiscountSetting } from '@/lib/pricing'
 import { getDiscountsEnabled, getHeroContent } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
@@ -108,7 +107,6 @@ export default async function HomePage() {
 
   const [
     { data: featuredProducts },
-    { data: categories },
     discountsEnabled,
     hero
   ] = await Promise.all([
@@ -121,7 +119,6 @@ export default async function HomePage() {
       .eq('is_visible', true)
       .order('created_at', { ascending: false })
       .limit(6),
-    supabase.from('categories').select('*').order('name').limit(8),
     getDiscountsEnabled(),
     getHeroContent()
   ])
@@ -487,107 +484,6 @@ export default async function HomePage() {
                 </AnimateIn>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* ── Category grid ─────────────────────────────────── */}
-        {categories && categories.length > 0 && (
-          <section className='py-20 lg:py-28 bg-muted/30'>
-            <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-              <AnimateIn className='text-center mb-12 space-y-4'>
-                <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
-                  Danh mục
-                </p>
-                <h2 className='text-3xl lg:text-4xl font-bold text-foreground'>
-                  Khám phá theo danh mục
-                </h2>
-              </AnimateIn>
-
-              <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4'>
-                {categories.map((cat, i) => {
-                  const Icon = getIconComponent(cat.icon)
-                  return (
-                    <AnimateIn key={cat.id} delay={i * 60} from='scale'>
-                      <Link
-                        href={`/products?category=${encodeURIComponent(cat.name.toLowerCase())}`}
-                        className='group flex flex-col items-center gap-3 p-6 rounded-2xl border border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md'
-                      >
-                        <div className='w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors'>
-                          <Icon className='w-7 h-7 text-primary' />
-                        </div>
-                        <span className='text-sm font-semibold text-foreground text-center leading-tight'>
-                          {cat.name}
-                        </span>
-                      </Link>
-                    </AnimateIn>
-                  )
-                })}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ── CTA ───────────────────────────────────────────── */}
-        <section className='py-20 lg:py-32 relative overflow-hidden'>
-          <div className='absolute inset-0 minimal-gradient opacity-[0.06]' />
-          <div className='absolute -top-24 -right-24 w-72 h-72 rounded-full bg-primary/5 animate-spin-slow pointer-events-none' />
-          <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
-            <AnimateIn
-              from='scale'
-              className='max-w-3xl mx-auto text-center space-y-8'
-            >
-              <div className='space-y-4'>
-                <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
-                  Bắt đầu ngay
-                </p>
-                <h2 className='text-4xl lg:text-6xl font-bold text-foreground font-mono tracking-tighter'>
-                  Tạo sản phẩm
-                  <span className='block text-primary italic'>
-                    của riêng bạn
-                  </span>
-                </h2>
-                <p className='text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed'>
-                  Chúng tôi không tạo ra sản phẩm để bán đại trà. Chúng tôi tạo
-                  ra sản phẩm để phù hợp với đúng một người — bạn.
-                </p>
-              </div>
-
-              <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-                <Button
-                  asChild
-                  size='lg'
-                  className='bg-primary hover:bg-primary/90 text-primary-foreground h-14 px-8 text-base group'
-                >
-                  <Link href='/contact'>
-                    <MessageCircle className='w-5 h-5 mr-2' />
-                    Đặt hàng theo yêu cầu
-                    <ArrowRight className='w-4 h-4 ml-2 transition-transform group-hover:translate-x-1' />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant='outline'
-                  size='lg'
-                  className='border-foreground/20 hover:bg-foreground/5 bg-transparent h-14 px-8 text-base'
-                >
-                  <Link href='/about'>Tìm hiểu thêm</Link>
-                </Button>
-              </div>
-
-              {/* Trust badges */}
-              <div className='flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-muted-foreground font-medium uppercase tracking-widest'>
-                {[
-                  'Tư vấn miễn phí',
-                  'Giao hàng toàn quốc',
-                  'Bảo hành chất lượng'
-                ].map((badge) => (
-                  <div key={badge} className='flex items-center gap-1.5'>
-                    <CheckCircle2 className='w-3.5 h-3.5 text-primary' />
-                    {badge}
-                  </div>
-                ))}
-              </div>
-            </AnimateIn>
           </div>
         </section>
       </main>
