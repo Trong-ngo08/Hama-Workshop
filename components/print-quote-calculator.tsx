@@ -164,15 +164,6 @@ export function PrintQuoteCalculator() {
             </Select>
           ) : null}
 
-          <a
-            href={design!.url}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='block truncate text-primary hover:underline'
-          >
-            {design!.title}
-          </a>
-
           <div className='space-y-1 font-mono text-xs'>
             <div className='flex justify-between gap-3'>
               <span className='text-muted-foreground'>
@@ -225,7 +216,8 @@ export function PrintQuoteCalculator() {
             In khoảng {formatDuration(hours)}.{' '}
             {price.belowMinimum &&
               `Shop nhận đơn theo yêu cầu từ ${formatVnd(MIN_ORDER)}. `}
-            Chưa gồm hậu kỳ và phí vận chuyển.
+            Có thể phát sinh chi phí hậu kỳ, vận chuyển, phụ kiện lắp thêm nếu
+            bạn cần.
           </p>
         </div>
       )}
