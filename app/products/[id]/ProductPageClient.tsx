@@ -14,7 +14,6 @@ import {
   Layers,
   MessageCircle,
   Palette,
-  PenTool,
   Printer,
   Ruler,
   Share2,
@@ -281,15 +280,6 @@ export default function ProductPageClient({
                       Tùy chọn theo yêu cầu
                     </span>
                   </div>
-                  <div className='flex items-center justify-between py-2 border-b border-border/30'>
-                    <div className='flex items-center gap-3 text-muted-foreground'>
-                      <PenTool className='w-4 h-4' />
-                      <span>Khắc tên/Logo:</span>
-                    </div>
-                    <span className='font-semibold text-foreground'>
-                      Khắc theo yêu cầu
-                    </span>
-                  </div>
                 </div>
               </div>
 
@@ -338,81 +328,15 @@ export default function ProductPageClient({
             </div>
           </div>
 
-          {/* Detailed Product Description */}
-          <section className='mb-24' aria-label='Triết lý chế tác'>
-            <div className='bg-card rounded-2xl tech-shadow border border-border p-10 lg:p-16 overflow-hidden relative'>
-              <div className='absolute top-0 right-0 w-64 h-64 warm-texture opacity-50 -mr-32 -mt-32 rounded-full' />
-              <div className='max-w-4xl mx-auto relative z-10'>
-                <div className='text-center mb-12 space-y-4'>
-                  <h2 className='text-3xl lg:text-4xl font-bold text-foreground'>
-                    Triết lý chế tác
-                  </h2>
-                  <p className='text-lg text-muted-foreground leading-relaxed'>
-                    Độ chính xác của công nghệ, sự chăm chút của con người.
-                  </p>
-                </div>
-
-                <div className='prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground'>
-                  <div className='grid lg:grid-cols-2 gap-12 items-start'>
-                    <div className='space-y-8'>
-                      <div className='space-y-4'>
-                        <h3 className='text-2xl font-bold text-foreground'>
-                          Vật liệu & Quy trình
-                        </h3>
-                        <p className='leading-relaxed'>
-                          Mỗi sản phẩm bắt đầu từ một mô hình 3D được thiết kế
-                          riêng, sau đó in bằng công nghệ FDM với nhựa PETG —
-                          bền, nhẹ, chịu nhiệt tốt và giữ màu theo thời gian.
-                        </p>
-                        <p className='leading-relaxed'>
-                          Sau khi in, sản phẩm được xử lý bề mặt, lắp ráp và
-                          kiểm tra kỹ lưỡng. Những hình khối phức tạp, chi tiết
-                          nhỏ đến từng milimet đều được tái hiện sắc nét.
-                        </p>
-                      </div>
-
-                      <div className='space-y-4'>
-                        <h3 className='text-2xl font-bold text-foreground'>
-                          Bản sắc riêng của bạn
-                        </h3>
-                        <p className='leading-relaxed'>
-                          "Tại sao sản phẩm lại phải giống nhau?" - Đây là kim
-                          chỉ nam cho mọi thiết kế. Bạn hoàn toàn có quyền thay
-                          đổi bất kỳ thông số nào để sản phẩm thực sự là của
-                          bạn.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className='space-y-6'>
-                      <div className='aspect-[4/3] rounded-xl overflow-hidden tech-shadow border border-border'>
-                        <Image
-                          src='/clock.jpg?height=400&width=600&text=Precision+Crafting'
-                          alt='Quy trình chế tác chính xác'
-                          width={600}
-                          height={400}
-                          className='object-cover w-full h-full'
-                        />
-                      </div>
-                      <p className='text-xs uppercase tracking-widest text-muted-foreground text-center font-bold'>
-                        Độ chính xác kỹ thuật cao × Hoàn thiện tỉ mỉ
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* Related Products */}
           {relatedProducts.length > 0 && (
             <section className='py-12' aria-label='Sản phẩm liên quan'>
               <div className='space-y-8'>
                 <div className='text-center space-y-4'>
-                  <h2 className='text-2xl lg:text-3xl font-bold text-gray-900'>
+                  <h2 className='text-2xl lg:text-3xl font-bold text-foreground'>
                     Sản phẩm liên quan
                   </h2>
-                  <p className='text-gray-600'>
+                  <p className='text-muted-foreground'>
                     Các sản phẩm khác trong cùng danh mục
                   </p>
                 </div>
@@ -431,7 +355,7 @@ export default function ProductPageClient({
                   <Button
                     asChild
                     variant='outline'
-                    className='rounded-full bg-transparent border-gray-300 text-gray-700 hover:bg-gray-50'
+                    className='rounded-full bg-transparent border-border text-foreground hover:bg-muted'
                   >
                     <Link
                       href={`/products?category=${product.category.toLowerCase()}`}

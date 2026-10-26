@@ -85,7 +85,7 @@ export default function ContactPage() {
                         <Button
                           variant='outline'
                           size='sm'
-                          className='rounded-full bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100'
+                          className='rounded-full bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900'
                           asChild
                         >
                           <Link
@@ -106,7 +106,7 @@ export default function ContactPage() {
                         <Button
                           variant='outline'
                           size='sm'
-                          className='rounded-full bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100'
+                          className='rounded-full bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900'
                           asChild
                         >
                           <Link

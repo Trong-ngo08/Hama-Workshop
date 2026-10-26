@@ -288,17 +288,6 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
               />
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='care_instructions'>Hướng dẫn bảo quản</Label>
-              <Textarea
-                id='care_instructions'
-                placeholder='Ví dụ: Hand wash with mild soap, air dry only'
-                value={formData.care_instructions}
-                onChange={(e) => handleChange('care_instructions', e.target.value)}
-                rows={3}
-              />
-            </div>
-
             {/* Settings */}
             <Card className='border-0 bg-muted/30'>
               <CardContent className='p-4 space-y-4'>
@@ -380,71 +369,20 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
           </CardContent>
         </Card>
 
-        <Card className='border-blue-200 bg-blue-50/50'>
-          <CardContent className='p-6'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-4'>Tối ưu SEO</h3>
-
-            <div className='space-y-4'>
-              <div className='space-y-2'>
-                <Label htmlFor='seo_title'>Tiêu đề SEO</Label>
-                <Input
-                  id='seo_title'
-                  type='text'
-                  placeholder='Tiêu đề tối ưu cho công cụ tìm kiếm (50-60 ký tự)'
-                  value={formData.seo_title}
-                  onChange={(e) => handleChange('seo_title', e.target.value)}
-                  maxLength={60}
-                />
-                <p className='text-xs text-muted-foreground'>
-                  {formData.seo_title.length}/60 ký tự
-                </p>
-              </div>
-
-              <div className='space-y-2'>
-                <Label htmlFor='seo_description'>Mô tả SEO</Label>
-                <Textarea
-                  id='seo_description'
-                  placeholder='Mô tả ngắn gọn cho công cụ tìm kiếm (150-160 ký tự)'
-                  value={formData.seo_description}
-                  onChange={(e) => handleChange('seo_description', e.target.value)}
-                  maxLength={160}
-                  rows={3}
-                />
-                <p className='text-xs text-muted-foreground'>
-                  {formData.seo_description.length}/160 ký tự
-                </p>
-              </div>
-
-              <div className='grid md:grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <Label htmlFor='seo_keywords'>Từ khóa SEO</Label>
-                  <Input
-                    id='seo_keywords'
-                    type='text'
-                    placeholder='từ khóa 1, từ khóa 2, từ khóa 3'
-                    value={formData.seo_keywords}
-                    onChange={(e) => handleChange('seo_keywords', e.target.value)}
-                  />
-                  <p className='text-xs text-muted-foreground'>Phân cách bằng dấu phẩy</p>
-                </div>
-
-                <div className='space-y-2'>
-                  <Label htmlFor='slug'>URL thân thiện</Label>
-                  <Input
-                    id='slug'
-                    type='text'
-                    placeholder='url-than-thien-seo'
-                    value={formData.slug}
-                    onChange={(e) => handleChange('slug', e.target.value)}
-                  />
-                  <p className='text-xs text-muted-foreground'>
-                    Để trống để tự động tạo từ tên sản phẩm
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* SEO title/description/keywords are still saved but no longer edited here. */}
+        <div className='space-y-2'>
+          <Label htmlFor='slug'>URL thân thiện</Label>
+          <Input
+            id='slug'
+            type='text'
+            placeholder='url-than-thien-seo'
+            value={formData.slug}
+            onChange={(e) => handleChange('slug', e.target.value)}
+          />
+          <p className='text-xs text-muted-foreground'>
+            Để trống để tự động tạo từ tên sản phẩm
+          </p>
+        </div>
 
         {/* Description */}
         <div className='space-y-2'>

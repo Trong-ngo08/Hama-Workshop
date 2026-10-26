@@ -22,7 +22,7 @@ export default async function AdminDashboard() {
       {/* Welcome Section */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900">Chào mừng trở lại!</h1>
-        <p className="text-gray-600">Quản lý cửa hàng Ghẹ Crochet của bạn</p>
+        <p className="text-gray-600">Quản lý cửa hàng HMWorkshop của bạn</p>
       </div>
 
       {/* Stats */}

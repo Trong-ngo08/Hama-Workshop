@@ -11,6 +11,7 @@ import {
   DEFAULT_HERO_IMAGE,
   HERO_CONTENT_KEY,
   parseHeroContent,
+  tiktokVideoId,
   type HeroContent
 } from '@/lib/hero-content'
 import { RotateCcw } from 'lucide-react'
@@ -18,7 +19,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-type TextField = Exclude<keyof HeroContent, 'imageUrl'>
+type TextField = Exclude<keyof HeroContent, 'imageUrl' | 'videoUrl'>
 
 const TEXT_FIELDS: { key: TextField; label: string; multiline?: boolean }[] = [
   { key: 'titleLine1', label: 'Tiêu đề dòng 1' },
@@ -47,6 +48,18 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
     // Normalise so blank fields are stored (and shown) as their defaults.
     const next = parseHeroContent(form)
     setIsSaving(true)
+
+    // Short share links (vt.tiktok.com/…) carry no id; resolve them first.
+    if (next.videoUrl && !tiktokVideoId(next.videoUrl)) {
+      const res = await fetch(`/api/tiktok-resolve?url=${encodeURIComponent(next.videoUrl)}`)
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data.url) {
+        setIsSaving(false)
+        toast.error(data.error ?? 'Link TikTok không hợp lệ.')
+        return
+      }
+      next.videoUrl = data.url
+    }
 
     const ok = await fetch('/api/settings', {
       method: 'PUT',
@@ -115,6 +128,21 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
                 Đang dùng ảnh mặc định.
               </p>
             )}
+
+            <div className='space-y-1.5 pt-4'>
+              <Label htmlFor='hero-videoUrl'>Link clip TikTok (thay cho ảnh)</Label>
+              <Input
+                id='hero-videoUrl'
+                value={form.videoUrl}
+                placeholder='https://www.tiktok.com/@hmworkshop_official/video/...'
+                disabled={isSaving}
+                onChange={(e) => setForm((prev) => ({ ...prev, videoUrl: e.target.value }))}
+              />
+              <p className='text-xs text-muted-foreground'>
+                Dán link chia sẻ từ app hoặc web TikTok. Clip tự chạy không tiếng, khách
+                bấm nút loa để bật tiếng. Để trống thì trang chủ hiện ảnh hero.
+              </p>
+            </div>
           </div>
 
           <div className='space-y-4'>

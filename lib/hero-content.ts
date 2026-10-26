@@ -7,6 +7,8 @@ export const DEFAULT_HERO_IMAGE = '/hero-image.jpg'
 
 export interface HeroContent {
   imageUrl: string
+  /** TikTok clip link; when set it replaces the hero image. */
+  videoUrl: string
   titleLine1: string
   titleLine2: string
   description: string
@@ -16,6 +18,7 @@ export interface HeroContent {
 
 export const DEFAULT_HERO_CONTENT: HeroContent = {
   imageUrl: DEFAULT_HERO_IMAGE,
+  videoUrl: '',
   titleLine1: 'In 3D theo ý bạn',
   titleLine2: '× Thiết kế độc bản',
   description:
@@ -49,10 +52,16 @@ export function parseHeroContent(raw: unknown): HeroContent {
 
   return {
     imageUrl: pick(data.imageUrl, d.imageUrl),
+    videoUrl: pick(data.videoUrl, d.videoUrl),
     titleLine1: pick(data.titleLine1, d.titleLine1),
     titleLine2: pick(data.titleLine2, d.titleLine2),
     description: pick(data.description, d.description),
     primaryCta: pick(data.primaryCta, d.primaryCta),
     quote: pick(data.quote, d.quote)
   }
+}
+
+/** Video id from a full TikTok link (…/video/123…), or null. */
+export function tiktokVideoId(url: string): string | null {
+  return url.match(/tiktok\.com\/.*?video\/(\d+)/)?.[1] ?? null
 }

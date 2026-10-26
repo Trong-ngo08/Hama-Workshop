@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -32,7 +33,7 @@ export function Header() {
               src='/logo.png'
               alt='HMWorkshop'
               width={200}
-              className='h-10 w-auto'
+              className='h-10 w-auto dark:rounded-md dark:bg-[#ede6dc] dark:px-2 dark:py-1 dark:box-content'
               height={64}
             />
           </Link>
@@ -63,6 +64,7 @@ export function Header() {
 
           {/* Contact Button */}
           <div className='hidden md:flex items-center gap-4'>
+            <ThemeToggle />
             <Button
               asChild
               className='bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/20'
@@ -71,24 +73,27 @@ export function Header() {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant='ghost'
-            size='sm'
-            className='md:hidden text-gray-700'
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? (
-              <X className='w-5 h-5' />
-            ) : (
-              <Menu className='w-5 h-5' />
-            )}
-          </Button>
+          {/* Mobile: theme switch + menu button */}
+          <div className='flex md:hidden items-center gap-2'>
+            <ThemeToggle />
+            <Button
+              variant='ghost'
+              size='sm'
+              className='text-foreground'
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? (
+                <X className='w-5 h-5' />
+              ) : (
+                <Menu className='w-5 h-5' />
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className='md:hidden py-4 border-t border-gray-200'>
+          <div className='md:hidden py-4 border-t border-border'>
             <nav className='flex flex-col gap-4'>
               {navigation.map((item) => {
                 const isActive =

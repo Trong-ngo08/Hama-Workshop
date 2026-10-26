@@ -121,7 +121,6 @@ export function ContactForm() {
                   <SelectValue placeholder="Chọn danh mục" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="amigurumi">Amigurumi</SelectItem>
                   <SelectItem value="keychain">Móc khóa</SelectItem>
                   <SelectItem value="figure">Mô hình & figure</SelectItem>
                   <SelectItem value="decor">Đèn ngủ & decor</SelectItem>

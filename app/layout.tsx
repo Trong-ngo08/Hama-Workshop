@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Be_Vietnam_Pro, Space_Mono } from 'next/font/google'
 import type React from 'react'
 import { FloatingContact } from '@/components/floating-contact'
+import { SiteThemeProvider } from '@/components/site-theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -93,14 +94,14 @@ export default function RootLayout({
     <html
       lang='vi'
       className={`${beVietnamPro.variable} ${spaceMono.variable}`}
+      suppressHydrationWarning
     >
-      <body
-        className='font-sans antialiased'
-        style={{ backgroundColor: '#faf9f6' }}
-      >
-        {children}
-        <FloatingContact />
-        <Toaster position='top-center' richColors />
+      <body className='font-sans antialiased'>
+        <SiteThemeProvider>
+          {children}
+          <FloatingContact />
+          <Toaster position='top-center' richColors />
+        </SiteThemeProvider>
         <Analytics />
       </body>
     </html>

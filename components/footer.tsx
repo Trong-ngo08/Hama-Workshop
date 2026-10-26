@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className='bg-card border-t border-border overflow-hidden relative'>
       <div className='absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none' />
-      <div className='container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10'>
+      <div className='container mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6 relative z-10'>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-24'>
           {/* Brand */}
           <div className='space-y-8'>
@@ -19,7 +19,7 @@ export function Footer() {
                 alt='HMWorkshop'
                 width={100}
                 height={40}
-                className='h-10 w-auto'
+                className='h-10 w-auto dark:rounded-md dark:bg-[#ede6dc] dark:px-2 dark:py-1 dark:box-content'
               />
             </Link>
             <p className='text-sm text-muted-foreground leading-relaxed font-medium'>
@@ -91,7 +91,7 @@ export function Footer() {
         </div>
 
         {/* <CHANGE> Removed policy links section to simplify footer */}
-        <div className='mt-24 pt-8 border-t border-border/50 text-center'>
+        <div className='mt-12 pt-6 border-t border-border/50 text-center'>
           <p className='text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold'>
             © 2025 HMWorkshop. Chế tác những phiên bản độc bản cho những con
             người duy nhất.
