@@ -33,7 +33,7 @@ export function Header() {
               src='/logo.png'
               alt='HMWorkshop'
               width={200}
-              className='h-10 w-auto dark:rounded-md dark:bg-[#ede6dc] dark:px-2 dark:py-1 dark:box-content'
+              className='h-10 w-auto dark:invert dark:brightness-90'
               height={64}
             />
           </Link>
