@@ -1,6 +1,7 @@
 import { AnimateIn } from '@/components/animate-in'
 import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
+import { PrintQuoteCalculator } from '@/components/print-quote-calculator'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { getIconComponent } from '@/lib/category-icons'
@@ -96,10 +97,10 @@ const USE_CASES = [
 ]
 
 const PRINT_FEATURES = [
-  'Công nghệ FDM & SLA',
-  'Độ chính xác ±0.1mm',
-  'Nhựa PETG / PLA+ cao cấp',
-  'Phủ UV chống nước'
+  'Công nghệ in FDM',
+  'Độ chính xác ±0.1 mm',
+  '100% nhựa PETG',
+  'Bền, chịu nhiệt, chống nước'
 ]
 
 export default async function HomePage() {
@@ -274,6 +275,28 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* ── Print quote calculator ───────────────────────── */}
+        <section id='tinh-gia' className='py-20 lg:py-28 scroll-mt-20'>
+          <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+            <AnimateIn className='text-center mb-12 space-y-4'>
+              <p className='text-xs uppercase tracking-[0.3em] text-primary font-bold'>
+                Báo giá nhanh
+              </p>
+              <h2 className='text-3xl lg:text-5xl font-bold text-foreground font-mono tracking-tighter'>
+                Tính giá in{' '}
+                <span className='text-primary italic'>theo yêu cầu</span>
+              </h2>
+              <p className='text-muted-foreground max-w-xl mx-auto'>
+                Tải lên file STL, 3MF hoặc dán link MakerWorld để xem giá tham
+                khảo khi in bằng nhựa PETG.
+              </p>
+            </AnimateIn>
+            <AnimateIn>
+              <PrintQuoteCalculator />
+            </AnimateIn>
+          </div>
+        </section>
+
         {/* ── Marquee banner ───────────────────────────────── */}
         <div className='border-y border-primary/20 bg-foreground overflow-hidden py-4'>
           <div className='animate-marquee'>
@@ -406,9 +429,9 @@ export default async function HomePage() {
                       In 3D chính xác
                     </h3>
                     <p className='text-muted-foreground text-sm leading-relaxed max-w-sm'>
-                      Công nghệ FDM & SLA tạo nên những hình khối phức tạp, đường
-                      nét sắc sảo và bề mặt mịn — điều mà cách làm truyền thống
-                      khó lòng đạt được.
+                      In FDM bằng nhựa PETG tạo nên những hình khối phức tạp,
+                      đường nét sắc sảo và độ bền cao — điều mà cách làm truyền
+                      thống khó lòng đạt được.
                     </p>
                     <ul className='space-y-2 pt-2'>
                       {PRINT_FEATURES.map((f) => (

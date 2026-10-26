@@ -89,7 +89,6 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
     // Keyword fallback
     const lowerName = category.name.toLowerCase()
     const keywordRules: { keywords: string[]; icon: string }[] = [
-      { keywords: ['gỗ', 'wood'], icon: 'Trees' },
       { keywords: ['3d', 'in 3d', 'print'], icon: 'Printer' },
       { keywords: ['mô hình', 'model'], icon: 'Box' },
       { keywords: ['quà', 'gift'], icon: 'Gift' },

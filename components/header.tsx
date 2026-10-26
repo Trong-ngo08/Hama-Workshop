@@ -16,7 +16,8 @@ export function Header() {
     { name: 'Trang chủ', href: '/' },
     { name: 'Sản phẩm', href: '/products' },
     { name: 'Về chúng tôi', href: '/about' },
-    { name: 'Feedbacks', href: '/feedbacks' },
+    { name: 'Tính giá in', href: '/#tinh-gia' },
+    { name: 'Feedback', href: '/feedbacks' },
     { name: 'Liên hệ', href: '/contact' }
   ]
 

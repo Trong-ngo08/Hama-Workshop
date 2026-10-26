@@ -11,10 +11,12 @@ import {
   ArrowLeft,
   Box,
   Check,
+  Layers,
   MessageCircle,
   Palette,
   PenTool,
   Printer,
+  Ruler,
   Share2,
   Shield
 } from 'lucide-react'
@@ -98,7 +100,7 @@ export default function ProductPageClient({
       name: 'Hama Workshop'
     },
     category: product.category,
-    ...(product.materials ? { material: product.materials } : {})
+    material: 'PETG'
   }
 
   const breadcrumbData = {
@@ -237,9 +239,8 @@ export default function ProductPageClient({
                   ) : null}
                 </div>
 
-                <p className='text-lg text-muted-foreground leading-relaxed max-w-prose'>
-                  "Không đại trà. Không rập khuôn. Mỗi chi tiết đều có lý do tồn
-                  tại." - {product.description}
+                <p className='text-lg text-muted-foreground leading-relaxed max-w-prose whitespace-pre-line'>
+                  {product.description}
                 </p>
               </div>
 
@@ -251,6 +252,26 @@ export default function ProductPageClient({
                   Cá nhân hóa cho bạn
                 </h2>
                 <div className='grid gap-4'>
+                  <div className='flex items-center justify-between py-2 border-b border-border/30'>
+                    <div className='flex items-center gap-3 text-muted-foreground'>
+                      <Layers className='w-4 h-4' />
+                      <span>Chất liệu:</span>
+                    </div>
+                    <span className='font-semibold text-foreground'>
+                      Nhựa PETG
+                    </span>
+                  </div>
+                  {product.size_info && (
+                    <div className='flex items-center justify-between gap-4 py-2 border-b border-border/30'>
+                      <div className='flex items-center gap-3 text-muted-foreground shrink-0'>
+                        <Ruler className='w-4 h-4' />
+                        <span>Kích thước:</span>
+                      </div>
+                      <span className='font-semibold text-foreground text-right'>
+                        {product.size_info}
+                      </span>
+                    </div>
+                  )}
                   <div className='flex items-center justify-between py-2 border-b border-border/30'>
                     <div className='flex items-center gap-3 text-muted-foreground'>
                       <Palette className='w-4 h-4' />
@@ -301,7 +322,7 @@ export default function ProductPageClient({
                       <Printer className='w-7 h-7 text-accent' />
                     </div>
                     <div className='text-[11px] uppercase tracking-widest text-muted-foreground font-bold'>
-                      In 3D Precision
+                      In 3D chính xác
                     </div>
                   </div>
                   <div className='space-y-3'>
@@ -340,9 +361,8 @@ export default function ProductPageClient({
                         </h3>
                         <p className='leading-relaxed'>
                           Mỗi sản phẩm bắt đầu từ một mô hình 3D được thiết kế
-                          riêng, sau đó in bằng công nghệ FDM/SLA với nhựa PETG
-                          / PLA+ cao cấp — bền, nhẹ và giữ màu tốt theo thời
-                          gian.
+                          riêng, sau đó in bằng công nghệ FDM với nhựa PETG —
+                          bền, nhẹ, chịu nhiệt tốt và giữ màu theo thời gian.
                         </p>
                         <p className='leading-relaxed'>
                           Sau khi in, sản phẩm được xử lý bề mặt, lắp ráp và

@@ -122,11 +122,11 @@ export function ContactForm() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="amigurumi">Amigurumi</SelectItem>
-                  <SelectItem value="bags">Túi xách & Phụ kiện</SelectItem>
-                  <SelectItem value="home-decor">Trang trí nhà</SelectItem>
-                  <SelectItem value="baby">Đồ cho bé</SelectItem>
-                  <SelectItem value="seasonal">Theo mùa</SelectItem>
-                  <SelectItem value="custom">Đặt hàng riêng</SelectItem>
+                  <SelectItem value="keychain">Móc khóa</SelectItem>
+                  <SelectItem value="figure">Mô hình & figure</SelectItem>
+                  <SelectItem value="decor">Đèn ngủ & decor</SelectItem>
+                  <SelectItem value="clicker">Clicker</SelectItem>
+                  <SelectItem value="custom">In theo yêu cầu (file 3D)</SelectItem>
                   <SelectItem value="other">Khác</SelectItem>
                 </SelectContent>
               </Select>

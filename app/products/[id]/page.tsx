@@ -36,15 +36,15 @@ export async function generateMetadata({
     currency: 'VND'
   }).format(product.price)
 
-  const title = product.seo_title || `${product.name} - Hama Workshop`
+  const title = product.seo_title || product.name
   const rawDescription =
     product.seo_description ||
     product.description ||
-    `Mua ${product.name} handmade chất lượng cao tại Hama Workshop. Giá ${priceFormatted}`
+    `Mua ${product.name} in 3D bằng nhựa PETG tại Hama Workshop. Giá ${priceFormatted}`
   const description = rawDescription.slice(0, 160)
   const keywords =
     product.seo_keywords ||
-    `in 3d, quà tặng cá nhân hóa,${product.name}, ${product.category}, handmade, hama workshop`
+    `in 3d, quà tặng cá nhân hóa, ${product.name}, ${product.category}, nhựa petg, hama workshop`
   const image = product.images?.[0] || '/hero-image.jpg'
   const url = `https://hmworkshop.vn/products/${id}`
 
