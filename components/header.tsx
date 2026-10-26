@@ -23,11 +23,11 @@ export function Header() {
   return (
     <header className='sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md tech-shadow'>
       <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex h-16 items-center justify-between'>
+        <div className='flex h-16 items-center justify-between gap-4'>
           {/* Logo */}
           <Link
             href='/'
-            className='flex items-center gap-2 font-bold text-xl group'
+            className='flex shrink-0 items-center gap-2 font-bold text-xl group'
           >
             <Image
               src='/logo.png'
@@ -39,7 +39,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className='hidden md:flex items-center gap-8'>
+          <nav className='hidden md:flex items-center gap-5 lg:gap-8'>
             {navigation.map((item) => {
               const isActive =
                 pathname === item.href ||
@@ -50,7 +50,7 @@ export function Header() {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    'text-xs uppercase tracking-widest font-bold transition-all hover:text-primary relative py-1',
+                    'text-xs uppercase tracking-wider lg:tracking-widest font-bold whitespace-nowrap transition-all hover:text-primary relative py-1',
                     isActive
                       ? 'text-primary after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary'
                       : 'text-muted-foreground'
@@ -63,7 +63,7 @@ export function Header() {
           </nav>
 
           {/* Contact Button */}
-          <div className='hidden md:flex items-center gap-4'>
+          <div className='hidden md:flex shrink-0 items-center gap-3 lg:gap-4'>
             <ThemeToggle />
             <Button
               asChild

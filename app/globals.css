@@ -2,6 +2,9 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+/* Desktop-style layout: wide AND landscape, so portrait tablets (even the
+   1024px iPad Pro) get their own layout. */
+@custom-variant desk (@media (min-width: 64rem) and (orientation: landscape));
 
 :root {
   /* Color palette: warm natural tones + modern accents */

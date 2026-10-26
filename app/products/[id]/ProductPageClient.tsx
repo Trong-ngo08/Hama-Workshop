@@ -11,11 +11,9 @@ import {
   ArrowLeft,
   Box,
   Check,
-  Layers,
   MessageCircle,
   Palette,
   Printer,
-  Ruler,
   Share2,
   Shield
 } from 'lucide-react'
@@ -246,41 +244,14 @@ export default function ProductPageClient({
               <Separator className='bg-border/50' />
 
               {/* Product Details */}
-              <div className='space-y-6'>
-                <h2 className='font-bold text-xl text-foreground'>
-                  Cá nhân hóa cho bạn
-                </h2>
-                <div className='grid gap-4'>
-                  <div className='flex items-center justify-between py-2 border-b border-border/30'>
-                    <div className='flex items-center gap-3 text-muted-foreground'>
-                      <Layers className='w-4 h-4' />
-                      <span>Chất liệu:</span>
-                    </div>
-                    <span className='font-semibold text-foreground'>
-                      Nhựa PETG
-                    </span>
-                  </div>
-                  {product.size_info && (
-                    <div className='flex items-center justify-between gap-4 py-2 border-b border-border/30'>
-                      <div className='flex items-center gap-3 text-muted-foreground shrink-0'>
-                        <Ruler className='w-4 h-4' />
-                        <span>Kích thước:</span>
-                      </div>
-                      <span className='font-semibold text-foreground text-right'>
-                        {product.size_info}
-                      </span>
-                    </div>
-                  )}
-                  <div className='flex items-center justify-between py-2 border-b border-border/30'>
-                    <div className='flex items-center gap-3 text-muted-foreground'>
-                      <Palette className='w-4 h-4' />
-                      <span>Màu sắc:</span>
-                    </div>
-                    <span className='font-semibold text-foreground'>
-                      Tùy chọn theo yêu cầu
-                    </span>
-                  </div>
+              <div className='flex items-center justify-between py-2'>
+                <div className='flex items-center gap-3 text-muted-foreground'>
+                  <Palette className='w-4 h-4' />
+                  <span>Màu sắc:</span>
                 </div>
+                <span className='font-semibold text-foreground'>
+                  Tùy chọn theo yêu cầu
+                </span>
               </div>
 
               <Separator className='bg-border/50' />

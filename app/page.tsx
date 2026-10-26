@@ -53,7 +53,7 @@ export default async function HomePage() {
 
       <main>
         {/* ── Hero ─────────────────────────────────────────── */}
-        <section className='relative py-8 lg:py-6 overflow-hidden'>
+        <section className='relative py-8 md:py-10 desk:py-6 overflow-hidden'>
           <div className='absolute inset-0 warm-texture' />
           {/* Decorative spinning ring */}
           <div className='absolute -top-32 -right-32 w-96 h-96 rounded-full border border-primary/10 animate-spin-slow pointer-events-none' />
@@ -64,11 +64,14 @@ export default async function HomePage() {
 
           <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
             <div
-              className={`grid gap-10 lg:gap-16 ${videoId ? 'lg:grid-cols-[minmax(0,1fr)_auto] lg:items-stretch' : ''}`}
+              className={`grid gap-10 md:gap-8 desk:gap-16 ${videoId ? 'md:grid-cols-[auto_minmax(0,1fr)] md:items-center desk:grid-cols-[minmax(0,1fr)_auto] desk:items-stretch' : ''}`}
             >
-              {/* Left – Text + quote calculator, centred against the clip */}
-              <div className='space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:justify-center lg:gap-12'>
-                <div className='space-y-6 lg:space-y-8'>
+              {/* Left – Text + quote calculator, centred against the clip on
+                  desktop. Below that the wrapper dissolves (contents): phones
+                  stack text, clip, calculator; portrait tablets put the text
+                  on top and the clip beside the calculator. */}
+              <div className='contents desk:flex desk:flex-col desk:justify-center desk:gap-12'>
+                <div className={`order-1 space-y-6 desk:space-y-8 ${videoId ? 'md:col-span-2' : ''}`}>
                   <h1 className='animate-fade-in-up delay-150 text-4xl md:text-5xl 2xl:text-6xl font-bold leading-tight text-foreground text-balance'>
                     {hero.titleLine1}{' '}
                     <span className='block text-primary'>{hero.titleLine2}</span>
@@ -93,15 +96,15 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                <div className='animate-fade-in-up delay-500 max-w-2xl'>
+                <div className='order-3 animate-fade-in-up delay-500 max-w-2xl'>
                   <PrintQuoteCalculator />
                 </div>
               </div>
 
-              {/* Right – vertical TikTok clip, as tall as the screen allows */}
+              {/* Right – vertical TikTok clip, as tall as the screen allows on desktop */}
               {videoId && (
-                <div className='animate-fade-in-scale delay-300 relative w-full max-w-sm mx-auto lg:max-w-none lg:w-auto'>
-                  <div className='aspect-[9/16] w-full lg:w-auto lg:h-[calc(100svh-8rem)] lg:min-h-[32rem] rounded-2xl overflow-hidden tech-shadow bg-black'>
+                <div className='order-2 animate-fade-in-scale delay-300 relative w-full max-w-sm mx-auto md:mx-0 md:w-[17rem] desk:max-w-none desk:w-auto'>
+                  <div className='aspect-[9/16] w-full desk:w-auto desk:h-[calc(100svh-8rem)] desk:min-h-[32rem] rounded-2xl overflow-hidden tech-shadow bg-black'>
                     <HeroTikTok videoId={videoId} />
                   </div>
                   {/* Floating accent dot */}
