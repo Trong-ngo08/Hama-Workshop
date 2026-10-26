@@ -46,12 +46,8 @@ export default async function FeedbacksPage() {
 
       <main className='py-8 relative z-10'>
         <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-          <section className='py-16 lg:py-20'>
-            <div className='text-center space-y-6 mb-16'>
-              <div className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-sm font-medium'>
-                <MessageSquare className='w-4 h-4' />
-                Khách hàng nói gì
-              </div>
+          <section className='py-8 lg:py-12'>
+            <div className='text-center space-y-4 mb-14'>
               <h1 className='text-4xl lg:text-5xl font-bold text-balance text-foreground'>
                 Feedback thực tế
               </h1>

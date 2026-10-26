@@ -1,88 +1,88 @@
 "use client"
 
 import Image from "next/image"
-import { Eye, ImageIcon } from "lucide-react"
+import { Images, ImageIcon, Quote } from "lucide-react"
 import type { FeedbackItem } from "@/types/feedback"
+import { cn } from "@/lib/utils"
 
 interface FeedbackCardProps {
   item: FeedbackItem
+  index: number
   onClick: () => void
 }
 
-export function FeedbackCard({ item, onClick }: FeedbackCardProps) {
+const AVATAR_COLORS = [
+  "bg-primary text-primary-foreground",
+  "bg-accent text-accent-foreground",
+  "bg-foreground text-background",
+]
+
+// Alternate a slight tilt so the grid reads like pinned photos.
+const TILTS = ["lg:-rotate-1", "lg:rotate-1", "lg:-rotate-[0.5deg]"]
+
+export function FeedbackCard({ item, index, onClick }: FeedbackCardProps) {
   const images = [...item.feedback_images].sort((a, b) => a.display_order - b.display_order)
-  const coverImage = images[0]
-  const thumbs = images.slice(1, 4)
-  const extraCount = images.length - 4
+  const cover = images[0]
+  const initial = item.customer_name.trim().charAt(0).toUpperCase()
 
   return (
-    <div
-      className="group bg-card rounded-2xl overflow-hidden border border-border cursor-pointer hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 flex"
+    <button
+      type="button"
       onClick={onClick}
+      className={cn(
+        "group w-full text-left bg-card rounded-3xl border border-border overflow-hidden tech-shadow transition-all duration-300 hover:rotate-0 hover:-translate-y-1.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+        TILTS[index % TILTS.length]
+      )}
     >
-      {/* Image side */}
-      <div className="w-48 flex-shrink-0 relative bg-muted min-h-[180px]">
-        {coverImage ? (
+      {/* Photo */}
+      <div className="relative aspect-[4/3] bg-muted overflow-hidden">
+        {cover ? (
           <Image
-            src={coverImage.image_url}
-            alt={item.customer_name}
+            src={cover.image_url}
+            alt={`Ảnh feedback của ${item.customer_name}`}
             fill
-            sizes="192px"
-            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-            <ImageIcon className="w-8 h-8 opacity-30" />
+            <ImageIcon className="w-10 h-10 opacity-30" />
           </div>
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         {images.length > 1 && (
-          <div className="absolute bottom-2 right-2 bg-black/55 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full backdrop-blur-sm">
-            📷 {images.length}
-          </div>
+          <span className="absolute top-3 right-3 inline-flex items-center gap-1 bg-black/55 text-white text-xs font-semibold px-2.5 py-1 rounded-full backdrop-blur-sm">
+            <Images className="w-3.5 h-3.5" />
+            {images.length}
+          </span>
         )}
       </div>
 
-      {/* Content side */}
-      <div className="flex-1 p-5 flex flex-col justify-between min-w-0">
-        <div>
-          <span className="text-5xl leading-none text-primary/60 font-serif block mb-1">"</span>
-          <p className="text-sm text-foreground/80 italic leading-relaxed line-clamp-4">
-            {item.quote}
-          </p>
+      {/* Quote bubble */}
+      <div className="p-5 space-y-4">
+        <div className="relative rounded-2xl rounded-tl-sm bg-secondary/60 px-4 py-3">
+          <Quote className="absolute -top-3 left-3 w-6 h-6 text-primary fill-primary/20" />
+          <p className="text-foreground leading-relaxed line-clamp-3">{item.quote}</p>
         </div>
-        <div>
-          {thumbs.length > 0 && (
-            <div className="flex gap-1.5 mb-3">
-              {thumbs.map((img) => (
-                <div
-                  key={img.id}
-                  className="w-8 h-8 rounded-md overflow-hidden border border-border flex-shrink-0 relative"
-                >
-                  <Image
-                    src={img.image_url}
-                    alt=""
-                    fill
-                    sizes="32px"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-              {extraCount > 0 && (
-                <div className="w-8 h-8 rounded-md bg-muted border border-border flex items-center justify-center text-[9px] font-bold text-muted-foreground flex-shrink-0">
-                  +{extraCount}
-                </div>
-              )}
-            </div>
-          )}
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-bold text-foreground">{item.customer_name}</span>
-            <span className="text-[11px] text-primary/70 flex items-center gap-1">
-              <Eye className="w-3 h-3" />
-              {images.length > 1 ? `Xem ${images.length} ảnh` : "Xem ảnh"}
-            </span>
+
+        <div className="flex items-center gap-3">
+          <span
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0",
+              AVATAR_COLORS[index % AVATAR_COLORS.length]
+            )}
+          >
+            {initial}
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-bold text-foreground truncate">{item.customer_name}</p>
+            <p className="text-xs text-muted-foreground">Khách hàng HMWorkshop</p>
           </div>
+          <span className="text-xs font-semibold text-primary opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+            Xem ảnh →
+          </span>
         </div>
       </div>
-    </div>
+    </button>
   )
 }
