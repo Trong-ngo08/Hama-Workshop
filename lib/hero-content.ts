@@ -3,28 +3,22 @@
 // imports — the admin form (a client component) uses it too.
 export const HERO_CONTENT_KEY = 'hero_content'
 
-export const DEFAULT_HERO_IMAGE = '/hero-image.jpg'
-
 export interface HeroContent {
-  imageUrl: string
-  /** TikTok clip link; when set it replaces the hero image. */
+  /** TikTok clip link shown beside the hero text. */
   videoUrl: string
   titleLine1: string
   titleLine2: string
   description: string
   primaryCta: string
-  quote: string
 }
 
 export const DEFAULT_HERO_CONTENT: HeroContent = {
-  imageUrl: DEFAULT_HERO_IMAGE,
   videoUrl: '',
   titleLine1: 'In 3D theo ý bạn',
   titleLine2: '× Thiết kế độc bản',
   description:
     'Từ một ý tưởng, một tấm ảnh hay một cái tên — chúng tôi biến nó thành món đồ chỉ thuộc về bạn. Không đại trà. Không rập khuôn.',
-  primaryCta: 'Khám phá sản phẩm',
-  quote: 'Mỗi lớp in đều mang một phần câu chuyện của bạn.'
+  primaryCta: 'Khám phá sản phẩm'
 }
 
 function pick(value: unknown, fallback: string): string {
@@ -51,13 +45,11 @@ export function parseHeroContent(raw: unknown): HeroContent {
   const d = DEFAULT_HERO_CONTENT
 
   return {
-    imageUrl: pick(data.imageUrl, d.imageUrl),
     videoUrl: pick(data.videoUrl, d.videoUrl),
     titleLine1: pick(data.titleLine1, d.titleLine1),
     titleLine2: pick(data.titleLine2, d.titleLine2),
     description: pick(data.description, d.description),
-    primaryCta: pick(data.primaryCta, d.primaryCta),
-    quote: pick(data.quote, d.quote)
+    primaryCta: pick(data.primaryCta, d.primaryCta)
   }
 }
 

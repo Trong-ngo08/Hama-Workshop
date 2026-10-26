@@ -10,7 +10,6 @@ import { applyDiscountSetting } from '@/lib/pricing'
 import { getDiscountsEnabled, getHeroContent } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
 import { ArrowRight, Box } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 const MARQUEE_ITEMS = [
@@ -54,7 +53,7 @@ export default async function HomePage() {
 
       <main>
         {/* ── Hero ─────────────────────────────────────────── */}
-        <section className='relative pt-12 lg:pt-20 pb-14 overflow-hidden'>
+        <section className='relative py-8 lg:py-6 overflow-hidden'>
           <div className='absolute inset-0 warm-texture' />
           {/* Decorative spinning ring */}
           <div className='absolute -top-32 -right-32 w-96 h-96 rounded-full border border-primary/10 animate-spin-slow pointer-events-none' />
@@ -64,18 +63,18 @@ export default async function HomePage() {
           />
 
           <div className='container mx-auto px-4 sm:px-6 lg:px-8 relative'>
-            <div className='grid lg:grid-cols-2 gap-12 lg:gap-16 items-center lg:items-stretch'>
-              {/* Left – Text + quote calculator. On desktop the headline lines
-                  up with the top of the media and the calculator with its bottom. */}
-              <div className='space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:justify-between lg:gap-6'>
-                <div className='space-y-6'>
-                  {/* Headline */}
-                  <h1 className='animate-fade-in-up delay-150 text-4xl lg:text-5xl font-bold leading-tight text-foreground text-balance'>
+            <div
+              className={`grid gap-10 lg:gap-16 ${videoId ? 'lg:grid-cols-[minmax(0,1fr)_auto] lg:items-stretch' : ''}`}
+            >
+              {/* Left – Text + quote calculator, centred against the clip */}
+              <div className='space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:justify-center lg:gap-12'>
+                <div className='space-y-6 lg:space-y-8'>
+                  <h1 className='animate-fade-in-up delay-150 text-4xl md:text-5xl 2xl:text-6xl font-bold leading-tight text-foreground text-balance'>
                     {hero.titleLine1}{' '}
                     <span className='block text-primary'>{hero.titleLine2}</span>
                   </h1>
 
-                  <p className='animate-fade-in-up delay-300 text-lg text-muted-foreground leading-relaxed max-w-xl'>
+                  <p className='animate-fade-in-up delay-300 text-lg xl:text-xl text-muted-foreground leading-relaxed max-w-2xl'>
                     {hero.description}
                   </p>
 
@@ -94,49 +93,21 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                <div className='animate-fade-in-up delay-500 max-w-xl'>
+                <div className='animate-fade-in-up delay-500 max-w-2xl'>
                   <PrintQuoteCalculator />
                 </div>
               </div>
 
-              {/* Right – Image */}
-              <div
-                className={`animate-fade-in-scale delay-300 relative ${videoId ? 'w-fit mx-auto' : ''}`}
-              >
-                {videoId ? (
-                  // TikTok clips are vertical: keep 9:16 and roughly the
-                  // height of the left column.
-                  <div className='mx-auto aspect-[9/16] h-[36rem] max-h-[80vh] lg:h-full lg:max-h-none max-w-full rounded-2xl overflow-hidden tech-shadow bg-black'>
+              {/* Right – vertical TikTok clip, as tall as the screen allows */}
+              {videoId && (
+                <div className='animate-fade-in-scale delay-300 relative w-full max-w-sm mx-auto lg:max-w-none lg:w-auto'>
+                  <div className='aspect-[9/16] w-full lg:w-auto lg:h-[calc(100svh-8rem)] lg:min-h-[32rem] rounded-2xl overflow-hidden tech-shadow bg-black'>
                     <HeroTikTok videoId={videoId} />
                   </div>
-                ) : (
-                  <div className='aspect-square rounded-2xl overflow-hidden tech-shadow animate-float'>
-                    <Image
-                      src={hero.imageUrl}
-                      alt='Sản phẩm in 3D cá nhân hóa của HMWorkshop'
-                      width={600}
-                      height={600}
-                      className='object-cover w-full h-full'
-                      priority
-                    />
-                  </div>
-                )}
-                {/* Quote card – would cover the TikTok controls, so image only */}
-                {!videoId && (
-                  <div className='animate-fade-in-left delay-700 absolute -bottom-6 -left-6 bg-card p-6 rounded-2xl tech-shadow max-w-xs border border-border/50'>
-                    <div className='flex items-start gap-3'>
-                      <span className='text-3xl text-primary leading-none mt-1'>
-                        "
-                      </span>
-                      <p className='text-sm italic text-muted-foreground leading-relaxed'>
-                        {hero.quote}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {/* Floating accent dot */}
-                <div className='absolute -top-4 -right-4 w-8 h-8 rounded-full bg-accent/20 border border-accent/40 animate-pulse-dot' />
-              </div>
+                  {/* Floating accent dot */}
+                  <div className='absolute -top-4 -right-4 w-8 h-8 rounded-full bg-accent/20 border border-accent/40 animate-pulse-dot' />
+                </div>
+              )}
             </div>
           </div>
         </section>

@@ -1,6 +1,5 @@
 'use client'
 
-import { SingleImageUpload } from '@/components/admin/single-image-upload'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -8,7 +7,6 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
   DEFAULT_HERO_CONTENT,
-  DEFAULT_HERO_IMAGE,
   HERO_CONTENT_KEY,
   parseHeroContent,
   tiktokVideoId,
@@ -19,14 +17,13 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-type TextField = Exclude<keyof HeroContent, 'imageUrl' | 'videoUrl'>
+type TextField = Exclude<keyof HeroContent, 'videoUrl'>
 
 const TEXT_FIELDS: { key: TextField; label: string; multiline?: boolean }[] = [
   { key: 'titleLine1', label: 'Tiêu đề dòng 1' },
   { key: 'titleLine2', label: 'Tiêu đề dòng 2 (màu nhấn)' },
   { key: 'description', label: 'Mô tả', multiline: true },
-  { key: 'primaryCta', label: 'Nút chính (→ Sản phẩm)' },
-  { key: 'quote', label: 'Câu quote dưới ảnh' }
+  { key: 'primaryCta', label: 'Nút chính (→ Sản phẩm)' }
 ]
 
 interface HeroSettingCardProps {
@@ -79,15 +76,6 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
       return
     }
 
-    // The previous uploaded image is no longer referenced anywhere.
-    if (saved.imageUrl !== next.imageUrl && saved.imageUrl !== DEFAULT_HERO_IMAGE) {
-      fetch('/api/delete-image', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: saved.imageUrl })
-      }).catch((err) => console.error('[settings] old hero image delete error:', err))
-    }
-
     setSaved(next)
     setForm(next)
     toast.success('Đã cập nhật hero trang chủ')
@@ -112,25 +100,8 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
       <CardContent className='space-y-6'>
         <div className='grid lg:grid-cols-2 gap-6'>
           <div className='space-y-2'>
-            <Label>Ảnh hero</Label>
-            <SingleImageUpload
-              value={form.imageUrl === DEFAULT_HERO_IMAGE ? undefined : form.imageUrl}
-              onChange={(url) =>
-                setForm((prev) => ({ ...prev, imageUrl: url ?? DEFAULT_HERO_IMAGE }))
-              }
-              uploadEndpoint='/api/upload-hero-image'
-              deleteOnRemove={false}
-              disabled={isSaving}
-              placeholder='Tải ảnh hero mới (nên dùng ảnh vuông)'
-            />
-            {form.imageUrl === DEFAULT_HERO_IMAGE && (
-              <p className='text-xs text-muted-foreground'>
-                Đang dùng ảnh mặc định.
-              </p>
-            )}
-
-            <div className='space-y-1.5 pt-4'>
-              <Label htmlFor='hero-videoUrl'>Link clip TikTok (thay cho ảnh)</Label>
+            <div className='space-y-1.5'>
+              <Label htmlFor='hero-videoUrl'>Link clip TikTok</Label>
               <Input
                 id='hero-videoUrl'
                 value={form.videoUrl}
@@ -139,8 +110,8 @@ export function HeroSettingCard({ initialContent }: HeroSettingCardProps) {
                 onChange={(e) => setForm((prev) => ({ ...prev, videoUrl: e.target.value }))}
               />
               <p className='text-xs text-muted-foreground'>
-                Dán link chia sẻ từ app hoặc web TikTok. Clip tự chạy không tiếng, khách
-                bấm nút loa để bật tiếng. Để trống thì trang chủ hiện ảnh hero.
+                Dán link chia sẻ từ app hoặc web TikTok (clip dọc). Clip tự chạy và lặp
+                lại trên trang chủ. Để trống thì hero chỉ hiện phần chữ.
               </p>
             </div>
           </div>
