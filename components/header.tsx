@@ -1,10 +1,10 @@
 'use client'
 
+import { BrandLogo } from '@/components/brand-logo'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Menu, X } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -29,13 +29,7 @@ export function Header() {
             href='/'
             className='flex shrink-0 items-center gap-2 font-bold text-xl group'
           >
-            <Image
-              src='/logo.png'
-              alt='HMWorkshop'
-              width={200}
-              className='h-10 w-auto dark:invert dark:brightness-90'
-              height={64}
-            />
+            <BrandLogo />
           </Link>
 
           {/* Desktop Navigation */}

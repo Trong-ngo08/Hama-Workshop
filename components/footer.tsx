@@ -1,5 +1,5 @@
+import { BrandLogo } from '@/components/brand-logo'
 import { Facebook, Mail } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export function Footer() {
@@ -14,13 +14,7 @@ export function Footer() {
               href='/'
               className='flex items-center gap-2 font-bold text-2xl uppercase tracking-tighter font-mono'
             >
-              <Image
-                src='/logo.png'
-                alt='HMWorkshop'
-                width={100}
-                height={40}
-                className='h-10 w-auto dark:invert dark:brightness-90'
-              />
+              <BrandLogo />
             </Link>
             <p className='text-sm text-muted-foreground leading-relaxed font-medium'>
               Xưởng in 3D cá nhân hóa theo yêu cầu. Quà tặng, đèn ngủ, decor và
