@@ -12,7 +12,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
-const PAGE_SIZE = 12
+const PAGE_SIZE = 9
 
 interface SearchParams {
   category?: string
