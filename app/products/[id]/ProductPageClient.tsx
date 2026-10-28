@@ -382,7 +382,7 @@ function ProductImageGallery({
 
         {displayImages.length > 1 && (
           <div className='grid grid-cols-4 gap-2'>
-            {displayImages.slice(1, 5).map((image, index) => (
+            {displayImages.slice(1).map((image, index) => (
               <div
                 key={index}
                 className='aspect-square rounded-lg overflow-hidden border cursor-pointer hover:scale-105 transition-transform'
