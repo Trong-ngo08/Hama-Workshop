@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 const MESSENGER_URL = 'https://m.me/61550244332051'
-const ZALO_URL = 'https://zalo.me/0325311497'
+const ZALO_URL = 'https://zalo.me/0984702938'
 
 // Messenger glyph from Simple Icons (CC0).
 const MESSENGER_PATH =
