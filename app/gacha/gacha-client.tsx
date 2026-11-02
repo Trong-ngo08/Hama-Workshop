@@ -11,11 +11,9 @@ import {
 } from '@/components/ui/dialog'
 import { GACHA_SLICES, MESSENGER_URL, pickSliceIndex } from '@/lib/gacha'
 import { Loader2, MessageCircle, Sparkles } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const SPIN_MS = 5000
-// One spin per browser; the result is kept so a reload shows it again.
-const STORAGE_KEY = 'hmw-gacha-result'
 
 const SLICE_COLORS = [
   { fill: 'var(--primary)', text: 'var(--primary-foreground)' },
@@ -30,18 +28,8 @@ export default function GachaClient() {
   const [result, setResult] = useState<number | null>(null)
   const [showResult, setShowResult] = useState(false)
 
-  useEffect(() => {
-    try {
-      const saved = Number(localStorage.getItem(STORAGE_KEY))
-      if (localStorage.getItem(STORAGE_KEY) !== null && GACHA_SLICES[saved]) {
-        setResult(saved)
-        setRotation(landingAngle(saved, 0))
-      }
-    } catch {}
-  }, [])
-
   const spin = () => {
-    if (spinning || result !== null) return
+    if (spinning) return
     const index = pickSliceIndex()
     setSpinning(true)
     setRotation(rotation + landingAngle(index, rotation) + 360 * 6)
@@ -49,9 +37,6 @@ export default function GachaClient() {
       setSpinning(false)
       setResult(index)
       setShowResult(true)
-      try {
-        localStorage.setItem(STORAGE_KEY, String(index))
-      } catch {}
     }, SPIN_MS)
   }
 
@@ -77,7 +62,7 @@ export default function GachaClient() {
             size='lg'
             className='w-full rounded-full font-bold'
             onClick={spin}
-            disabled={spinning || result !== null}
+            disabled={spinning}
           >
             {spinning ? (
               <>
@@ -85,7 +70,7 @@ export default function GachaClient() {
                 Đang quay...
               </>
             ) : result !== null ? (
-              'Bạn đã dùng lượt quay'
+              'Quay lại'
             ) : (
               'Quay ngay'
             )}
@@ -108,8 +93,8 @@ export default function GachaClient() {
           )}
 
           <p className='text-xs text-muted-foreground'>
-            Mỗi người được quay một lần. Phiếu giảm giá và quà áp dụng khi mua
-            hàng tại HMWorkshop.
+            Kết quả chỉ được tính khi shop cho bạn quay. Phiếu giảm giá và quà
+            áp dụng khi mua hàng tại HMWorkshop.
           </p>
         </CardContent>
       </Card>
