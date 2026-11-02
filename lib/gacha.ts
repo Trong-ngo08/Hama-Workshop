@@ -13,7 +13,7 @@ const OFF_10K: GachaSlice = { label: 'Giảm 10K', prize: 'Phiếu giảm 10.000
 const CLICKER: GachaSlice = { label: 'Clicker 30K', prize: '1 clicker loại 30.000đ' }
 const SPECIAL: GachaSlice = {
   label: 'Mô hình 150-300K',
-  prize: '1 mô hình 150.000đ – 300.000đ do shop chọn',
+  prize: '1 mô hình đặc biệt 150.000đ – 300.000đ',
   special: true
 }
 

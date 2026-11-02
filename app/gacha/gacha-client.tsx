@@ -69,7 +69,7 @@ export default function GachaClient() {
             <li>Phiếu giảm 10.000đ</li>
             <li>1 clicker loại 30.000đ</li>
             <li className='text-foreground font-semibold'>
-              Ô đặc biệt: 1 mô hình 150.000đ – 300.000đ do shop chọn
+              1 mô hình đặc biệt 150.000đ – 300.000đ
             </li>
           </ul>
 

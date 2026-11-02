@@ -26,7 +26,7 @@ export default function GachaPage() {
             <h1 className='text-3xl lg:text-4xl font-bold'>Quay gacha nhận quà</h1>
             <p className='text-lg text-muted-foreground max-w-2xl mx-auto text-pretty'>
               Bấm quay để thử vận may: phiếu giảm giá, clicker hoặc một mô hình
-              in 3D do shop chọn.
+              đặc biệt.
             </p>
           </div>
 
