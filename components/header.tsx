@@ -3,6 +3,7 @@
 import { BrandLogo } from '@/components/brand-logo'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { Printer3dIcon } from '@/components/printer-3d-icon'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
@@ -62,12 +63,13 @@ export function Header() {
             <ThemeToggle />
             <Button
               asChild
-              className='h-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-5 py-1.5 text-xs leading-tight text-center transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/20'
+              className='group gap-0 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20'
             >
               <Link href='/in-theo-yeu-cau'>
-                Hướng dẫn
-                <br />
-                in theo yêu cầu
+                <span className='inline-flex w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-5 group-hover:mr-2 group-hover:opacity-100'>
+                  <Printer3dIcon className='size-5 shrink-0' />
+                </span>
+                In theo yêu cầu
               </Link>
             </Button>
           </div>
@@ -123,7 +125,8 @@ export function Header() {
                   href='/in-theo-yeu-cau'
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Hướng dẫn in theo yêu cầu
+                  <Printer3dIcon className='size-5' />
+                  In theo yêu cầu
                 </Link>
               </Button>
             </nav>
