@@ -57,7 +57,7 @@ export default function ContactPage() {
                           className='bg-primary hover:bg-primary/90 text-primary-foreground rounded-full'
                           asChild
                         >
-                          <Link href='tel:0325311497'>
+                          <Link href='tel:0984702938'>
                             <Phone className='w-4 h-4 mr-2' />
                             Gọi ngay
                           </Link>
@@ -156,7 +156,7 @@ export default function ContactPage() {
                       </div>
                       <div className='space-y-1'>
                         <h3 className='font-semibold'>Điện thoại</h3>
-                        <p className='text-muted-foreground'>0325311497</p>
+                        <p className='text-muted-foreground'>0984702938</p>
                       </div>
                     </div>
 
