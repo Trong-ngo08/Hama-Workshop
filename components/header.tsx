@@ -18,7 +18,8 @@ export function Header() {
     { name: 'Trang chủ', href: '/' },
     { name: 'Sản phẩm', href: '/products' },
     { name: 'Feedback', href: '/feedbacks' },
-    { name: 'Quay gacha', href: '/gacha' },
+    // Hidden for now at the owner's request; the /gacha page still works by direct link.
+    // { name: 'Quay gacha', href: '/gacha' },
     { name: 'Liên hệ', href: '/contact' }
   ]
 
