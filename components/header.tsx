@@ -17,6 +17,7 @@ export function Header() {
     { name: 'Trang chủ', href: '/' },
     { name: 'Sản phẩm', href: '/products' },
     { name: 'Feedback', href: '/feedbacks' },
+    { name: 'Quay gacha', href: '/gacha' },
     { name: 'Liên hệ', href: '/contact' }
   ]
 
@@ -61,9 +62,13 @@ export function Header() {
             <ThemeToggle />
             <Button
               asChild
-              className='bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/20'
+              className='h-auto bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-5 py-1.5 text-xs leading-tight text-center transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/20'
             >
-              <Link href='/contact'>Đặt hàng ngay</Link>
+              <Link href='/in-theo-yeu-cau'>
+                Hướng dẫn
+                <br />
+                in theo yêu cầu
+              </Link>
             </Button>
           </div>
 
@@ -114,8 +119,11 @@ export function Header() {
                 asChild
                 className='bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 w-fit'
               >
-                <Link href='/contact' onClick={() => setIsMenuOpen(false)}>
-                  Đặt hàng ngay
+                <Link
+                  href='/in-theo-yeu-cau'
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Hướng dẫn in theo yêu cầu
                 </Link>
               </Button>
             </nav>
