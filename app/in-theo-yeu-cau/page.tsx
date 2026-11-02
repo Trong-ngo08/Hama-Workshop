@@ -1,10 +1,11 @@
+import { FacebookOrderButton } from '@/components/facebook-order-button'
 import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
 import { PrintQuoteCalculator } from '@/components/print-quote-calculator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatVnd, PRICE_PER_GRAM, PRICE_PER_HOUR } from '@/lib/print-quote'
-import { ExternalLink, Facebook, Printer } from 'lucide-react'
+import { ExternalLink, Printer } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -12,9 +13,6 @@ export const metadata: Metadata = {
   description:
     'Chọn mẫu 3D miễn phí trên MakerWorld, dán link để xem giá in và đặt hàng qua Facebook HMWorkshop.'
 }
-
-const FACEBOOK_PAGE_URL =
-  'https://www.facebook.com/profile.php?id=61550244332051'
 
 const MODEL_SITES = [
   { name: 'MakerWorld', url: 'https://makerworld.com/vi', recommended: true },
@@ -28,21 +26,6 @@ function StepNumber({ n }: { n: number }) {
     <span className='w-9 h-9 shrink-0 rounded-full bg-primary text-primary-foreground font-bold flex items-center justify-center'>
       {n}
     </span>
-  )
-}
-
-function OrderButton() {
-  return (
-    <Button
-      asChild
-      size='lg'
-      className='rounded-full px-8 shadow-lg shadow-primary/20'
-    >
-      <a href={FACEBOOK_PAGE_URL} target='_blank' rel='noopener noreferrer'>
-        <Facebook className='w-4 h-4' />
-        Đặt hàng
-      </a>
-    </Button>
   )
 }
 
@@ -138,7 +121,7 @@ export default function CustomPrintGuidePage() {
                   Bấm nút bên dưới để nhắn tin cho page Facebook của shop, gửi
                   link mẫu và màu bạn muốn.
                 </p>
-                <OrderButton />
+                <FacebookOrderButton />
               </div>
             </li>
           </ol>
@@ -158,7 +141,7 @@ export default function CustomPrintGuidePage() {
                 Khách hàng in theo yêu cầu cần thanh toán trước toàn bộ chi phí.
               </li>
             </ul>
-            <OrderButton />
+            <FacebookOrderButton />
           </div>
         </div>
       </main>

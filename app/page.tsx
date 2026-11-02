@@ -1,4 +1,5 @@
 import { AnimateIn } from '@/components/animate-in'
+import { FacebookOrderButton } from '@/components/facebook-order-button'
 import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
 import { HeroTikTok } from '@/components/hero-tiktok'
@@ -96,8 +97,9 @@ export default async function HomePage() {
                   </div>
                 </div>
 
-                <div className='order-3 animate-fade-in-up delay-500 max-w-2xl'>
+                <div className='order-3 animate-fade-in-up delay-500 max-w-2xl space-y-4'>
                   <PrintQuoteCalculator />
+                  <FacebookOrderButton />
                 </div>
               </div>
 
