@@ -99,8 +99,8 @@ export default function CustomPrintGuidePage() {
               <div className='space-y-3 min-w-0 flex-1'>
                 <h2 className='text-xl font-bold pt-1'>Bấm đặt hàng</h2>
                 <p className='text-muted-foreground'>
-                  Bấm nút bên dưới để nhắn tin cho page Facebook của shop, gửi
-                  link mẫu và màu bạn muốn.
+                  Bấm nút bên dưới để mở Messenger nhắn tin cho shop, gửi link
+                  mẫu và màu bạn muốn.
                 </p>
                 <FacebookOrderButton />
               </div>
