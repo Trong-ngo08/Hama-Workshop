@@ -35,7 +35,7 @@ export function Footer() {
                 Bộ sưu tập
               </Link>
               <Link
-                href='/contact'
+                href='/in-theo-yeu-cau'
                 className='text-sm text-muted-foreground hover:text-primary transition-colors'
               >
                 Đặt hàng riêng
