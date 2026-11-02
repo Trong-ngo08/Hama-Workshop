@@ -63,13 +63,16 @@ export function Header() {
             <ThemeToggle />
             <Button
               asChild
-              className='group gap-0 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20'
+              className='group relative bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-6 transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/20'
             >
               <Link href='/in-theo-yeu-cau'>
-                <span className='inline-flex w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:w-5 group-hover:mr-2 group-hover:opacity-100'>
-                  <Printer3dIcon className='size-5 shrink-0' />
+                {/* On hover the label gives way to the 3D printer icon; the label keeps the button's width. */}
+                <span className='transition-all duration-300 group-hover:opacity-0 group-hover:-translate-y-2'>
+                  In theo yêu cầu
                 </span>
-                In theo yêu cầu
+                <span className='absolute inset-0 flex items-center justify-center opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0'>
+                  <Printer3dIcon className='size-6' />
+                </span>
               </Link>
             </Button>
           </div>

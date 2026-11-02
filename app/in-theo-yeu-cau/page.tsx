@@ -14,12 +14,7 @@ export const metadata: Metadata = {
     'Chọn mẫu 3D miễn phí trên MakerWorld, dán link để xem giá in và đặt hàng qua Facebook HMWorkshop.'
 }
 
-const MODEL_SITES = [
-  { name: 'MakerWorld', url: 'https://makerworld.com/vi', recommended: true },
-  { name: 'Printables', url: 'https://www.printables.com' },
-  { name: 'Thingiverse', url: 'https://www.thingiverse.com' },
-  { name: 'Cults3D (mẫu miễn phí)', url: 'https://cults3d.com/en/free-3d-models' }
-]
+const MAKERWORLD_URL = 'https://makerworld.com/vi'
 
 function StepNumber({ n }: { n: number }) {
   return (
@@ -45,7 +40,7 @@ export default function CustomPrintGuidePage() {
               Hướng dẫn in theo yêu cầu
             </h1>
             <p className='text-lg text-muted-foreground text-pretty'>
-              Chọn mẫu bạn thích trên các trang chia sẻ mô hình 3D miễn phí, xem
+              Chọn mẫu bạn thích trên MakerWorld, xem
               giá in ngay tại đây và đặt hàng với shop qua Facebook.
             </p>
           </div>
@@ -56,27 +51,15 @@ export default function CustomPrintGuidePage() {
               <div className='space-y-3 min-w-0 flex-1'>
                 <h2 className='text-xl font-bold pt-1'>Tìm mẫu và copy link</h2>
                 <p className='text-muted-foreground'>
-                  Vào MakerWorld (ưu tiên) hoặc các trang chia sẻ mô hình in 3D
-                  miễn phí khác, tìm sản phẩm bạn muốn in rồi copy link trang
-                  mẫu đó.
+                  Vào MakerWorld (trang chia sẻ mô hình in 3D miễn phí), tìm sản
+                  phẩm bạn muốn in rồi copy link trang mẫu đó.
                 </p>
-                <div className='flex flex-wrap gap-2'>
-                  {MODEL_SITES.map((site) => (
-                    <Button
-                      key={site.name}
-                      asChild
-                      variant={site.recommended ? 'default' : 'outline'}
-                      size='sm'
-                      className='rounded-full'
-                    >
-                      <a href={site.url} target='_blank' rel='noopener noreferrer'>
-                        {site.name}
-                        {site.recommended && ' (ưu tiên)'}
-                        <ExternalLink className='w-3 h-3' />
-                      </a>
-                    </Button>
-                  ))}
-                </div>
+                <Button asChild size='sm' className='rounded-full'>
+                  <a href={MAKERWORLD_URL} target='_blank' rel='noopener noreferrer'>
+                    Mở MakerWorld
+                    <ExternalLink className='w-3 h-3' />
+                  </a>
+                </Button>
               </div>
             </li>
 
@@ -86,8 +69,6 @@ export default function CustomPrintGuidePage() {
                 <h2 className='text-xl font-bold pt-1'>Dán link để xem giá in</h2>
                 <p className='text-muted-foreground'>
                   Dán link mẫu MakerWorld vào ô bên dưới, giá in sẽ hiện ra ngay.
-                  Mẫu ở các trang khác, bạn gửi link cho shop ở bước 3 để được
-                  báo giá.
                 </p>
                 <PrintQuoteCalculator />
                 <div className='rounded-xl border border-border bg-muted/40 p-4 text-sm space-y-1'>
