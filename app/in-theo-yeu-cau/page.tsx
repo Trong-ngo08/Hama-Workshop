@@ -97,7 +97,7 @@ export default function CustomPrintGuidePage() {
             <li className='flex gap-4'>
               <StepNumber n={3} />
               <div className='space-y-3 min-w-0 flex-1'>
-                <h2 className='text-xl font-bold pt-1'>Bấm đặt hàng</h2>
+                <h2 className='text-xl font-bold pt-1'>Nhắn tin cho shop</h2>
                 <p className='text-muted-foreground'>
                   Bấm nút bên dưới để mở Messenger nhắn tin cho shop, gửi link
                   mẫu và màu bạn muốn.

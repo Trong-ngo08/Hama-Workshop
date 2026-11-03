@@ -193,6 +193,10 @@ export function PrintQuoteCalculator() {
             Có thể phát sinh chi phí hậu kỳ, vận chuyển, phụ kiện lắp thêm nếu
             bạn cần.
           </p>
+          <p className='text-sm font-medium text-foreground'>
+            Hãy nhắn tin trực tiếp cho shop để nhận báo giá và ưu đãi thêm cho
+            mẫu.
+          </p>
         </div>
       )}
     </div>
