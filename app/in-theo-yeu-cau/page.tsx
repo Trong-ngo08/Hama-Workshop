@@ -5,7 +5,7 @@ import { PrintQuoteCalculator } from '@/components/print-quote-calculator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatVnd, PRICE_PER_GRAM, PRICE_PER_HOUR } from '@/lib/print-quote'
-import { ExternalLink, Printer } from 'lucide-react'
+import { ExternalLink, Printer, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -40,8 +40,8 @@ export default function CustomPrintGuidePage() {
               Hướng dẫn in theo yêu cầu
             </h1>
             <p className='text-lg text-muted-foreground text-pretty'>
-              Chọn mẫu bạn thích trên MakerWorld, xem
-              giá in ngay tại đây và đặt hàng với shop qua Facebook.
+              Chọn mẫu bạn thích trên MakerWorld, chọn profile in, xem giá ngay
+              tại đây và nhắn tin cho shop qua Messenger.
             </p>
           </div>
 
@@ -97,10 +97,40 @@ export default function CustomPrintGuidePage() {
             <li className='flex gap-4'>
               <StepNumber n={3} />
               <div className='space-y-3 min-w-0 flex-1'>
+                <h2 className='text-xl font-bold pt-1'>Chọn 1 profile in</h2>
+                <p className='text-muted-foreground'>
+                  Một mẫu trên MakerWorld thường có nhiều profile (file in): bản
+                  đầy đủ, bản thu nhỏ, từng chi tiết riêng… Mỗi profile có giá
+                  riêng trong bảng tính giá ở trên.
+                </p>
+                <ul className='list-disc pl-5 text-sm text-muted-foreground space-y-1.5'>
+                  <li>
+                    Chọn <b className='text-foreground'>1 profile chuẩn</b> bạn
+                    muốn in. Giá tính theo profile bạn chọn,{' '}
+                    <b className='text-foreground'>không phải cộng tất cả</b>.
+                  </li>
+                  <li>
+                    Profile có nhãn{' '}
+                    <span className='inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground'>
+                      <Star className='w-3 h-3 fill-current' />
+                      Shop đề xuất
+                    </span>{' '}
+                    là profile được nhiều người in và đánh giá tốt nhất. Nếu
+                    chưa biết chọn, hãy chọn profile này.
+                  </li>
+                  <li>Ghi lại tên profile để gửi cho shop ở bước sau.</li>
+                </ul>
+              </div>
+            </li>
+
+            <li className='flex gap-4'>
+              <StepNumber n={4} />
+              <div className='space-y-3 min-w-0 flex-1'>
                 <h2 className='text-xl font-bold pt-1'>Nhắn tin cho shop</h2>
                 <p className='text-muted-foreground'>
                   Bấm nút bên dưới để mở Messenger nhắn tin cho shop, gửi link
-                  mẫu và màu bạn muốn.
+                  mẫu, tên profile và màu bạn muốn. Nhắn tin trực tiếp để nhận
+                  báo giá và ưu đãi thêm cho mẫu.
                 </p>
                 <FacebookOrderButton />
               </div>
