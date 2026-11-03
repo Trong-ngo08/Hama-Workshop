@@ -14,7 +14,7 @@ import {
   quote,
   type FilamentUsage
 } from '@/lib/print-quote'
-import { Calculator, Loader2, RotateCcw } from 'lucide-react'
+import { Calculator, Loader2, RotateCcw, Star } from 'lucide-react'
 import { useState } from 'react'
 
 interface MakerWorldInstance {
@@ -22,12 +22,15 @@ interface MakerWorldInstance {
   title: string
   weight: number
   predictionHours: number
+  printCount: number
+  rating: number | null
   filaments: FilamentUsage[]
 }
 
 interface MakerWorldDesign {
   title: string
   url: string
+  recommended: number
   instances: MakerWorldInstance[]
 }
 
@@ -42,6 +45,8 @@ function quoteInstance(inst: MakerWorldInstance) {
   return {
     id: inst.id,
     title: inst.title,
+    printCount: inst.printCount,
+    rating: inst.rating,
     grams,
     hours,
     price: quote(grams, hours),
@@ -85,7 +90,11 @@ export function PrintQuoteCalculator() {
     setError(null)
   }
 
-  const quotes = design?.instances.map(quoteInstance) ?? []
+  // The recommended file goes first so customers see it before the rest.
+  const quotes = (design?.instances.map(quoteInstance) ?? []).sort(
+    (a, b) =>
+      Number(b.id === design?.recommended) - Number(a.id === design?.recommended)
+  )
   const converted = [...new Set(quotes.flatMap((q) => q.converted))]
 
   return (
@@ -162,11 +171,29 @@ export function PrintQuoteCalculator() {
           </div>
 
           <ul className='space-y-2'>
-            {quotes.map((q) => (
+            {quotes.map((q) => {
+              const recommended = q.id === design.recommended
+              return (
               <li
                 key={q.id}
-                className='rounded-xl border border-border bg-background p-3 space-y-1.5'
+                className={
+                  recommended
+                    ? 'rounded-xl border-2 border-primary bg-primary/5 p-3 space-y-1.5'
+                    : 'rounded-xl border border-border bg-background p-3 space-y-1.5'
+                }
               >
+                {recommended && (
+                  <p className='flex flex-wrap items-center gap-x-2 gap-y-1 text-xs'>
+                    <span className='inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 font-semibold text-primary-foreground'>
+                      <Star className='w-3 h-3 fill-current' />
+                      Shop đề xuất
+                    </span>
+                    <span className='text-muted-foreground'>
+                      Nhiều người in nhất ({formatNumber(q.printCount)} lượt in
+                      {q.rating ? `, ${q.rating.toFixed(1)}★` : ''})
+                    </span>
+                  </p>
+                )}
                 <div className='flex items-start justify-between gap-3'>
                   <p className='font-medium text-foreground leading-snug'>
                     {q.title}
@@ -181,11 +208,15 @@ export function PrintQuoteCalculator() {
                   in khoảng {formatDuration(q.hours)}
                 </p>
               </li>
-            ))}
+              )
+            })}
           </ul>
 
           <p className='text-xs text-muted-foreground'>
-            Mỗi file in được báo giá riêng.{' '}
+            <span className='font-semibold text-foreground'>
+              Chọn 1 profile chuẩn bạn muốn, giá tính theo profile bạn in,
+              KHÔNG PHẢI TẤT CẢ.
+            </span>{' '}
             {converted.length > 0 &&
               `Đã quy đổi ${converted.join(', ')} sang PETG. `}
             {quotes.some((q) => q.price.belowMinimum) &&

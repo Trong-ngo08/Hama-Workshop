@@ -15,6 +15,10 @@ interface RawInstance {
   title?: string
   prediction?: number
   weight?: number
+  printCount?: number
+  ratingCount?: number
+  ratingScoreTotal?: number
+  score?: number
   instanceFilaments?: RawFilament[]
 }
 
@@ -57,6 +61,9 @@ export async function GET(request: Request) {
       title: i.title ?? 'Profile',
       weight: Number(i.weight),
       predictionHours: Number(i.prediction) / 3600,
+      printCount: i.printCount ?? 0,
+      rating: i.ratingCount ? (i.ratingScoreTotal ?? 0) / i.ratingCount : null,
+      score: i.score ?? 0,
       filaments: (i.instanceFilaments ?? []).map((f) => ({
         type: f.type ?? 'PLA',
         grams: Number(f.usedG) || 0
@@ -75,12 +82,19 @@ export async function GET(request: Request) {
     instances.find((i) => i.id === design.defaultInstanceId)?.id ??
     instances[0].id
 
+  // Recommend the file the community has printed most, weighted by
+  // MakerWorld's own rating confidence score, so a well-tested file wins.
+  const recommended = instances.reduce((best, i) =>
+    i.printCount * i.score > best.printCount * best.score ? i : best
+  ).id
+
   return NextResponse.json({
     id: design.id,
     title: design.title,
     cover: design.coverUrl ?? null,
     url: `https://makerworld.com/vi/models/${design.id}`,
     selected,
+    recommended,
     instances
   })
 }
