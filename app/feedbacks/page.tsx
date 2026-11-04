@@ -4,7 +4,15 @@ import { createServerClient } from '@supabase/ssr'
 import { MessageSquare } from 'lucide-react'
 import { cookies } from 'next/headers'
 import type { FeedbackItem } from '@/types/feedback'
+import type { Metadata } from 'next'
 import FeedbacksClient from './feedbacks-client'
+
+export const metadata: Metadata = {
+  title: 'Feedback khách hàng',
+  description:
+    'Hình ảnh và cảm nhận thực tế của khách đã in 3D tại HMWorkshop, xưởng in 3D theo yêu cầu ở Nha Trang.',
+  alternates: { canonical: '/feedbacks' }
+}
 
 async function getFeedbacks(): Promise<FeedbackItem[]> {
   const cookieStore = cookies()

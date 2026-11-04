@@ -22,7 +22,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-const BASE_URL = 'https://hmworkshop.vn'
+const BASE_URL = 'https://www.hmworkshop.vn'
 
 interface Product {
   id: string

@@ -37,7 +37,8 @@ export async function generateMetadata({
   return {
     title,
     description:
-      'Khám phá bộ sưu tập sản phẩm in 3D cá nhân hóa của HMWorkshop.',
+      'Bộ sưu tập sản phẩm in 3D của HMWorkshop, xưởng in 3D theo yêu cầu tại Nha Trang: mô hình, móc khóa, đèn ngủ, decor.',
+    alternates: { canonical: '/products' },
     robots: hasFilter
       ? { index: false, follow: true }
       : { index: true, follow: true }

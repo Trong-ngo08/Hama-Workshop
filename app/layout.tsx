@@ -5,6 +5,7 @@ import type React from 'react'
 import { FloatingContact } from '@/components/floating-contact'
 import { SiteThemeProvider } from '@/components/site-theme-provider'
 import { Toaster } from '@/components/ui/sonner'
+import { SITE_URL, localBusinessJsonLd } from '@/lib/site'
 import './globals.css'
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -20,13 +21,13 @@ const spaceMono = Space_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://hmworkshop.vn'),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'In 3D cá nhân hóa theo yêu cầu | HMWorkshop',
+    default: 'In 3D theo yêu cầu tại Nha Trang | HMWorkshop',
     template: '%s | HMWorkshop – In 3D theo yêu cầu'
   },
   description:
-    'Xưởng in 3D cá nhân hóa theo yêu cầu: quà tặng khắc tên, đèn ngủ, decor, mô hình. Thiết kế riêng, không đại trà, tư vấn miễn phí, giao hàng toàn quốc.',
+    'Xưởng in 3D theo yêu cầu tại Nha Trang: mô hình, quà tặng, đèn ngủ, decor in nhựa PETG. Dán link MakerWorld để xem giá ngay, giao hàng toàn quốc.',
   keywords: [
     'in 3d',
     'in 3d theo yêu cầu',
@@ -55,11 +56,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'vi_VN',
-    url: 'https://hmworkshop.vn',
     siteName: 'HMWorkshop',
-    title: 'In 3D cá nhân hóa theo yêu cầu | HMWorkshop',
+    title: 'In 3D theo yêu cầu tại Nha Trang | HMWorkshop',
     description:
-      'In 3D theo yêu cầu – mỗi sản phẩm được thiết kế riêng cho đúng người sử dụng.',
+      'Xưởng in 3D theo yêu cầu tại Nha Trang – mô hình, quà tặng, decor in nhựa PETG.',
     images: [
       {
         url: '/hero-image.jpg',
@@ -72,9 +72,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'In 3D cá nhân hóa theo yêu cầu | HMWorkshop',
+    title: 'In 3D theo yêu cầu tại Nha Trang | HMWorkshop',
     description:
-      'Sản phẩm in 3D cá nhân hóa. Không rập khuôn, không đại trà.',
+      'Xưởng in 3D theo yêu cầu tại Nha Trang. Không rập khuôn, không đại trà.',
     images: ['/hero-image.jpg']
   },
 
@@ -97,6 +97,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className='font-sans antialiased'>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        />
         <SiteThemeProvider>
           {children}
           <FloatingContact />

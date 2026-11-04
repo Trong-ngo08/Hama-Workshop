@@ -1,5 +1,6 @@
 import { applyDiscountSettingToOne } from '@/lib/pricing'
 import { getDiscountsEnabled } from '@/lib/settings'
+import { SITE_URL } from '@/lib/site'
 import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -46,7 +47,7 @@ export async function generateMetadata({
     product.seo_keywords ||
     `in 3d, quà tặng cá nhân hóa, ${product.name}, ${product.category}, nhựa petg, hmworkshop`
   const image = product.images?.[0] || '/hero-image.jpg'
-  const url = `https://hmworkshop.vn/products/${id}`
+  const url = `${SITE_URL}/products/${id}`
 
   return {
     title,

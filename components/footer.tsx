@@ -1,5 +1,6 @@
 import { BrandLogo } from '@/components/brand-logo'
-import { Facebook, Mail } from 'lucide-react'
+import { BUSINESS } from '@/lib/site'
+import { Facebook, Mail, MapPin, Phone } from 'lucide-react'
 import Link from 'next/link'
 
 export function Footer() {
@@ -17,7 +18,7 @@ export function Footer() {
               <BrandLogo />
             </Link>
             <p className='text-sm text-muted-foreground leading-relaxed font-medium'>
-              Xưởng in 3D cá nhân hóa theo yêu cầu. Quà tặng, đèn ngủ, decor và
+              Xưởng in 3D theo yêu cầu tại Nha Trang. Quà tặng, đèn ngủ, decor và
               mọi ý tưởng bạn muốn biến thành hiện thực.
             </p>
           </div>
@@ -64,10 +65,25 @@ export function Footer() {
               Kết nối
             </h3>
             <div className='space-y-4'>
+              <div className='flex items-start gap-2'>
+                <MapPin className='w-4 h-4 mt-0.5 shrink-0 text-muted-foreground' />
+                <span className='text-sm text-muted-foreground'>
+                  {BUSINESS.addressText}
+                </span>
+              </div>
+              <a
+                href={`tel:${BUSINESS.phone}`}
+                className='flex items-center gap-2 group'
+              >
+                <Phone className='w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors' />
+                <span className='text-sm text-muted-foreground group-hover:text-primary transition-colors'>
+                  {BUSINESS.phone}
+                </span>
+              </a>
               <div className='flex items-center gap-2 group'>
                 <Mail className='w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors' />
                 <span className='text-sm text-muted-foreground'>
-                  ductn19970411@gmail.com
+                  {BUSINESS.email}
                 </span>
               </div>
               <div className='flex items-center gap-6'>

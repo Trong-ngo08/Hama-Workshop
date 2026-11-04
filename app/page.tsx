@@ -10,11 +10,27 @@ import { Button } from '@/components/ui/button'
 import { applyDiscountSetting } from '@/lib/pricing'
 import { getDiscountsEnabled, getHeroContent } from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
-import { ArrowRight, Box } from 'lucide-react'
+import { ArrowRight, Box, MapPin } from 'lucide-react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    locale: 'vi_VN',
+    url: '/',
+    siteName: 'HMWorkshop',
+    title: 'In 3D theo yêu cầu tại Nha Trang | HMWorkshop',
+    description:
+      'Xưởng in 3D theo yêu cầu tại Nha Trang – mô hình, quà tặng, decor in nhựa PETG.',
+    images: [{ url: '/hero-image.jpg', width: 1200, height: 630 }]
+  }
+}
 
 const MARQUEE_ITEMS = [
   'IN 3D',
+  'NHA TRANG',
   'CÁ NHÂN HÓA',
   'ĐỘC BẢN',
   'KHÔNG ĐẠI TRÀ',
@@ -73,6 +89,10 @@ export default async function HomePage() {
                   on top and the clip beside the calculator. */}
               <div className='contents desk:flex desk:flex-col desk:justify-center desk:gap-12'>
                 <div className={`order-1 space-y-6 desk:space-y-8 ${videoId ? 'md:col-span-2' : ''}`}>
+                  <p className='animate-fade-in-up inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary'>
+                    <MapPin className='w-4 h-4' />
+                    Xưởng in 3D theo yêu cầu tại Nha Trang
+                  </p>
                   <h1 className='animate-fade-in-up delay-150 text-4xl md:text-5xl 2xl:text-6xl font-bold leading-tight text-foreground text-balance'>
                     {hero.titleLine1}{' '}
                     <span className='block text-primary'>{hero.titleLine2}</span>

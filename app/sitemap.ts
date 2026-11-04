@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
+import { SITE_URL as BASE_URL } from '@/lib/site'
 import type { MetadataRoute } from 'next'
-
-const BASE_URL = 'https://hmworkshop.vn'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient()
@@ -34,6 +33,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9
+    },
+    {
+      url: `${BASE_URL}/in-theo-yeu-cau`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9
+    },
+    {
+      url: `${BASE_URL}/feedbacks`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7
     },
     {
       url: `${BASE_URL}/contact`,

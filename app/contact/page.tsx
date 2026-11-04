@@ -5,7 +5,15 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Clock, Heart, Mail, MapPin, Phone } from 'lucide-react'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Liên hệ',
+  description:
+    'Liên hệ HMWorkshop, xưởng in 3D theo yêu cầu tại Phước Đồng, Nam Nha Trang, Khánh Hòa. Điện thoại/Zalo 0984702938.',
+  alternates: { canonical: '/contact' }
+}
 
 export default function ContactPage() {
   return (

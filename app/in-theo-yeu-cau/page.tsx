@@ -4,14 +4,72 @@ import { Header } from '@/components/header'
 import { PrintQuoteCalculator } from '@/components/print-quote-calculator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { formatVnd, PRICE_PER_GRAM, PRICE_PER_HOUR } from '@/lib/print-quote'
+import {
+  formatVnd,
+  MIN_ORDER,
+  PRICE_PER_GRAM,
+  PRICE_PER_HOUR
+} from '@/lib/print-quote'
+import { BUSINESS } from '@/lib/site'
 import { ExternalLink, Printer, Star } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Hướng dẫn in theo yêu cầu',
+  title: { absolute: 'In 3D theo yêu cầu tại Nha Trang – Bảng giá | HMWorkshop' },
   description:
-    'Chọn mẫu 3D miễn phí trên MakerWorld, dán link để xem giá in và đặt hàng qua Facebook HMWorkshop.'
+    'Dịch vụ in 3D theo yêu cầu tại Nha Trang bằng nhựa PETG. Giá 800đ/gam + 8.000đ/giờ in, dán link MakerWorld xem giá ngay, giao hàng toàn quốc.',
+  alternates: { canonical: '/in-theo-yeu-cau' },
+  openGraph: {
+    type: 'website',
+    locale: 'vi_VN',
+    url: '/in-theo-yeu-cau',
+    siteName: 'HMWorkshop',
+    title: 'In 3D theo yêu cầu tại Nha Trang | HMWorkshop',
+    description:
+      'Dán link mẫu MakerWorld để xem giá in 3D ngay. Nhựa PETG, xưởng tại Nha Trang, giao toàn quốc.',
+    images: [{ url: '/hero-image.jpg', width: 1200, height: 630 }]
+  }
+}
+
+const FAQS = [
+  {
+    q: 'Xưởng in 3D của HMWorkshop ở đâu tại Nha Trang?',
+    a: `Xưởng ở ${BUSINESS.addressText}. Bạn có thể nhắn tin hoặc gọi ${BUSINESS.phone} (có Zalo) trước khi ghé, hoặc đặt online và nhận hàng tận nơi.`
+  },
+  {
+    q: 'Giá in 3D theo yêu cầu được tính thế nào?',
+    a: `Giá = số gam nhựa × ${formatVnd(PRICE_PER_GRAM)} + số giờ in × ${formatVnd(PRICE_PER_HOUR)}. Dán link mẫu MakerWorld vào bảng tính giá ở trên là thấy giá ngay. Shop nhận đơn in theo yêu cầu từ ${formatVnd(MIN_ORDER)}.`
+  },
+  {
+    q: 'Shop in bằng nhựa gì?',
+    a: 'Shop in bằng nhựa PETG: bền, dẻo dai, chịu nhiệt tốt hơn PLA, phù hợp cả đồ trang trí lẫn đồ dùng hằng ngày. Có nhiều màu để bạn chọn.'
+  },
+  {
+    q: 'Tôi chưa có file 3D thì có in được không?',
+    a: 'Được. Bạn tìm mẫu có sẵn trên MakerWorld (miễn phí) rồi gửi link cho shop. Nếu bạn có ý tưởng riêng hoặc ảnh mẫu, hãy nhắn tin để shop tư vấn.'
+  },
+  {
+    q: 'Mẫu có nhiều profile (file in) thì chọn cái nào?',
+    a: 'Chọn 1 profile bạn muốn in, giá tính theo profile đó chứ không cộng tất cả. Nếu chưa biết chọn, hãy lấy profile có nhãn "Shop đề xuất" – profile được nhiều người in và đánh giá tốt nhất.'
+  },
+  {
+    q: 'Bao lâu thì nhận được hàng?',
+    a: 'Thời gian in của từng mẫu hiện ngay trong bảng tính giá. Khi nhận đơn, shop sẽ báo ngày hoàn thiện cụ thể. Khách ở Nha Trang có thể nhận tại xưởng, khách tỉnh khác shop gửi giao hàng toàn quốc.'
+  },
+  {
+    q: 'Thanh toán như thế nào?',
+    a: 'Với đơn in theo yêu cầu, bạn thanh toán trước toàn bộ chi phí, shop bắt đầu in ngay sau khi xác nhận.'
+  }
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a }
+  }))
 }
 
 const MAKERWORLD_URL = 'https://makerworld.com/vi'
@@ -37,11 +95,13 @@ export default function CustomPrintGuidePage() {
               In 3D theo yêu cầu
             </Badge>
             <h1 className='text-3xl lg:text-4xl font-bold'>
-              Hướng dẫn in theo yêu cầu
+              In 3D theo yêu cầu tại Nha Trang
             </h1>
             <p className='text-lg text-muted-foreground text-pretty'>
-              Chọn mẫu bạn thích trên MakerWorld, chọn profile in, xem giá ngay
-              tại đây và nhắn tin cho shop qua Messenger.
+              HMWorkshop là xưởng in 3D ở Nha Trang, nhận in mô hình, quà tặng,
+              đèn ngủ, đồ decor và đồ dùng theo mẫu bạn chọn. Chọn mẫu trên
+              MakerWorld, chọn profile in, xem giá ngay tại đây và nhắn tin cho
+              shop qua Messenger.
             </p>
           </div>
 
@@ -154,8 +214,85 @@ export default function CustomPrintGuidePage() {
             </ul>
             <FacebookOrderButton />
           </div>
+
+          <section className='mt-14 space-y-4'>
+            <h2 className='text-2xl font-bold'>
+              Xưởng in 3D theo yêu cầu ở Nha Trang
+            </h2>
+            <p className='text-muted-foreground'>
+              HMWorkshop in trực tiếp tại xưởng ở {BUSINESS.addressText} bằng
+              máy in 3D Bambu Lab, nên bạn biết rõ giá từ đầu và nhận sản phẩm
+              đúng như mẫu. Khách ở Nha Trang có thể nhắn tin hẹn nhận tại
+              xưởng, khách ở tỉnh khác shop gửi giao hàng toàn quốc.
+            </p>
+            <div className='grid gap-4 sm:grid-cols-3'>
+              <div className='rounded-xl border border-border bg-card p-4 space-y-1'>
+                <h3 className='font-semibold'>Nhựa PETG bền</h3>
+                <p className='text-sm text-muted-foreground'>
+                  Dẻo dai, chịu nhiệt tốt hơn PLA, dùng được cả cho đồ dùng hằng
+                  ngày. Nhiều màu để chọn.
+                </p>
+              </div>
+              <div className='rounded-xl border border-border bg-card p-4 space-y-1'>
+                <h3 className='font-semibold'>Giá minh bạch</h3>
+                <p className='text-sm text-muted-foreground'>
+                  {formatVnd(PRICE_PER_GRAM)}/gam nhựa + {formatVnd(PRICE_PER_HOUR)}
+                  /giờ in. Dán link là thấy giá, không phải chờ báo giá.
+                </p>
+              </div>
+              <div className='rounded-xl border border-border bg-card p-4 space-y-1'>
+                <h3 className='font-semibold'>In gì cũng được</h3>
+                <p className='text-sm text-muted-foreground'>
+                  Mô hình game, Minecraft, móc khóa, đèn ngủ, đồ decor, quà
+                  tặng, đồ cosplay và phụ kiện theo yêu cầu.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className='mt-14 space-y-4'>
+            <h2 className='text-2xl font-bold'>Câu hỏi thường gặp</h2>
+            <div className='space-y-3'>
+              {FAQS.map((f) => (
+                <details
+                  key={f.q}
+                  className='group rounded-xl border border-border bg-card p-4'
+                >
+                  <summary className='cursor-pointer font-semibold text-foreground'>
+                    {f.q}
+                  </summary>
+                  <p className='mt-2 text-sm text-muted-foreground'>{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          <section className='mt-14 space-y-4'>
+            <h2 className='text-2xl font-bold'>Địa chỉ xưởng</h2>
+            <p className='text-muted-foreground'>
+              {BUSINESS.name} – {BUSINESS.addressText}. Điện thoại/Zalo:{' '}
+              <a
+                href={`tel:${BUSINESS.phone}`}
+                className='font-semibold text-foreground hover:text-primary'
+              >
+                {BUSINESS.phone}
+              </a>
+              .
+            </p>
+            <iframe
+              title='Bản đồ xưởng HMWorkshop tại Nha Trang'
+              src={`https://www.google.com/maps?q=${encodeURIComponent(`${BUSINESS.street}, ${BUSINESS.locality}, ${BUSINESS.region}`)}&output=embed`}
+              className='w-full h-72 rounded-xl border border-border'
+              loading='lazy'
+              referrerPolicy='no-referrer-when-downgrade'
+            />
+          </section>
         </div>
       </main>
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
       <Footer />
     </div>
