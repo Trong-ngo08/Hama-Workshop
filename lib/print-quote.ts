@@ -82,13 +82,17 @@ export function quote(grams: number, hours: number) {
   const materialCost = grams * PRICE_PER_GRAM
   const timeCost = hours * PRICE_PER_HOUR
   const total = materialCost + timeCost
-  const rounded = Math.ceil(total / 1000) * 1000
+  const final = Math.ceil(total / 1000) * 1000
+  const belowMinimum = final < MIN_ORDER
   return {
     materialCost,
     timeCost,
     total,
-    belowMinimum: rounded < MIN_ORDER,
-    final: Math.max(rounded, MIN_ORDER)
+    /** Price of one print, rounded up to 1.000đ; never raised to the minimum. */
+    final,
+    belowMinimum,
+    /** Fewest copies of this print that reach the minimum order. */
+    minQuantity: belowMinimum ? Math.ceil(MIN_ORDER / Math.max(final, 1000)) : 1
   }
 }
 

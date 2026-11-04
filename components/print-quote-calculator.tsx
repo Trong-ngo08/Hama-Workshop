@@ -202,11 +202,40 @@ export function PrintQuoteCalculator() {
                     ≈ {formatVnd(q.price.final)}
                   </p>
                 </div>
-                <p className='font-mono text-xs text-muted-foreground'>
-                  {formatNumber(q.grams)} g × {formatVnd(PRICE_PER_GRAM)} +{' '}
-                  {formatNumber(q.hours, 2)} giờ × {formatVnd(PRICE_PER_HOUR)} ·
-                  in khoảng {formatDuration(q.hours)}
-                </p>
+                <dl className='font-mono text-xs text-muted-foreground space-y-0.5'>
+                  <div className='flex justify-between gap-3'>
+                    <dt>
+                      Nhựa: {formatNumber(q.grams)} g × {formatVnd(PRICE_PER_GRAM)}
+                    </dt>
+                    <dd className='whitespace-nowrap'>
+                      {formatVnd(q.price.materialCost)}
+                    </dd>
+                  </div>
+                  <div className='flex justify-between gap-3'>
+                    <dt>
+                      In: {formatDuration(q.hours)} ({formatNumber(q.hours, 2)} giờ
+                      × {formatVnd(PRICE_PER_HOUR)})
+                    </dt>
+                    <dd className='whitespace-nowrap'>
+                      {formatVnd(q.price.timeCost)}
+                    </dd>
+                  </div>
+                  <div className='flex justify-between gap-3 border-t border-border pt-0.5 font-semibold text-foreground'>
+                    <dt>Tổng (làm tròn)</dt>
+                    <dd className='whitespace-nowrap'>
+                      {formatVnd(q.price.final)}
+                    </dd>
+                  </div>
+                </dl>
+                {q.price.belowMinimum && (
+                  <p className='rounded-lg bg-amber-500/10 px-2 py-1.5 text-xs text-amber-800 dark:text-amber-300'>
+                    Shop nhận in theo yêu cầu từ {formatVnd(MIN_ORDER)}, nên bạn
+                    cần đặt ít nhất{' '}
+                    <b>{q.price.minQuantity} sản phẩm này</b> (
+                    {q.price.minQuantity} × {formatVnd(q.price.final)} ={' '}
+                    {formatVnd(q.price.minQuantity * q.price.final)}).
+                  </p>
+                )}
               </li>
               )
             })}
@@ -219,8 +248,6 @@ export function PrintQuoteCalculator() {
             </span>{' '}
             {converted.length > 0 &&
               `Đã quy đổi ${converted.join(', ')} sang PETG. `}
-            {quotes.some((q) => q.price.belowMinimum) &&
-              `Shop nhận đơn theo yêu cầu từ ${formatVnd(MIN_ORDER)}. `}
             Có thể phát sinh chi phí hậu kỳ, vận chuyển, phụ kiện lắp thêm nếu
             bạn cần.
           </p>
