@@ -1,4 +1,9 @@
 import {
+  COVER_POSITIONS_KEY,
+  parseCoverPositions,
+  type CoverPositions
+} from '@/lib/cover-position'
+import {
   DEFAULT_HERO_CONTENT,
   HERO_CONTENT_KEY,
   parseHeroContent,
@@ -60,5 +65,30 @@ export async function getHeroContent(): Promise<HeroContent> {
   } catch (error) {
     console.error('[settings] hero_content connection error:', error)
     return DEFAULT_HERO_CONTENT
+  }
+}
+
+/**
+ * Reads the per-photo cover framing map. Empty on any failure, so cards fall
+ * back to a centred crop.
+ */
+export async function getCoverPositions(): Promise<CoverPositions> {
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', COVER_POSITIONS_KEY)
+      .maybeSingle()
+
+    if (error) {
+      console.error('[settings] cover_positions read error:', error)
+      return {}
+    }
+
+    return parseCoverPositions(data?.value)
+  } catch (error) {
+    console.error('[settings] cover_positions connection error:', error)
+    return {}
   }
 }

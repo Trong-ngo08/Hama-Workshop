@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { coverStyle, type CoverPosition } from '@/lib/cover-position'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,6 +17,8 @@ interface Product {
   images: string[]
   is_featured: boolean
   is_available: boolean
+  /** Framing of the cover photo set in the admin; centred when absent. */
+  cover_position?: CoverPosition
 }
 
 interface ProductCardProps {
@@ -65,6 +68,7 @@ export function ProductCard({
             sizes='(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw'
             priority={priority}
             className='object-cover w-full h-full group-hover:scale-110 transition-transform duration-700'
+            style={coverStyle(product.cover_position)}
           />
           {secondImage && (
             <Image

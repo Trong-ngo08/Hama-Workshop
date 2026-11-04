@@ -1,5 +1,6 @@
 import { applyDiscountSettingToOne } from '@/lib/pricing'
-import { getDiscountsEnabled } from '@/lib/settings'
+import { withCoverPositions } from '@/lib/cover-position'
+import { getCoverPositions, getDiscountsEnabled } from '@/lib/settings'
 import { SITE_URL } from '@/lib/site'
 import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
@@ -103,7 +104,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <ProductPageClient
       product={visibleProduct}
-      relatedProducts={relatedProducts || []}
+      relatedProducts={withCoverPositions(
+        relatedProducts || [],
+        await getCoverPositions()
+      )}
     />
   )
 }

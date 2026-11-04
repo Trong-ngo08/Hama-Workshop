@@ -8,7 +8,12 @@ import { tiktokVideoId } from '@/lib/hero-content'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { applyDiscountSetting } from '@/lib/pricing'
-import { getDiscountsEnabled, getHeroContent } from '@/lib/settings'
+import { withCoverPositions } from '@/lib/cover-position'
+import {
+  getCoverPositions,
+  getDiscountsEnabled,
+  getHeroContent
+} from '@/lib/settings'
 import { createClient } from '@/lib/supabase/server'
 import { ArrowRight, Box, MapPin } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -46,7 +51,8 @@ export default async function HomePage() {
   const [
     { data: featuredProducts },
     discountsEnabled,
-    hero
+    hero,
+    coverPositions
   ] = await Promise.all([
     supabase
       .from('products')
@@ -58,10 +64,14 @@ export default async function HomePage() {
       .order('created_at', { ascending: false })
       .limit(6),
     getDiscountsEnabled(),
-    getHeroContent()
+    getHeroContent(),
+    getCoverPositions()
   ])
 
-  const featured = applyDiscountSetting(featuredProducts ?? [], discountsEnabled)
+  const featured = withCoverPositions(
+    applyDiscountSetting(featuredProducts ?? [], discountsEnabled),
+    coverPositions
+  )
   const videoId = tiktokVideoId(hero.videoUrl)
 
   return (

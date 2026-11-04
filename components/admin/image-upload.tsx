@@ -5,7 +5,8 @@ import { useDropzone } from "react-dropzone"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Upload, X, ImageIcon, Star } from "lucide-react"
+import { Upload, X, ImageIcon, Star, Crop } from "lucide-react"
+import { CoverPositionEditor } from "./cover-position-editor"
 import Image from "next/image"
 import imageCompression from "browser-image-compression"
 
@@ -27,6 +28,7 @@ const COMPRESSION_OPTIONS = {
 export function ImageUpload({ value = [], onChange, maxFiles = 5, disabled }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
+  const [framing, setFraming] = useState(false)
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -184,6 +186,19 @@ export function ImageUpload({ value = [], onChange, maxFiles = 5, disabled }: Im
                       )}
                     </>
                   )}
+                  {index === 0 && !disabled && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      title="Chỉnh khung ảnh đại diện"
+                      className="absolute top-2 left-2 h-7 px-2 text-xs"
+                      onClick={() => setFraming(true)}
+                    >
+                      <Crop className="h-3 w-3" />
+                      Chỉnh khung
+                    </Button>
+                  )}
                   {index === 0 && (
                     <div className="absolute bottom-2 left-2">
                       <div className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded flex items-center gap-1">
@@ -197,6 +212,10 @@ export function ImageUpload({ value = [], onChange, maxFiles = 5, disabled }: Im
             </Card>
           ))}
         </div>
+      )}
+
+      {value[0] && (
+        <CoverPositionEditor url={value[0]} open={framing} onOpenChange={setFraming} />
       )}
 
       {value.length === 0 && !uploading && (
