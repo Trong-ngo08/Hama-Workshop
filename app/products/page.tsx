@@ -120,10 +120,10 @@ export default async function ProductsPage({
           { count: 'exact' }
         )
         .eq('is_visible', true)
-        // Featured products first, then newest; sorted in the query so
-        // pagination keeps the same order across pages.
-        .order('is_featured', { ascending: false })
+        // Newest first; sorted in the query so pagination keeps the same
+        // order across pages. The id tie-break keeps the order stable.
         .order('created_at', { ascending: false })
+        .order('id', { ascending: false })
         .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
 
       if (filteredProductIds !== null && filteredProductIds.length > 0) {
