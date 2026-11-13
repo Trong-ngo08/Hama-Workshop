@@ -2,6 +2,7 @@
 
 import { BrandLogo } from '@/components/brand-logo'
 import { Button } from '@/components/ui/button'
+import { GACHA_ENABLED } from '@/lib/gacha'
 import { cn } from '@/lib/utils'
 import { Printer3dIcon } from '@/components/printer-3d-icon'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -18,7 +19,7 @@ export function Header() {
     { name: 'Trang chủ', href: '/' },
     { name: 'Sản phẩm', href: '/products' },
     { name: 'Feedback', href: '/feedbacks' },
-    { name: 'Quay gacha', href: '/gacha' },
+    ...(GACHA_ENABLED ? [{ name: 'Quay gacha', href: '/gacha' }] : []),
     { name: 'Liên hệ', href: '/contact' }
   ]
 

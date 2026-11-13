@@ -2,7 +2,9 @@ import { Footer } from '@/components/footer'
 import { Header } from '@/components/header'
 import { Badge } from '@/components/ui/badge'
 import { Gift } from 'lucide-react'
+import { GACHA_ENABLED } from '@/lib/gacha'
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import GachaClient from './gacha-client'
 
 export const metadata: Metadata = {
@@ -12,6 +14,8 @@ export const metadata: Metadata = {
 }
 
 export default function GachaPage() {
+  if (!GACHA_ENABLED) notFound()
+
   return (
     <div className='min-h-screen relative overflow-hidden bg-background'>
       <Header />

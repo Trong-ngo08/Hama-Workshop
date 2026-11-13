@@ -2,6 +2,10 @@ export const FACEBOOK_PAGE_URL =
   'https://www.facebook.com/profile.php?id=61550244332051'
 export const MESSENGER_URL = 'https://m.me/61550244332051'
 
+// Temporarily hidden at the owner's request: removes the nav link and makes /gacha return 404.
+// Set back to true to bring the gacha page back.
+export const GACHA_ENABLED = false
+
 export interface GachaSlice {
   label: string
   prize: string
