@@ -24,9 +24,21 @@ const PLAYER_PARAMS = new URLSearchParams({
  * the TikTok player exposes mute/unmute but no volume level, so the clip
  * starts muted and visitors switch sound on themselves.
  */
-export function HeroTikTok({ videoId }: { videoId: string }) {
+// Some browsers (Edge tracking prevention, Safari ITP) block the embedded
+// TikTok player, which then shows "Unable to load player". If the player has
+// not reported ready by this time, cover it with a link to the clip instead.
+const READY_TIMEOUT_MS = 10000
+
+export function HeroTikTok({ videoId, videoUrl }: { videoId: string; videoUrl: string }) {
   const frame = useRef<HTMLIFrameElement>(null)
   const [muted, setMuted] = useState(true)
+  const [ready, setReady] = useState(false)
+  const [timedOut, setTimedOut] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setTimedOut(true), READY_TIMEOUT_MS)
+    return () => clearTimeout(timer)
+  }, [])
 
   const send = (type: string) =>
     frame.current?.contentWindow?.postMessage({ type, 'x-tiktok-player': true }, '*')
@@ -35,6 +47,7 @@ export function HeroTikTok({ videoId }: { videoId: string }) {
     const onMessage = (e: MessageEvent) => {
       if (e.source !== frame.current?.contentWindow || !e.data?.['x-tiktok-player']) return
       if (e.data.type === 'onPlayerReady') {
+        setReady(true)
         send('mute')
         send('play')
       }
@@ -65,6 +78,22 @@ export function HeroTikTok({ videoId }: { videoId: string }) {
         {muted ? <VolumeX className='w-4 h-4' /> : <Volume2 className='w-4 h-4' />}
         {muted ? 'Bật tiếng' : 'Tắt tiếng'}
       </button>
+      {timedOut && !ready && (
+        <div className='absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-black px-6 text-center text-white'>
+          <img src='/tiktok.png' alt='' className='w-14 h-14 rounded-xl' />
+          <p className='text-sm text-white/80 text-pretty'>
+            Trình duyệt này đang chặn clip TikTok nhúng trong trang.
+          </p>
+          <a
+            href={videoUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='inline-flex items-center rounded-full bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-white/90 transition-colors'
+          >
+            Xem clip trên TikTok
+          </a>
+        </div>
+      )}
     </div>
   )
 }

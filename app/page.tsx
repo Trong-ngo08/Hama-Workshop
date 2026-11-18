@@ -137,7 +137,7 @@ export default async function HomePage() {
               {videoId && (
                 <div className='order-2 animate-fade-in-scale delay-300 relative w-full max-w-sm mx-auto md:mx-0 md:w-[17rem] desk:max-w-none desk:w-auto'>
                   <div className='aspect-[9/16] w-full desk:w-auto desk:h-[calc(100svh-8rem)] desk:min-h-[32rem] rounded-2xl overflow-hidden tech-shadow bg-black'>
-                    <HeroTikTok videoId={videoId} />
+                    <HeroTikTok videoId={videoId} videoUrl={hero.videoUrl} />
                   </div>
                   {/* Floating accent dot */}
                   <div className='absolute -top-4 -right-4 w-8 h-8 rounded-full bg-accent/20 border border-accent/40 animate-pulse-dot' />
