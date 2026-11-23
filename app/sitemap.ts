@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { SITE_URL as BASE_URL } from '@/lib/site'
+import { productPath } from '@/lib/product-url'
 import type { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -7,12 +8,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { data: products } = await supabase
     .from('products')
-    .select('id, updated_at')
+    .select('id, slug, updated_at')
     .eq('is_visible', true)
 
   const productUrls: MetadataRoute.Sitemap = (products || []).map(
     (product) => ({
-      url: `${BASE_URL}/products/${product.id}`,
+      url: `${BASE_URL}${productPath(product)}`,
       lastModified: product.updated_at
         ? new Date(product.updated_at)
         : new Date(),

@@ -116,7 +116,7 @@ export default async function ProductsPage({
       let productsQuery = supabase
         .from('products')
         .select(
-          'id, name, description, price, sale_price, discount_percentage, category, images, is_featured, is_available, product_categories(categories(id, name))',
+          'id, slug, name, description, price, sale_price, discount_percentage, category, images, is_featured, is_available, product_categories(categories(id, name))',
           { count: 'exact' }
         )
         .eq('is_visible', true)

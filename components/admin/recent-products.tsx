@@ -2,11 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { productPath } from "@/lib/product-url"
 import Image from "next/image"
 import { Eye, Edit } from "lucide-react"
 
 interface Product {
   id: string
+  slug?: string | null
   name: string
   category: string
   price: number
@@ -83,7 +85,7 @@ export function RecentProducts({ products }: RecentProductsProps) {
 
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/products/${product.id}`}>
+                    <Link href={productPath(product)}>
                       <Eye className="w-4 h-4" />
                     </Link>
                   </Button>

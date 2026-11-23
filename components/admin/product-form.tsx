@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { computeDiscountPercentage } from '@/lib/pricing'
+import { slugify } from '@/lib/product-url'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
@@ -81,14 +82,6 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
     slug: product?.slug || ''
   })
 
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim()
-  }
 
   const parsedPrice = Number.parseFloat(formData.price)
   const parsedSalePrice =
@@ -116,7 +109,7 @@ export function ProductForm({ categories, product, initialCategoryIds }: Product
     setIsSubmitting(true)
 
     try {
-      const slug = formData.slug || generateSlug(formData.name)
+      const slug = slugify(formData.slug || formData.name)
       const selectedCategories = categories.filter((c) => formData.categoryIds.includes(c.id))
       const primaryCategory = selectedCategories[0]?.name || ''
 

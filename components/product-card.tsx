@@ -1,12 +1,14 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { coverStyle, type CoverPosition } from '@/lib/cover-position'
+import { productPath } from '@/lib/product-url'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
 interface Product {
   id: string
+  slug?: string | null
   name: string
   description: string
   price: number
@@ -52,7 +54,7 @@ export function ProductCard({
         : []
 
   return (
-    <Link href={`/products/${product.id}`} className='block h-full'>
+    <Link href={productPath(product)} className='block h-full'>
       <Card className='group h-full overflow-hidden border border-border tech-shadow hover:shadow-xl transition-all duration-500 hover:-translate-y-2 bg-card relative'>
         <div
           className={cn(

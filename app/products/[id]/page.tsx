@@ -4,11 +4,26 @@ import { getCoverPositions, getDiscountsEnabled } from '@/lib/settings'
 import { SITE_URL } from '@/lib/site'
 import { createClient } from '@/lib/supabase/server'
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
+import { productPath } from '@/lib/product-url'
 import ProductPageClient from './ProductPageClient'
 
 interface ProductPageProps {
   params: Promise<{ id: string }>
+}
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/**
+ * The product URL segment is either the product slug (the canonical,
+ * SEO-friendly address) or its id (older links, redirected to the slug).
+ */
+function productKey(segment: string) {
+  const value = decodeURIComponent(segment)
+  return UUID_RE.test(value)
+    ? { column: 'id', value }
+    : { column: 'slug', value }
 }
 
 export async function generateMetadata({
@@ -20,10 +35,10 @@ export async function generateMetadata({
   const { data: product } = await supabase
     .from('products')
     .select(
-      'name, description, images, price, category, seo_title, seo_description, seo_keywords, is_visible'
+      'id, slug, name, description, images, price, category, seo_title, seo_description, seo_keywords, is_visible'
     )
-    .eq('id', id)
-    .single()
+    .eq(productKey(id).column, productKey(id).value)
+    .maybeSingle()
 
   if (!product || product.is_visible === false) {
     return {
@@ -48,7 +63,7 @@ export async function generateMetadata({
     product.seo_keywords ||
     `in 3d, quà tặng cá nhân hóa, ${product.name}, ${product.category}, nhựa petg, hmworkshop`
   const image = product.images?.[0] || '/hero-image.jpg'
-  const url = `${SITE_URL}/products/${id}`
+  const url = `${SITE_URL}${productPath(product)}`
 
   return {
     title,
@@ -70,7 +85,7 @@ export async function generateMetadata({
       images: [image]
     },
     alternates: {
-      canonical: `/products/${id}`
+      canonical: productPath(product)
     }
   }
 }
@@ -82,10 +97,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { data: product } = await supabase
     .from('products')
     .select('*')
-    .eq('id', id)
-    .single()
+    .eq(productKey(id).column, productKey(id).value)
+    .maybeSingle()
 
   if (!product || product.is_visible === false) notFound()
+
+  // Old id links (shared posts, Google index) move permanently to the slug URL.
+  if (product.slug && productKey(id).column === 'id') permanentRedirect(productPath(product))
 
   const discountsEnabled = await getDiscountsEnabled()
   const visibleProduct = applyDiscountSettingToOne(product, discountsEnabled)
@@ -93,11 +111,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { data: relatedProducts } = await supabase
     .from('products')
     .select(
-      'id, name, description, price, category, images, is_featured, is_available'
+      'id, slug, name, description, price, category, images, is_featured, is_available'
     )
     .eq('category', product.category)
     .eq('is_visible', true)
-    .neq('id', id)
+    .neq('id', product.id)
     .order('created_at', { ascending: false })
     .limit(4)
 

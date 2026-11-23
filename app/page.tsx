@@ -57,7 +57,7 @@ export default async function HomePage() {
     supabase
       .from('products')
       .select(
-        'id, name, description, price, category, images, is_featured, is_available, sale_price, discount_percentage'
+        'id, slug, name, description, price, category, images, is_featured, is_available, sale_price, discount_percentage'
       )
       .eq('is_featured', true)
       .eq('is_visible', true)

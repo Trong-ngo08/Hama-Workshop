@@ -17,6 +17,7 @@ import {
   Share2,
   Shield
 } from 'lucide-react'
+import { productPath } from '@/lib/product-url'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -26,6 +27,7 @@ const BASE_URL = 'https://www.hmworkshop.vn'
 
 interface Product {
   id: string
+  slug?: string | null
   name: string
   description: string
   price: number
@@ -52,7 +54,7 @@ export default function ProductPageClient({
   const [copied, setCopied] = useState(false)
 
   const handleShare = async () => {
-    const url = `${BASE_URL}/products/${product.id}`
+    const url = `${BASE_URL}${productPath(product)}`
     try {
       await navigator.clipboard.writeText(url)
     } catch {
@@ -120,7 +122,7 @@ export default function ProductPageClient({
         '@type': 'ListItem',
         position: 3,
         name: product.name,
-        item: `${BASE_URL}/products/${product.id}`
+        item: `${BASE_URL}${productPath(product)}`
       }
     ]
   }
