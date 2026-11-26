@@ -6,8 +6,10 @@ import {
   MIN_ORDER,
   PRICE_PER_GRAM,
   PRICE_PER_HOUR,
+  VOLUME_DISCOUNTS,
   convertToPetg,
   formatDuration,
+  formatKg,
   formatNumber,
   formatVnd,
   petgTimeFactor,
@@ -53,6 +55,12 @@ function quoteInstance(inst: MakerWorldInstance) {
     converted: filaments.filter((f) => f.base !== 'PETG').map((f) => f.base)
   }
 }
+
+/** "Giảm 10% cho đơn trên 1 kg nhựa, 20% cho đơn trên 5 kg nhựa." */
+const VOLUME_DISCOUNT_TEXT = `Giảm ${[...VOLUME_DISCOUNTS]
+  .reverse()
+  .map((t) => `${t.percent}% cho đơn trên ${formatKg(t.overGrams)} nhựa`)
+  .join(', ')}.`
 
 /** Compact MakerWorld quote card, sized to sit under the hero copy. */
 export function PrintQuoteCalculator() {
@@ -147,6 +155,9 @@ export function PrintQuoteCalculator() {
           {formatVnd(PRICE_PER_HOUR)}. Giá nhựa PETG.{' '}
           <span className='font-semibold text-foreground'>
             Nhận đơn theo yêu cầu từ {formatVnd(MIN_ORDER)}.
+          </span>{' '}
+          <span className='font-semibold text-primary'>
+            {VOLUME_DISCOUNT_TEXT}
           </span>
         </p>
       ) : (
@@ -220,6 +231,22 @@ export function PrintQuoteCalculator() {
                       {formatVnd(q.price.timeCost)}
                     </dd>
                   </div>
+                  {q.price.discountPercent > 0 && (
+                    <div className='flex justify-between gap-3 text-primary'>
+                      <dt>
+                        Giảm {q.price.discountPercent}% (đơn trên{' '}
+                        {formatKg(
+                          VOLUME_DISCOUNTS.find(
+                            (t) => t.percent === q.price.discountPercent
+                          )!.overGrams
+                        )}{' '}
+                        nhựa)
+                      </dt>
+                      <dd className='whitespace-nowrap'>
+                        −{formatVnd(q.price.discount)}
+                      </dd>
+                    </div>
+                  )}
                   <div className='flex justify-between gap-3 border-t border-border pt-0.5 font-semibold text-foreground'>
                     <dt>Tổng (làm tròn)</dt>
                     <dd className='whitespace-nowrap'>
@@ -249,7 +276,11 @@ export function PrintQuoteCalculator() {
             {converted.length > 0 &&
               `Đã quy đổi ${converted.join(', ')} sang PETG. `}
             Có thể phát sinh chi phí hậu kỳ, vận chuyển, phụ kiện lắp thêm nếu
-            bạn cần.
+            bạn cần.{' '}
+            <span className='font-semibold text-primary'>
+              {VOLUME_DISCOUNT_TEXT}
+            </span>{' '}
+            Đặt nhiều sản phẩm thì tính theo tổng số nhựa của cả đơn.
           </p>
           <p className='text-sm font-medium text-foreground'>
             Hãy nhắn tin trực tiếp cho shop để nhận báo giá và ưu đãi thêm cho

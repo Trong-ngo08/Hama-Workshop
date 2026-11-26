@@ -5,10 +5,12 @@ import { PrintQuoteCalculator } from '@/components/print-quote-calculator'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
+  formatKg,
   formatVnd,
   MIN_ORDER,
   PRICE_PER_GRAM,
-  PRICE_PER_HOUR
+  PRICE_PER_HOUR,
+  VOLUME_DISCOUNTS
 } from '@/lib/print-quote'
 import { BUSINESS } from '@/lib/site'
 import { ExternalLink, Printer, Star } from 'lucide-react'
@@ -38,7 +40,7 @@ const FAQS = [
   },
   {
     q: 'Giá in 3D theo yêu cầu được tính thế nào?',
-    a: `Giá = số gam nhựa × ${formatVnd(PRICE_PER_GRAM)} + số giờ in × ${formatVnd(PRICE_PER_HOUR)}. Dán link mẫu MakerWorld vào bảng tính giá ở trên là thấy giá ngay. Shop nhận đơn in theo yêu cầu từ ${formatVnd(MIN_ORDER)}.`
+    a: `Giá = số gam nhựa × ${formatVnd(PRICE_PER_GRAM)} + số giờ in × ${formatVnd(PRICE_PER_HOUR)}. Dán link mẫu MakerWorld vào bảng tính giá ở trên là thấy giá ngay. Shop nhận đơn in theo yêu cầu từ ${formatVnd(MIN_ORDER)}. Đơn lớn được giảm giá: ${[...VOLUME_DISCOUNTS].reverse().map((t) => `giảm ${t.percent}% cho đơn trên ${formatKg(t.overGrams)} nhựa`).join(', ')}.`
   },
   {
     q: 'Shop in bằng nhựa gì?',
@@ -149,6 +151,21 @@ export default function CustomPrintGuidePage() {
                     Ví dụ: mẫu dùng 100 g nhựa, in 5 giờ = 100 ×{' '}
                     {formatVnd(PRICE_PER_GRAM)} + 5 × {formatVnd(PRICE_PER_HOUR)} ={' '}
                     {formatVnd(100 * PRICE_PER_GRAM + 5 * PRICE_PER_HOUR)}.
+                  </p>
+                  <p className='font-semibold text-foreground pt-2'>
+                    Giảm giá cho đơn lớn:
+                  </p>
+                  <ul className='list-disc pl-5 text-muted-foreground space-y-1'>
+                    {[...VOLUME_DISCOUNTS].reverse().map((t) => (
+                      <li key={t.overGrams}>
+                        Đơn trên {formatKg(t.overGrams)} nhựa:{' '}
+                        <b className='text-primary'>giảm {t.percent}%</b>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className='text-muted-foreground'>
+                    Tính theo tổng số nhựa của cả đơn, kể cả khi bạn đặt nhiều
+                    mẫu hoặc nhiều sản phẩm.
                   </p>
                 </div>
               </div>

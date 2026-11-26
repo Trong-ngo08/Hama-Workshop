@@ -78,17 +78,40 @@ export function petgTimeFactor(filaments: FilamentUsage[]): number {
   )
 }
 
+/**
+ * Volume discounts on large orders, by PETG weight. Highest tier first.
+ * "Trên 1 kg" means strictly more than 1.000 g.
+ */
+export const VOLUME_DISCOUNTS = [
+  { overGrams: 5000, percent: 20 },
+  { overGrams: 1000, percent: 10 }
+] as const
+
+/** Discount percent for an order using this many grams of PETG (0 if none). */
+export function volumeDiscountPercent(grams: number): number {
+  return VOLUME_DISCOUNTS.find((t) => grams > t.overGrams)?.percent ?? 0
+}
+
+/** "1 kg", "5 kg" — tier thresholds as customers read them. */
+export const formatKg = (grams: number) => `${formatNumber(grams / 1000)} kg`
+
 export function quote(grams: number, hours: number) {
   const materialCost = grams * PRICE_PER_GRAM
   const timeCost = hours * PRICE_PER_HOUR
-  const total = materialCost + timeCost
+  const subtotal = materialCost + timeCost
+  const discountPercent = volumeDiscountPercent(grams)
+  const discount = (subtotal * discountPercent) / 100
+  const total = subtotal - discount
   const final = Math.ceil(total / 1000) * 1000
   const belowMinimum = final < MIN_ORDER
   return {
     materialCost,
     timeCost,
+    subtotal,
+    discountPercent,
+    discount,
     total,
-    /** Price of one print, rounded up to 1.000đ; never raised to the minimum. */
+    /** Price of one print after any volume discount, rounded up to 1.000đ; never raised to the minimum. */
     final,
     belowMinimum,
     /** Fewest copies of this print that reach the minimum order. */
