@@ -131,7 +131,7 @@ export function PrintQuoteCalculator() {
   const [link, setLink] = useState('')
   const [design, setDesign] = useState<MakerWorldDesign | null>(null)
   const [mode, setMode] = useState<'link' | 'manual'>('link')
-  const [kg, setKg] = useState('')
+  const [gramsInput, setGramsInput] = useState('')
   const [printHours, setPrintHours] = useState('')
   const [printMinutes, setPrintMinutes] = useState('')
 
@@ -172,10 +172,10 @@ export function PrintQuoteCalculator() {
   )
   const converted = [...new Set(quotes.flatMap((q) => q.converted))]
 
-  // Manual mode: weight in kg and print time typed by the customer.
+  // Manual mode: weight in grams and print time typed by the customer.
   // Accepts "1,5" as well as "1.5".
   const toNumber = (v: string) => Math.max(0, Number(v.replace(',', '.')) || 0)
-  const manualGrams = toNumber(kg) * 1000
+  const manualGrams = toNumber(gramsInput)
   const manualHours = toNumber(printHours) + toNumber(printMinutes) / 60
   const manualQuote =
     manualGrams > 0 || manualHours > 0 ? quote(manualGrams, manualHours) : null
@@ -194,7 +194,7 @@ export function PrintQuoteCalculator() {
             Tính giá in nhanh
           </p>
           <p className='text-xs text-muted-foreground'>
-            Dán link mẫu MakerWorld hoặc tự nhập số kg nhựa và thời gian in
+            Dán link mẫu MakerWorld hoặc tự nhập số gam nhựa và thời gian in
           </p>
         </div>
       </div>
@@ -207,7 +207,7 @@ export function PrintQuoteCalculator() {
         {(
           [
             ['link', 'Dán link MakerWorld'],
-            ['manual', 'Nhập kg & thời gian']
+            ['manual', 'Nhập gam & thời gian']
           ] as const
         ).map(([value, label]) => (
           <button
@@ -231,12 +231,12 @@ export function PrintQuoteCalculator() {
         <div className='space-y-3'>
           <div className='grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)] gap-2'>
             <label className='space-y-1 text-xs text-muted-foreground'>
-              <span>Nhựa (kg)</span>
+              <span>Nhựa (g)</span>
               <Input
                 inputMode='decimal'
-                value={kg}
-                onChange={(e) => setKg(e.target.value)}
-                placeholder='VD: 0,25'
+                value={gramsInput}
+                onChange={(e) => setGramsInput(e.target.value)}
+                placeholder='VD: 250'
                 className='bg-background'
               />
             </label>
@@ -278,7 +278,7 @@ export function PrintQuoteCalculator() {
           ) : null}
           <p className='text-xs text-muted-foreground leading-relaxed'>
             Lấy số gam nhựa và thời gian in trong phần mềm slicer (Bambu Studio,
-            Orca…), tính theo nhựa PETG. 1 kg = 1.000 g.{' '}
+            Orca…), tính theo nhựa PETG.{' '}
             <span className='font-semibold text-foreground'>
               Nhận đơn theo yêu cầu từ {formatVnd(MIN_ORDER)}.
             </span>{' '}
